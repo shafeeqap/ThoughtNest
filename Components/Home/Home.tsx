@@ -1,10 +1,13 @@
+"use client";
 import React from 'react'
 import Hero from './Hero/Hero'
+import BlogList from './Blog/BlogList'
 
-const Home = () => {
+const Home: React.FC = () => {
     return (
-        <div className='overflow-hidden h-[10000px]'>
+        <div className='overflow-hidden'>
             <Hero />
+            <BlogList />
         </div>
     )
 }
