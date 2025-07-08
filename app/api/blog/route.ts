@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 
 export async function GET(req: Request) {
-  console.log("Blog GET Hit");
+  console.log("Blog GET Hit", req);
   return NextResponse.json({ msg: "API Working" });
 }
 
@@ -73,9 +73,9 @@ export async function POST(req: Request) {
   
     return NextResponse.json({ success: true, msg: "Blog Added" });
   } catch (error) {
-    console.error("Error uploading blog image:", error);
+    console.error("Error uploading blog:", error);
     return NextResponse.json(
-      { error: "Failed to upload image" },
+      { error: "Failed to upload blog" },
       { status: 500 }
     );
   }
