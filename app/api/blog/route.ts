@@ -2,12 +2,7 @@ import { connectDB } from "@/lib/config/db";
 import BlogModel from "@/lib/models/BlogModel";
 import { writeFile } from "fs/promises";
 import { NextResponse } from "next/server";
-import path from "path";
 
-// const LoadDB = async () => {
-//   await connectDB();
-// };
-// LoadDB();
 
 export async function GET(req: Request) {
   console.log("Blog GET Hit");
@@ -18,22 +13,8 @@ export async function POST(req: Request) {
   try {
     await connectDB();
 
-    // Debug: Log request headers
-    const headers = Object.fromEntries(req.headers.entries());
-    console.log("Request Headers:", headers);
-
-    const contentType = req.headers.get("content-type") || "";
-    if (!contentType || !contentType.includes("multipart/form-data")) {
-      return NextResponse.json(
-        { error: "Invalid content type. Use multipart/form-data" },
-        { status: 400 }
-      );
-    }
-
     const formData = await req.formData();
-    console.log("FormData fields:", Array.from(formData.keys()));
 
-    // Validate all required fields based on your model
     const requiredFields = [
       "title",
       "description",
@@ -53,7 +34,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const image = formData.get("image") as File | null;
+    const image = formData.get("image") as File;
     let fileName = "";
 
     // Only process if image exists and is valid
@@ -72,13 +53,10 @@ export async function POST(req: Request) {
       fileName = `${timestamp}_${safeName}`;
       const imageByteData = await image.arrayBuffer();
       const buffer = Buffer.from(imageByteData);
-      const publicDir = path.join(process.cwd(), "public");
-      const filePath = path.join(publicDir, fileName);
-      await writeFile(filePath, buffer); // using our image will be store in the public folder.
+      const filePath = `./public/${timestamp}_${fileName}`;
+      await writeFile(filePath, buffer);
     } else {
       console.warn("No image file provided or invalid image field");
-      // Handle case where image is missing but your model requires it
-      // For now, we'll use a placeholder
       fileName = "default-image.jpg";
     }
 
@@ -92,8 +70,7 @@ export async function POST(req: Request) {
     };
 
     await BlogModel.create(blogData);
-    console.log("Blog Saved");
-
+  
     return NextResponse.json({ success: true, msg: "Blog Added" });
   } catch (error) {
     console.error("Error uploading blog image:", error);
