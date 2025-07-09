@@ -1,20 +1,23 @@
+'use client';
+import Header from "@/Components/Admin/Header/Header";
 import Sidebar from "@/Components/Admin/Sidebar/Sidebar";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 
-export const metadata = {
-    title: "Admin Panel",
-    description: "Admin dashboard",
-}
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
+    const [openSidebar, setOpenSidebar] = useState(false);
+
+    const toggleSidebar = () => setOpenSidebar(!openSidebar);
+    const closeSidebar = () => setOpenSidebar(false);
+
     return (
-        <html lang="en">
-            <body>
-                <div className="flex">
-                    <Sidebar />
-                    <main>{children}</main>
-                </div>
-            </body>
-        </html>
+        <div className='flex flex-col min-h-screen'>
+            <Header toggleSidebar={toggleSidebar} />
+            <div className="flex flex-col flex-1">
+                <Sidebar openSidebarToggle={openSidebar} closeSidebar={closeSidebar} />
+                <main className="p-4">{children}</main>
+            </div>
+        </div>
+
     )
 }

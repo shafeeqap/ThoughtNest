@@ -1,9 +1,11 @@
 import React from 'react'
 
-const page = () => {
+const AdminHomepage = () => {
   return (
-    <div>Admin Dashboard</div>
+    <div className="flex justify-center bg-gray-300 p-4 text-black">
+      <h1 className="text-2xl font-bold">Welcome to the Admin Dashboard</h1>
+    </div>
   )
 }
 
-export default page
+export default AdminHomepage;
