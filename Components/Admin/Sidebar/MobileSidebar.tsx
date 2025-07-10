@@ -20,17 +20,19 @@ const MobileSidebar: React.FC<Props> = ({ closeSidebar, openSidebarToggle }) => 
                 <div className='px-5 sm:w-80 h-[100vh] relative py-12'>
                     <button onClick={closeSidebar} className="text-white text-xl font-bold absolute top-5 right-5 cursor-pointer">X</button>
 
-                    <div className='flex flex-col space-y-5 px-2 py-5 mt-5'>
-                        <Link href={'#'} className='hover:bg-gray-500 rounded-md transition-all duration-300 delay-200'>
-                            <p className='text-white font-semibold text-lg sm:text-2xl py-2 px-2'>Dashboard</p>
-                        </Link>
-                        <Link href={'#'} className='hover:bg-gray-500 rounded-md transition-all duration-300 delay-200'>
-                            <p className='text-white font-semibold text-lg sm:text-2xl py-2 px-2'>Users</p>
-                        </Link>
-                        <Link href={'#'} className='hover:bg-gray-500 rounded-md transition-all duration-300 delay-200'>
-                            <p className='text-white font-semibold text-lg sm:text-2xl py-2 px-2'>Settings</p>
-                        </Link>
-                    </div>
+                    <nav>
+                        <div className='flex flex-col space-y-5 px-2 py-5 mt-5'>
+                            <Link href={'#'} className='hover:bg-gray-500 rounded-md transition-all duration-300 delay-200'>
+                                <p className='text-white font-semibold text-lg sm:text-2xl py-2 px-2'>Dashboard</p>
+                            </Link>
+                            <Link href={'#'} className='hover:bg-gray-500 rounded-md transition-all duration-300 delay-200'>
+                                <p className='text-white font-semibold text-lg sm:text-2xl py-2 px-2'>Users</p>
+                            </Link>
+                            <Link href={'#'} className='hover:bg-gray-500 rounded-md transition-all duration-300 delay-200'>
+                                <p className='text-white font-semibold text-lg sm:text-2xl py-2 px-2'>Settings</p>
+                            </Link>
+                        </div>
+                    </nav>
                 </div>
             </div>
         </>

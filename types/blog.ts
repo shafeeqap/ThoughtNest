@@ -1,4 +1,5 @@
 import { StaticImageData } from "next/image";
+import { IconType } from "react-icons";
 
 export type Category = "All" | "Technology" | "Startup" | "Lifestyle";
 
@@ -12,3 +13,10 @@ export interface BlogItemType {
   author: string;
   author_img: StaticImageData;
 }
+
+export type NavLinksType = {
+  id: number;
+  url: string;
+  label: string;
+  icon: IconType;
+};

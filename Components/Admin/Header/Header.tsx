@@ -8,7 +8,7 @@ type HeaderProps = {
     toggleSidebar: () => void;
 };
 
-const Header: React.FC<HeaderProps> = ({toggleSidebar}) => {
+const Header: React.FC<HeaderProps> = () => {
 
     return (
         <>
@@ -17,7 +17,7 @@ const Header: React.FC<HeaderProps> = ({toggleSidebar}) => {
                 </div>
                 {/* Hamburger icon for small screens */}
                 <div className='lg:hidden'>
-                    <TfiAlignLeft className='w-5 h-5 cursor-pointer' onClick={toggleSidebar} />
+                    <TfiAlignLeft className='w-5 h-5 cursor-pointer' onClick={'toggleSidebar'} />
                 </div>
                 <div className='flex justify-between py-2 px-5 gap-2'>
                     <div><FaUserCircle className='w-5 h-5 cursor-pointer hover:text-gray-300' /></div>
