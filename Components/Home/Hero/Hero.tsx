@@ -24,7 +24,7 @@ const Hero: React.FC = () => {
                     </div>
                     {/* Content Image */}
                     <div className='flex justify-end w-full'>
-                        <Image src='/images/nature.jpg' alt='content image' width={250} height={250} className='w-full h-full lg:w-[550px] lg:h-[350px] object-cover border-4 border-white' />
+                        <Image src='/images/nature.jpg' alt='content_image' width={250} height={250} className='w-full h-full lg:w-[550px] lg:h-[350px] object-cover border-4 border-white' />
                     </div>
                 </div>
             </section>

@@ -3,12 +3,13 @@ import BlogModel from "@/lib/models/BlogModel";
 import { writeFile } from "fs/promises";
 import { NextResponse } from "next/server";
 
-
+// =====> API Endpoint to get all blogs <=====
 export async function GET(req: Request) {
-  console.log("Blog GET Hit", req);
-  return NextResponse.json({ msg: "API Working" });
+  const blogs = await BlogModel.find({})
+  return NextResponse.json({ msg: "Blogs", blogs });
 }
 
+// =====> API Endpoint for uploading blogs <=====
 export async function POST(req: Request) {
   try {
     await connectDB();
@@ -49,11 +50,12 @@ export async function POST(req: Request) {
       }
 
       const timestamp = Date.now();
+      
       const safeName = image.name.replace(/[^a-z0-9.]/gi, "_").toLowerCase();
       fileName = `${timestamp}_${safeName}`;
       const imageByteData = await image.arrayBuffer();
       const buffer = Buffer.from(imageByteData);
-      const filePath = `./public/${timestamp}_${fileName}`;
+      const filePath = `./public/${fileName}`;
       await writeFile(filePath, buffer);
     } else {
       console.warn("No image file provided or invalid image field");
@@ -65,7 +67,7 @@ export async function POST(req: Request) {
       description: formData.get("description") as string,
       category: formData.get("category") as string,
       author: formData.get("author") as string,
-      image: fileName,
+      image: `/${fileName}`,
       authorImg: formData.get("authorImg") as string,
     };
 

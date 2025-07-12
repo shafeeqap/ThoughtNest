@@ -8,7 +8,7 @@ import { FaFacebook, FaInstagram, FaLinkedin, FaWhatsapp } from 'react-icons/fa'
 
 type PageProps = {
   params: {
-    id: string
+    _id: string
   }
 }
 
@@ -18,7 +18,7 @@ const Page: React.FC<PageProps> = ({ params }) => {
 
   useEffect(() => {
     const fetchBlogData = () => {
-      const blog = blog_data.find((item) => Number(params.id) === item.id)
+      const blog = blog_data.find((item) => Number(params._id) === item.id)
       if (blog) {
         setData(blog);
         console.log(blog);
