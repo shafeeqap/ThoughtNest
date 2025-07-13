@@ -10,7 +10,7 @@ export interface BlogItemType {
   description: string;
   date: number;
   author: string;
-  author_img: string;
+  authorImg: string;
 }
 
 export type NavLinksType = {

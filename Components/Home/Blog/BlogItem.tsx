@@ -18,10 +18,9 @@ const BlogItem: React.FC<BlogItemType> = ({ title, description, category, image,
             <div className="p-5">
                 <h5 className='mb-2 text-lg font-medium tracking-tight text-gray-700'>{title}</h5>
                 <p className='mb-3 text-sm tracking-tight text-gray-500 line-clamp-3'>
-                    {/* <ReadMore text={description} limit={300}/> */}
                     {description}
-                    </p>
-                
+                </p>
+
                 {/* Read more link */}
                 <Link href={`/blogs/${_id}`} className='inline-flex items-center py-2 font-semibold text-center gap-2 cursor-pointer'>
                     Read more <FaArrowRight />

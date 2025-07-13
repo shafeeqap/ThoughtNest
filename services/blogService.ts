@@ -1,0 +1,18 @@
+import { BlogItemType } from "@/types/blog";
+import axios from "axios";
+
+const baseURL =
+  typeof window === "undefined" ? process.env.NEXT_PUBLIC_BASE_URL : "";
+
+const axiosInstance = axios.create({ baseURL });
+
+export const blogService = {
+  fetchAllBlog: async (): Promise<BlogItemType[]> => {
+    const response = await axiosInstance.get("/api/blog");
+    return response.data.blogs;
+  },
+  fetchBlogById: async (id: string): Promise<BlogItemType> => {
+    const response = await axiosInstance.get(`/api/blog/${id}`);
+    return response.data;
+  },
+};

@@ -5,8 +5,16 @@ import { NextResponse } from "next/server";
 
 // =====> API Endpoint to get all blogs <=====
 export async function GET(req: Request) {
-  const blogs = await BlogModel.find({})
-  return NextResponse.json({ msg: "Blogs", blogs });
+  // const blogId = req.nextUrl.searchParams.get('id')
+  try {
+    await connectDB();
+
+    const blogs = await BlogModel.find({});
+    return NextResponse.json({ msg: "Blogs", blogs });
+  } catch (error) {
+    console.error("GET /api/blog error:", error);
+    return NextResponse.json({ msg: "Error fetching blogs" }, { status: 500 });
+  }
 }
 
 // =====> API Endpoint for uploading blogs <=====
@@ -50,7 +58,7 @@ export async function POST(req: Request) {
       }
 
       const timestamp = Date.now();
-      
+
       const safeName = image.name.replace(/[^a-z0-9.]/gi, "_").toLowerCase();
       fileName = `${timestamp}_${safeName}`;
       const imageByteData = await image.arrayBuffer();
@@ -72,7 +80,7 @@ export async function POST(req: Request) {
     };
 
     await BlogModel.create(blogData);
-  
+
     return NextResponse.json({ success: true, msg: "Blog Added" });
   } catch (error) {
     console.error("Error uploading blog:", error);

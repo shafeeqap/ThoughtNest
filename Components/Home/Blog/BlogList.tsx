@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import BlogItem from './BlogItem'
 import { BlogItemType, Category } from '@/types/blog'
-import axios from 'axios'
+import { blogService } from '@/services/blogService'
+
 
 const categories: Category[] = ["All", "Technology", "Startup", "Lifestyle"]
 
@@ -9,18 +10,12 @@ const BlogList: React.FC = () => {
     const [categoryMenu, setCategoryMenu] = useState<Category>("All");
     const [blogs, setBlogs] = useState<BlogItemType[]>([]);
 
-    const fetchBlog = async () => {
-        try {
-            const response = await axios.get('/api/blog');
-            setBlogs(response.data.blogs)
-            console.log(response.data.blogs);
-        } catch (error) {
-            console.log('Error fetching blogs:', error);
-        }
-    }
-
     useEffect(() => {
-        fetchBlog()
+        const getData = async () => {
+            const blogData = await blogService.fetchAllBlog()
+            setBlogs(blogData)
+        }
+        getData();
     }, [])
 
     const filteredBlogs = categoryMenu === "All" ? blogs : blogs.filter((item) => item.category === categoryMenu)
