@@ -15,4 +15,8 @@ export const blogService = {
     const response = await axiosInstance.get(`/api/blog/${id}`);
     return response.data;
   },
+  deleteBlog: async (id: string): Promise<{ msg: string }> => {
+    const response = await axiosInstance.delete(`/api/blog/${id}`);
+    return response.data;
+  },
 };

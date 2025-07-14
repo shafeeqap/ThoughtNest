@@ -25,3 +25,28 @@ export async function GET(
     );
   }
 }
+
+// =====> API Endpoint to delete blogs <=====
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await connectDB();
+
+    const deletedBlog = await BlogModel.findByIdAndDelete(params.id);
+    if (!deletedBlog) {
+      return NextResponse.json({ msg: "Blog not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(
+      { msg: "Blog deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { msg: "Error fetching blog by ID", error },
+      { status: 500 }
+    );
+  }
+}

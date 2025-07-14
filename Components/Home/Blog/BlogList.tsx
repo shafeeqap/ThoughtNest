@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import BlogItem from './BlogItem'
 import { BlogItemType, Category } from '@/types/blog'
 import { blogService } from '@/services/blogService'
+import Spinner from '../../Spinner/Spinner'
 
 
 const categories: Category[] = ["All", "Technology", "Startup", "Lifestyle"]
@@ -9,11 +10,15 @@ const categories: Category[] = ["All", "Technology", "Startup", "Lifestyle"]
 const BlogList: React.FC = () => {
     const [categoryMenu, setCategoryMenu] = useState<Category>("All");
     const [blogs, setBlogs] = useState<BlogItemType[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true)
 
     useEffect(() => {
         const getData = async () => {
-            const blogData = await blogService.fetchAllBlog()
+            const [blogData] = await Promise.all([blogService.fetchAllBlog(),
+            new Promise(resolve => setTimeout(resolve, 1000)),
+            ])
             setBlogs(blogData)
+            setIsLoading(false)
         }
         getData();
     }, [])
@@ -29,12 +34,17 @@ const BlogList: React.FC = () => {
                 ))}
             </div>
 
-            {/* List the Blog item */}
-            <div className='flex flex-wrap justify-around gap-1 gap-y-10 mb-16 xl:mx-24'>
-                {filteredBlogs.map((item) => (
-                    <BlogItem key={item._id} {...item} />
-                ))}
-            </div>
+            {/* Loading and Blog List */}
+            {isLoading ? (
+                <Spinner />
+            ) : (
+                < div className='flex flex-wrap justify-around gap-1 gap-y-10 mb-16 xl:mx-24'>
+                    {filteredBlogs.map((item) => (
+                        <BlogItem key={item._id} {...item} />
+                    ))}
+                </div >
+            )}
+
         </>
     )
 }

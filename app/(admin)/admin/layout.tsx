@@ -12,7 +12,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <ToastContainer theme="dark" position="top-right" autoClose={3000} />
 
             <Header />
-            <div className="flex">
+            <div className="flex flex-col">
                 <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
                 <main className='p-4 ml-14 md:ml-10'>{children}</main>
             </div>

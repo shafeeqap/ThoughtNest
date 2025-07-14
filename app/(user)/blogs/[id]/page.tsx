@@ -8,7 +8,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const blog = await blogService.fetchBlogById(id)
 
   if (!blog) {
-    return <div>Blog not found</div>;
+    return <div>
+      <p>Blog not found</p>
+    </div>;
   }
 
   return (
