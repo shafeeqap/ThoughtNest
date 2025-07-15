@@ -1,4 +1,5 @@
 'use client';
+import TiptapEditor from '@/Components/Tiptap/Editor';
 import { assets } from '@/data/assets';
 import axios from 'axios';
 import Image from 'next/image';
@@ -24,6 +25,7 @@ const Page = () => {
       return updateData
     })
   }
+
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -81,10 +83,11 @@ const Page = () => {
           type="file" id='image' hidden required />
         <p className='text-xl mt-4'>Blog Title</p>
         <input onChange={onChangHandler} className='w-full sm:w-[500px] mt-4 px-4 py-2 border' name='title' value={data.title} type="text" placeholder='Type here' required />
+        
         <p className='text-xl mt-4'>Blog Description</p>
-        <textarea onChange={onChangHandler} className='w-full sm:w-[500px] mt-4 px-4 py-2 border' name='description' value={data.description} placeholder='Write content here' rows={6} required />
+        <TiptapEditor content={data.description} onChange={(value) => setData(prev => ({ ...prev, description: value }))} />
+        
         <p className='text-xl mt-4'>Blog Category</p>
-
         <select onChange={onChangHandler} name="category" value={data.category} className='w-40 mt-4 px-4 py-3 border text-gray-500'>
           <option value="Startup">Startup</option>
           <option value="Technology">Technology</option>

@@ -15,7 +15,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   return (
     <>
-      <div className='bg-gray-200 py-5 px-5 md:px-12 lg:px-28 '>
+      <div className='bg-[#c8ceca] py-5 px-5 md:px-12 lg:px-28 '>
         {/* Blog Heading */}
         <div className='text-center my-24'>
           <h1 className='text-2xl sm:text-5xl font-semibold max-w-[700px] mx-auto'>{blog?.title}</h1>
@@ -32,7 +32,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           <p>No image available</p>
         )}
         <h1 className='my-8 text-[26px] font-semibold'>Introduction:</h1>
-        <p>{blog.description}</p>
+        <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{__html:blog.description}} />
 
         <div className='my-24'>
           <p className='text-black font-semibold my-4'>Share this article on social media</p>
