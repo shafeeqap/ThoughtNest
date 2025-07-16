@@ -1,6 +1,7 @@
 import { connectDB } from "@/lib/config/db";
 import BlogModel from "@/lib/models/BlogModel";
 import { NextResponse } from "next/server";
+import fs from "fs/promises";
 
 // =====> API Endpoint to get blogs by id <=====
 export async function GET(
@@ -34,10 +35,24 @@ export async function DELETE(
   try {
     await connectDB();
 
-    const deletedBlog = await BlogModel.findByIdAndDelete(params.id);
-    if (!deletedBlog) {
+    const blog = await BlogModel.findById(params.id);
+    console.log(blog?.image, 'Blog Image');
+    
+
+    if (!blog) {
       return NextResponse.json({ msg: "Blog not found" }, { status: 404 });
     }
+
+    if (blog.image) {
+      const imagePath = `./public${blog?.image}`;
+      try {
+        await fs.unlink(imagePath);
+      } catch (error) {
+        console.error("Error deleting image:", error);
+      }
+    }
+
+    await BlogModel.findByIdAndDelete(params.id);
 
     return NextResponse.json(
       { msg: "Blog deleted successfully" },
