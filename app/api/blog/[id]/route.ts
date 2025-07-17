@@ -36,8 +36,6 @@ export async function DELETE(
     await connectDB();
 
     const blog = await BlogModel.findById(params.id);
-    console.log(blog?.image, 'Blog Image');
-    
 
     if (!blog) {
       return NextResponse.json({ msg: "Blog not found" }, { status: 404 });

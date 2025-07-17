@@ -41,6 +41,7 @@ const Page = () => {
         <table className='w-full text-sm text-gray-500'>
           <thead className='text-sm text-gray-700 text-left uppercase bg-gray-50 border-b'>
             <tr>
+              <th scope='col' className='px-6 py-3'>No</th>
               <th scope='col' className='hidden sm:block px-6 py-3'>Author name</th>
               <th scope='col' className='px-6 py-3'>Blog Title</th>
               <th scope='col' className='px-6 py-3'>Date</th>
@@ -60,11 +61,12 @@ const Page = () => {
               </tr>
             ) : (
               <>
-                {blogs.map((item) => (
+                {blogs.map((item, index) => (
                   < BlogTableItem
                     key={item._id}
                     {...item}
                     onDelete={handleDelete}
+                    counter={index + 1}
                   />
                 ))}
               </>

@@ -3,6 +3,9 @@ import BlogModel from "@/lib/models/BlogModel";
 import { writeFile } from "fs/promises";
 import { NextResponse } from "next/server";
 
+
+
+
 // =====> API Endpoint to get all blogs <=====
 export async function GET(req: Request) {
   // const blogId = await req.nextUrl.searchParams.get('id')

@@ -38,4 +38,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 Tools & Packages Used:
 ----------------------
-1. 
+1. zod :- form data validation
