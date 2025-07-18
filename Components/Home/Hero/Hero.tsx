@@ -1,37 +1,47 @@
-import { emailSchema } from '@/lib/validators/emailSchema';
+import SubscribeForm from '@/features/subscribe/SubscribeForm';
+import { validateEmail } from '@/features/subscribe/validateEmail';
 import { subscribeService } from '@/services/subscribeService';
+import { isAxiosError } from 'axios';
 import Image from 'next/image'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify';
-import z, { ZodError } from "zod";
 
 
 const Hero: React.FC = () => {
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState<string>("");
+    const [error, setError] = useState<string | null>(null);
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(null);
 
-        const result = emailSchema.safeParse({ email })
-        console.log(result, 'Result');
-        
-        if (!result.success) {
-            const msg = result.error.errors[0]?.message || "Invalid input";
-            toast.error(msg);
-            console.log("Validation error:", msg);
-           
+        const validationError = validateEmail(email);
+        if (validationError) {
+            setError(validationError);
+            setTimeout(() => setError(''), 3000)
+            toast.error(validationError);
+            console.log("Validation error:", validationError);
             return;
         }
 
         try {
             const res = await subscribeService.subscribe(email);
             toast.success(res.msg)
-
-        } catch (error) {
-            toast.error("Something went wrong.");
-            console.log(error);
+            setEmail("");
+        } catch (error: unknown) {
+            if (isAxiosError(error)) {
+                if (error.response) {
+                    const { msg } = error?.response?.data;
+                    setError(msg);
+                    setTimeout(() => setError(""), 3000)
+                    toast.error(msg);
+                } else {
+                    toast.error('Something went wrong.');
+                }
+            }
+            console.error('Subscription error:', error);
         }
-
     }
 
     return (
@@ -39,11 +49,12 @@ const Hero: React.FC = () => {
             <section className=' max-w-full py-28 lg:py-0'>
 
                 {/* Subscription */}
-                <form onSubmit={handleSubmit} className='flex flex-col md:flex-row gap-2 py-5'>
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder='Enter your email' className='bg-white placeholder:text-gray-400 px-2 py-2 md:w-full max-w-md' />
-                    <button type='submit' className='px-5 py-2 border border-solid border-black hover:bg-white cursor-pointer transition-all duration-300 uppercase'>Subscribe</button>
-                </form>
-
+                <SubscribeForm
+                    handleSubmit={handleSubmit}
+                    email={email}
+                    setEmail={setEmail}
+                    error={error}
+                />
                 {/* Latest Blog */}
                 <header className='text-start sm:py-10 py-5'>
                     <h1 className='text-3xl sm:text-4xl font-medium'>Latest Blogs</h1>

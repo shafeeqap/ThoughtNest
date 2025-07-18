@@ -7,8 +7,9 @@ export async function POST(req: Request) {
   try {
     await connectDB();
 
-    const email = await req.json();
+    const {email} = await req.json();
     const existing = await SubscribeModel.findOne({ email });
+    
     if (existing) {
       return NextResponse.json({ msg: "Already subscribed" }, { status: 409 });
     }

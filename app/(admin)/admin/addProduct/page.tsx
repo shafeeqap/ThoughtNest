@@ -1,7 +1,7 @@
 'use client';
 import TiptapEditor from '@/Components/Tiptap/Editor';
 import { assets } from '@/data/assets';
-import axios from 'axios';
+import { blogService } from '@/services/blogService';
 import Image from 'next/image';
 import React, { useState } from 'react'
 import { toast } from 'react-toastify';
@@ -46,7 +46,7 @@ const Page = () => {
     }
 
     try {
-      const response = await axios.post('/api/blog', formData);
+      const response = await blogService.addBlog(formData)
       if (response.data.success) {
         toast.success('Your blog is added')
         console.log('Blog posted successfully!', response.data);
