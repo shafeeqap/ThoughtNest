@@ -8,7 +8,7 @@ export interface BlogItemType {
   category: Category;
   image: string;
   description: string;
-  date: number | number;
+  date: number ;
   author: string;
   authorImg: string;
 }

@@ -58,7 +58,7 @@ export async function DELETE(
     );
   } catch (error) {
     return NextResponse.json(
-      { msg: "Error fetching blog by ID", error },
+      { msg: "Error delete blog by ID", error },
       { status: 500 }
     );
   }

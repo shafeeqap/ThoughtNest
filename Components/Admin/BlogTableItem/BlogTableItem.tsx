@@ -1,4 +1,5 @@
 import { assets } from '@/data/assets'
+import { formatDate } from '@/lib/utils/formatDate';
 import { BlogItemType } from '@/types/blog';
 import Image from 'next/image'
 import React from 'react'
@@ -10,13 +11,9 @@ interface IProps extends BlogItemType {
     counter: number;
 }
 
-const BlogTableItem: React.FC<IProps> = ({ authorImg, title, author, date, category, image, _id, onDelete, counter }) => {
-    const formattedDate = new Date(date).toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-    })
+const BlogTableItem: React.FC<IProps> = ({ _id, authorImg, title, author, date, category, image, onDelete, counter }) => {
 
+    const formattedDate = formatDate(date)
 
     return (
         <>
@@ -41,7 +38,11 @@ const BlogTableItem: React.FC<IProps> = ({ authorImg, title, author, date, categ
                     <Image src={image} width={180} height={180} alt='blogImg' className='w-14 h-16  object-cover border border-black' />
                 </td>
                 <td className='px-6 py-4 cursor-pointer sm:flex justify-around items-center '>
-                    <IoTrashBinOutline onClick={() => onDelete(_id)} size={20} className='text-black hover:text-red-500' />
+                    <IoTrashBinOutline
+                        onClick={() => onDelete(_id)}
+                        size={20}
+                        className='text-black hover:text-red-500'
+                    />
                 </td>
             </tr>
         </>
