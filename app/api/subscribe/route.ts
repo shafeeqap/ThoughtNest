@@ -31,7 +31,7 @@ export async function GET(req: Request) {
   try {
     await connectDB();
 
-    const subscription = await SubscribeModel.find();
+    const subscription = await SubscribeModel.find({});
     
     return NextResponse.json(
       { msg: "Subscription", subscription },

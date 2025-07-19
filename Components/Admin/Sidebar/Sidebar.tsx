@@ -21,7 +21,11 @@ const Sidebar: React.FC<SidebarProps> = ({ openSidebar, setOpenSidebar }) => {
                         <h1 className='text-xl font-medium  transition-all delay-500'>ThoughtNest</h1>
                     </div>
                     <div>
-                        <RiMenuUnfold3Fill size={32} onClick={() => setOpenSidebar(!openSidebar)} className={`duration-500 cursor-pointer transition-transform ${openSidebar && "rotate-180"}`} />
+                        <RiMenuUnfold3Fill
+                            size={32}
+                            onClick={() => setOpenSidebar(!openSidebar)}
+                            className={`duration-500 cursor-pointer transition-transform ${openSidebar && "rotate-180"}`}
+                        />
                     </div>
                 </div>
                 {/* Body */}

@@ -1,5 +1,6 @@
 import { assets } from '@/data/assets'
 import { formatDate } from '@/lib/utils/formatDate';
+import { truncateText } from '@/lib/utils/truncateText';
 import { BlogItemType } from '@/types/blog';
 import Image from 'next/image'
 import React from 'react'
@@ -13,7 +14,8 @@ interface IProps extends BlogItemType {
 
 const BlogTableItem: React.FC<IProps> = ({ _id, authorImg, title, author, date, category, image, onDelete, counter }) => {
 
-    const formattedDate = formatDate(date)
+    const formattedDate = formatDate(date);
+    const truncatedText = truncateText(title);
 
     return (
         <>
@@ -26,7 +28,7 @@ const BlogTableItem: React.FC<IProps> = ({ _id, authorImg, title, author, date, 
                     <p>{author ? author : "No author"}</p>
                 </th>
                 <td className='px-6 py-4'>
-                    {title || 'No title'}
+                    {title ? truncatedText : 'No title'}
                 </td>
                 <td className='px-6 py-4'>
                     {date ? formattedDate : 'N/A'}

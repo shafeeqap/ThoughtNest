@@ -36,10 +36,10 @@ const Page = () => {
 
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16'>
-      <h1>All Subscription</h1>
+      <h1 className='font-semibold'>All Subscription</h1>
       <div className='relative max-w-[600px] h-[80vh] overflow-x-auto mt-4 border border-gray-400 scrollbar-hide'>
         <table className='w-full text-sm text-gray-500'>
-          <thead className='text-xs text-left text-gray-700 uppercase bg-gray-50 border-b'>
+          <thead className='text-xs text-left text-white uppercase bg-[#626a7a]'>
             <tr>
               <th scope='col' className='px-6 py-3'>
                 No
@@ -68,7 +68,7 @@ const Page = () => {
               <>
                 {subscribe.map((item, index) => (
                   <SubsTableItem
-                    key={item._id}
+                    key={index}
                     {...item}
                     counter={index + 1}
                     onDelete={handleDelete}

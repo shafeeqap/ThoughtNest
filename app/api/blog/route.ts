@@ -1,10 +1,8 @@
 import { connectDB } from "@/lib/config/db";
 import BlogModel from "@/lib/models/BlogModel";
+import { sanitizeHtml } from "@/lib/utils/sanitize/sanitizeHtmlServer";
 import { writeFile } from "fs/promises";
 import { NextResponse } from "next/server";
-
-
-
 
 // =====> API Endpoint to get all blogs <=====
 export async function GET(req: Request) {
@@ -36,6 +34,7 @@ export async function POST(req: Request) {
       "authorImg",
     ];
 
+    // ================= helper function ================== //
     const missingFields = requiredFields.filter(
       (field) => !formData.get(field)
     );
@@ -48,6 +47,14 @@ export async function POST(req: Request) {
 
     const image = formData.get("image") as File;
     let fileName = "";
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(image.type)) {
+      return NextResponse.json(
+        { error: "Invalid image type. Only JPEG, PNG, WEBP allowed." },
+        { status: 400 }
+      );
+    }
 
     // Only process if image exists and is valid
     if (image && typeof image !== "string" && image.size > 0) {
@@ -73,9 +80,20 @@ export async function POST(req: Request) {
       fileName = "default-image.jpg";
     }
 
+    const description = formData.get("description") as string;
+    const safeDescription = sanitizeHtml(description);
+    console.log("===> Sanitized Description:", safeDescription);
+
+    if (safeDescription.length > 10000) {
+      return NextResponse.json(
+        { error: "Description is too long" },
+        { status: 400 }
+      );
+    }
+
     const blogData = {
       title: formData.get("title") as string,
-      description: formData.get("description") as string,
+      description: safeDescription,
       category: formData.get("category") as string,
       author: formData.get("author") as string,
       image: `/${fileName}`,
@@ -86,7 +104,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, msg: "Blog Added" });
   } catch (error) {
-    console.error("Error uploading blog:", error);
+    console.error("Error uploading blog:", (error as Error).message);
     return NextResponse.json(
       { error: "Failed to upload blog" },
       { status: 500 }

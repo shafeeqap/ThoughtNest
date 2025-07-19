@@ -1,3 +1,4 @@
+import { sanitizeHtml } from '@/lib/utils/sanitize/sanitizeHtmlServer';
 import { blogService } from '@/services/blogService';
 import Image from 'next/image';
 import { FaFacebook, FaInstagram, FaLinkedin, FaWhatsapp } from 'react-icons/fa';
@@ -6,6 +7,7 @@ import { FaFacebook, FaInstagram, FaLinkedin, FaWhatsapp } from 'react-icons/fa'
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const blog = await blogService.fetchBlogById(id)
+  const safeHtml = sanitizeHtml(blog.description)
 
   if (!blog) {
     return <div>
@@ -19,7 +21,13 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         {/* Blog Heading */}
         <div className='text-center my-24'>
           <h1 className='text-2xl sm:text-5xl font-semibold max-w-[700px] mx-auto'>{blog?.title}</h1>
-          <Image src={blog.authorImg} width={60} height={60} alt='author_image' className='mx-auto mt-6 border border-solid border-white rounded-full' />
+          <Image
+            src={blog.authorImg}
+            width={60}
+            height={60}
+            alt='author_image'
+            className='mx-auto mt-6 border border-solid border-white rounded-full'
+          />
           <p className='mt-1 pb-2 text-lg max-w-[740px] mx-auto'>{blog.author}</p>
         </div>
       </div>
@@ -31,9 +39,10 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         ) : (
           <p>No image available</p>
         )}
-        <h1 className='my-8 text-[26px] font-semibold'>Introduction:</h1>
-        <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{__html:blog.description}} />
 
+        <div className="prose prose-lg max-w-none"
+          dangerouslySetInnerHTML={{ __html: blog.description }}
+        />
         <div className='my-24'>
           <p className='text-black font-semibold my-4'>Share this article on social media</p>
           <div className='flex gap-1'>

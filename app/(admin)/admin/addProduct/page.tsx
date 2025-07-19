@@ -7,6 +7,7 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify';
 
 
+
 const Page = () => {
   const [image, setImage] = useState<File | null>(null);
   const [data, setData] = useState({
@@ -15,7 +16,8 @@ const Page = () => {
     category: 'Startup',
     author: 'Alex Bennett',
     authorImg: '/author_img.png'
-  })
+  });
+  const [validatedMessage, setValidatedMessage] = useState("");
 
   const onChangHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -31,7 +33,12 @@ const Page = () => {
     e.preventDefault();
 
     if (!image) {
-      alert('Please upload a thumbnail image.');
+      toast.warning('Please upload a thumbnail image.');
+      return;
+    } else if(data.title.trim()){
+
+    }else if (data.description.trim() === "") {
+      toast.warning("Input cannot be empty");
       return;
     }
 
@@ -47,9 +54,9 @@ const Page = () => {
 
     try {
       const response = await blogService.addBlog(formData)
-      if (response.data.success) {
+      if (response.success) {
         toast.success('Your blog is added')
-        console.log('Blog posted successfully!', response.data);
+        console.log('Blog posted successfully!', response.success);
         setData({
           title: '',
           description: '',
@@ -73,7 +80,12 @@ const Page = () => {
       <form onSubmit={onSubmitHandler} className='py-10 pt-5 px-5 sm:pt-12 sm:pl-16 absolute '>
         <p className='text-xl'>Upload thumbnail</p>
         <label htmlFor="image">
-          <Image className='mt-4 cursor-pointer' src={!image ? assets.upload_area : URL.createObjectURL(image)} width={140} height={70} alt='upload_image' />
+          <Image className='mt-4 cursor-pointer'
+            src={!image ? assets.upload_area : URL.createObjectURL(image)}
+            width={140}
+            height={70}
+            alt='upload_image'
+          />
         </label>
         <input onChange={(e) => {
           if (e.target.files && e.target.files[0]) {
@@ -82,19 +94,39 @@ const Page = () => {
         }}
           type="file" id='image' hidden required />
         <p className='text-xl mt-4'>Blog Title</p>
-        <input onChange={onChangHandler} className='w-full sm:w-[500px] mt-4 px-4 py-2 border' name='title' value={data.title} type="text" placeholder='Type here' required />
-        
+        <input
+          onChange={onChangHandler}
+          name='title'
+          value={data.title}
+          type="text"
+          placeholder='Type here'
+          required
+          className='w-full sm:w-[500px] mt-4 px-4 py-2 border'
+        />
+
         <p className='text-xl mt-4'>Blog Description</p>
-        <TiptapEditor content={data.description} onChange={(value) => setData(prev => ({ ...prev, description: value }))} />
-        
+        <TiptapEditor
+          content={data.description}
+          onChange={(value) => setData(prev => ({ ...prev, description: value }))}
+        />
+
         <p className='text-xl mt-4'>Blog Category</p>
-        <select onChange={onChangHandler} name="category" value={data.category} className='w-40 mt-4 px-4 py-3 border text-gray-500'>
+        <select
+          onChange={onChangHandler}
+          name="category"
+          value={data.category}
+          className='w-40 mt-4 px-4 py-3 border text-gray-500'
+        >
           <option value="Startup">Startup</option>
           <option value="Technology">Technology</option>
           <option value="Lifestyle">Lifestyle</option>
         </select>
         <br />
-        <button type='submit' className='mt-8 w-40 h-12 bg-[#263043] text-white cursor-pointer hover:bg-[#37455f]'>Add</button>
+        <button
+          type='submit'
+          className='mt-8 w-40 h-12 bg-[#263043] text-white cursor-pointer hover:bg-[#37455f]'>
+          Add
+        </button>
       </form>
     </>
   )

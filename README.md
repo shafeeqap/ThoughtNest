@@ -39,3 +39,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 Tools & Packages Used:
 ----------------------
 1. zod :- form data validation
+2. Tiptap :- rich text editor
+3. dompurify :- to prevent XSS (Cross-Site Scripting) attacks.
+4. jsdom :- for DOM support during server-side rendering (Next.js SSR)
+5. 
