@@ -1,6 +1,6 @@
 import { connectDB } from "@/lib/config/db";
 import BlogModel from "@/lib/models/BlogModel";
-import { sanitizeHtml } from "@/lib/utils/sanitize/sanitizeHtmlServer";
+import { sanitizeHtml } from "@/lib/utils/sanitize/sanitizeHtmlClient";
 import { writeFile } from "fs/promises";
 import { NextResponse } from "next/server";
 

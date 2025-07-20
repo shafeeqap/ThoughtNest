@@ -1,6 +1,7 @@
 'use client';
 import TiptapEditor from '@/Components/Tiptap/Editor';
 import { assets } from '@/data/assets';
+import { validateBlog } from '@/features/bloge/validateBlog';
 import { blogService } from '@/services/blogService';
 import Image from 'next/image';
 import React, { useState } from 'react'
@@ -17,7 +18,7 @@ const Page = () => {
     author: 'Alex Bennett',
     authorImg: '/author_img.png'
   });
-  const [validatedMessage, setValidatedMessage] = useState("");
+
 
   const onChangHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -28,22 +29,23 @@ const Page = () => {
     })
   }
 
-
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!image) {
-      toast.warning('Please upload a thumbnail image.');
-      return;
-    } else if(data.title.trim()){
-
-    }else if (data.description.trim() === "") {
-      toast.warning("Input cannot be empty");
+    const validationError = validateBlog(data.title, data.description, image);
+    if (validationError) {
+      if (validationError.title) toast.warning(validationError.title);
+      if (validationError.description) toast.warning(validationError.description);
+      if (validationError.image) toast.warning(validationError.image);
       return;
     }
 
-    const formData = new FormData();
+    // if (!image) {
+    //   toast.warning('Please upload a thumbnail image.');
+    //   return;
+    // }
 
+    const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       formData.append(key, value);
     })
@@ -77,7 +79,7 @@ const Page = () => {
 
   return (
     <>
-      <form onSubmit={onSubmitHandler} className='py-10 pt-5 px-5 sm:pt-12 sm:pl-16 absolute '>
+      <form onSubmit={onSubmitHandler} className='py-10 pt-5 px-5 sm:pt-12 sm:pl-16 absolute w-[78%] md:w-2xl'>
         <p className='text-xl'>Upload thumbnail</p>
         <label htmlFor="image">
           <Image className='mt-4 cursor-pointer'

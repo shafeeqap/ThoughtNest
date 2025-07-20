@@ -99,7 +99,7 @@ const TiptapEditor = ({ content, onChange }: Props) => {
     }, [content, editor])
 
     return (
-        <div className='border p-4 my-5 sm:max-w-full'>
+        <div className='border p-4 my-5'>
             {/* Toolbar */}
             {editor && (
                 <div className='mb-2 grid grid-cols-4 sm:flex gap-2 border-b pb-2'>
