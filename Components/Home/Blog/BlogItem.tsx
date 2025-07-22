@@ -6,8 +6,6 @@ import Link from 'next/link'
 import { sanitizeHtml } from '@/lib/utils/sanitize/sanitizeHtmlClient'
 
 
-
-
 const BlogItem: React.FC<BlogItemType> = ({ title, description, category, image, _id }) => {
     const sanitizedContent = sanitizeHtml(description)
 

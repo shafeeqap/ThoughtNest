@@ -7,7 +7,7 @@ import { FaUserCircle } from "react-icons/fa";
 
 export const navLinks: NavLinksType[] = [
   { id: 1, url: "/admin", label: "Dashboard", icon: MdOutlineDashboard },
-  { id: 2, url: "/admin/addProduct", label: "AddBlog", icon: IoMdAddCircleOutline },
+  { id: 2, url: "/admin/addBlog", label: "AddBlog", icon: IoMdAddCircleOutline },
   { id: 3, url: "/admin/blogList", label: "BlogList", icon: TbReportSearch },
   { id: 4, url: "/admin/subscriptions", label: "Subscriptions", icon: MdUnsubscribe },
   { id: 5, url: "#", label: "Category", icon: IoLogoBuffer },

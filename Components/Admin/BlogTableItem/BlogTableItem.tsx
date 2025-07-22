@@ -1,6 +1,6 @@
 import { assets } from '@/data/assets'
-import { formatDate } from '@/lib/utils/formatDate';
-import { truncateText } from '@/lib/utils/truncateText';
+import { formatDate } from '@/lib/utils/helpers/formatDate';
+import { truncateText } from '@/lib/utils/helpers/truncateText';
 import { BlogItemType } from '@/types/blog';
 import Image from 'next/image'
 import React from 'react'

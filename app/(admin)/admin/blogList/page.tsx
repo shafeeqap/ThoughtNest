@@ -1,5 +1,6 @@
 'use client';
 import BlogTableItem from '@/Components/Admin/BlogTableItem/BlogTableItem';
+import Pagination from '@/Components/Pagination/Pagination';
 import Spinner from '@/Components/Spinner/Spinner';
 import { blogService } from '@/services/blogService';
 import { BlogItemType } from '@/types/blog';
@@ -9,16 +10,23 @@ import { toast } from 'react-toastify';
 const Page = () => {
   const [blogs, setBlogs] = useState<BlogItemType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [numberOfPages, setNumberOfPages] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const recordsPerPage = 5;
+  const pagesToShow = 5
+
 
   useEffect(() => {
     const getData = async () => {
-      const blogData = await blogService.fetchAllBlog()
-      setBlogs(blogData)
+      const blogData = await blogService.fetchAllBlog();
+      const paginatedBlogData = blogData.slice((currentPage - 1) * recordsPerPage, currentPage * recordsPerPage)
+      setBlogs(paginatedBlogData)
+      setNumberOfPages(Math.ceil(blogData.length / recordsPerPage))
       setIsLoading(false)
     }
 
     getData();
-  }, [])
+  }, [currentPage])
 
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this blog?")) {
@@ -32,7 +40,6 @@ const Page = () => {
       }
     }
   }
-
 
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16'>
@@ -66,7 +73,7 @@ const Page = () => {
                     key={index}
                     {...item}
                     onDelete={handleDelete}
-                    counter={index + 1}
+                    counter={(currentPage - 1) * recordsPerPage + index + 1}
                   />
                 ))}
               </>
@@ -74,6 +81,14 @@ const Page = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Pagination */}
+      <Pagination
+        currentPage={currentPage}
+        numberOfPages={numberOfPages}
+        pagesToShow={pagesToShow}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   )
 }

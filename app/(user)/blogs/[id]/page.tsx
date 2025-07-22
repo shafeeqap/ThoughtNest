@@ -40,8 +40,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           <p>No image available</p>
         )}
 
-        <div className="prose prose-lg max-w-none"
-          dangerouslySetInnerHTML={{ __html: blog.description }}
+        <div className="content prose prose-lg max-w-none"
+          dangerouslySetInnerHTML={{ __html: safeHtml }}
         />
         <div className='my-24'>
           <p className='text-black font-semibold my-4'>Share this article on social media</p>

@@ -24,7 +24,7 @@ const Page = () => {
     const { name, value } = e.target;
     setData((prevData) => {
       const updateData = { ...prevData, [name]: value };
-      console.log(updateData);
+      console.log(updateData, "Update Data");
       return updateData
     })
   }
@@ -36,14 +36,12 @@ const Page = () => {
     if (validationError) {
       if (validationError.title) toast.warning(validationError.title);
       if (validationError.description) toast.warning(validationError.description);
-      if (validationError.image) toast.warning(validationError.image);
+      if (validationError.image) {
+        validationError.image.forEach((msg) => toast.warning(msg))
+      }
+
       return;
     }
-
-    // if (!image) {
-    //   toast.warning('Please upload a thumbnail image.');
-    //   return;
-    // }
 
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
@@ -94,16 +92,20 @@ const Page = () => {
             setImage(e.target.files[0])
           }
         }}
-          type="file" id='image' hidden required />
+          type="file"
+          id='image'
+          hidden
+        />
+
         <p className='text-xl mt-4'>Blog Title</p>
+
         <input
           onChange={onChangHandler}
           name='title'
           value={data.title}
           type="text"
           placeholder='Type here'
-          required
-          className='w-full sm:w-[500px] mt-4 px-4 py-2 border'
+          className='w-full  mt-4 px-4 py-2 border'
         />
 
         <p className='text-xl mt-4'>Blog Description</p>

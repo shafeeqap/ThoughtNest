@@ -34,8 +34,7 @@ export const blogSchema = z.object({
   }),
 
   image: z
-    .any()
-    .refine((file) => file instanceof File, {
+    .custom<File>((file) => file instanceof File, {
       message: "Image is required",
     })
     .refine((file) => file && file.size <= MAX_FILE_SIZE, {

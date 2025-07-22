@@ -8,12 +8,26 @@ export const validateBlog = (
   const result = blogSchema.safeParse({ title, description, image });
 
   if (!result.success) {
-    const errors: Record<string, string> = {};
+    const errors: { title?: string; description?: string; image?: string[] } = {};
 
     result.error.issues.forEach((issue) => {
       const field = issue.path[0];
-      if (typeof field === "string") {
-        errors[field] = issue.message;
+
+      if (typeof field !== "string") return;
+
+      if (field === "title") {
+        errors.title = issue.message;
+      }
+
+      if (field === "description") {
+        errors.description = issue.message;
+      }
+
+      if (field === "image" && !errors.image) {
+        if (!errors.image) {
+          errors.image = [];
+        }
+        errors.image.push(issue.message)
       }
     });
 

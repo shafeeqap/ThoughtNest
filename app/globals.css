@@ -3,6 +3,19 @@
 
 
 
+.content p {
+    margin-bottom: 1rem;
+}
+.content br + br {
+    display: block;
+    content: '';
+    margin-top: 1rem;
+}
+
+.content {
+    white-space: pre-line;
+}
+  
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }

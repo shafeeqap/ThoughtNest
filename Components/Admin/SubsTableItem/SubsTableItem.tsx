@@ -1,4 +1,4 @@
-import { formatDate } from '@/lib/utils/formatDate';
+import { formatDate } from '@/lib/utils/helpers/formatDate';
 import { SubscriptionType } from '@/types/subscription';
 import React from 'react'
 import { IoTrashBinOutline } from 'react-icons/io5'
