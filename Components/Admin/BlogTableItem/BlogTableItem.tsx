@@ -1,9 +1,10 @@
+import ConfirmDeleteModal from '@/Components/Modal/ConfirmDeleteModal';
 import { assets } from '@/data/assets'
 import { formatDate } from '@/lib/utils/helpers/formatDate';
 import { truncateText } from '@/lib/utils/helpers/truncateText';
 import { BlogItemType } from '@/types/blog';
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
 import { IoTrashBinOutline } from 'react-icons/io5';
 
 
@@ -12,8 +13,18 @@ interface IProps extends BlogItemType {
     counter: number;
 }
 
-const BlogTableItem: React.FC<IProps> = ({ _id, authorImg, title, author, date, category, image, onDelete, counter }) => {
-
+const BlogTableItem: React.FC<IProps> = ({
+    _id,
+    authorImg,
+    title,
+    author,
+    date,
+    category,
+    image,
+    onDelete,
+    counter
+}) => {
+    const [showModal, setShowModal] = useState<boolean>(false);
     const formattedDate = formatDate(date);
     const truncatedText = truncateText(title);
 
@@ -39,12 +50,20 @@ const BlogTableItem: React.FC<IProps> = ({ _id, authorImg, title, author, date, 
                 <td className='px-6 py-4'>
                     <Image src={image} width={180} height={180} alt='blogImg' className='w-14 h-16  object-cover border border-black' />
                 </td>
-                <td className='px-6 py-4 cursor-pointer sm:flex justify-around items-center '>
+                <td className='px-6 py-4 sm:flex justify-around items-center '>
+
                     <IoTrashBinOutline
-                        onClick={() => onDelete(_id)}
+                        onClick={() => setShowModal(true)}
                         size={20}
-                        className='text-black hover:text-red-500'
+                        className='text-black hover:text-red-500 cursor-pointer'
                     />
+                    {showModal && (
+                        <ConfirmDeleteModal
+                            isOpen={showModal}
+                            onClose={() => setShowModal(false)}
+                            onConfirm={() => onDelete(_id)}
+                        />
+                    )}
                 </td>
             </tr>
         </>

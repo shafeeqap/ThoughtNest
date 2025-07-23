@@ -29,15 +29,13 @@ const Page = () => {
   }, [currentPage])
 
   const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this blog?")) {
-      try {
-        const res = await blogService.deleteBlog(id);
-        toast.success(res.msg);
-        setBlogs(prev => prev.filter(blog => blog._id !== id))
-      } catch (error) {
-        toast.error("Failed to delete blog");
-        console.error(error);
-      }
+    try {
+      const res = await blogService.deleteBlog(id);
+      toast.success(res.msg);
+      setBlogs(prev => prev.filter(blog => blog._id !== id))
+    } catch (error) {
+      toast.error("Failed to delete blog");
+      console.error(error);
     }
   }
 
