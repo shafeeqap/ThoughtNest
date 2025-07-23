@@ -6,12 +6,14 @@ import fs from "fs/promises";
 // =====> API Endpoint to get blogs by id <=====
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
 
-    const blog = await BlogModel.findById(params.id);
+    const { id } = await context.params;
+
+    const blog = await BlogModel.findById(id);
 
     if (!blog) {
       return NextResponse.json({ msg: "Blog not found" }, { status: 404 });
@@ -30,12 +32,14 @@ export async function GET(
 // =====> API Endpoint to delete blogs <=====
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
 
-    const blog = await BlogModel.findById(params.id);
+    const { id } = await context.params;
+
+    const blog = await BlogModel.findById(id);
 
     if (!blog) {
       return NextResponse.json({ msg: "Blog not found" }, { status: 404 });
@@ -50,7 +54,7 @@ export async function DELETE(
       }
     }
 
-    await BlogModel.findByIdAndDelete(params.id);
+    await BlogModel.findByIdAndDelete(id);
 
     return NextResponse.json(
       { msg: "Blog deleted successfully" },

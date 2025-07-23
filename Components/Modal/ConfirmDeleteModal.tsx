@@ -28,7 +28,7 @@ const ConfirmDeleteModal: React.FC<ConfirmModalProps> = ({
                     <p className='text-center'>{message}</p>
                 </div>
                 {/* Modal Footer */}
-                <div className='sm:w-full flex justify-end gap-5 sm:pr-5 py-2 text-white '>
+                <div className='sm:w-full flex justify-around gap-5 sm:pr-5 py-2 text-white'>
                     <button
                         onClick={onClose}
                         className='bg-blue-500 px-7 py-2 rounded cursor-pointer uppercase hover:bg-blue-600'

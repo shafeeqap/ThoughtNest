@@ -2,8 +2,7 @@ import { BlogItemType } from "@/types/blog";
 import axios from "axios";
 
 
-const baseURL =
-  typeof window === "undefined" ? process.env.NEXT_PUBLIC_BASE_URL : "";
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
 
 const axiosInstance = axios.create({ baseURL });
 

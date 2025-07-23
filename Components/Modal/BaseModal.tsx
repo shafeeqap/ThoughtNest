@@ -1,4 +1,3 @@
-import React from 'react'
 
 interface ModalProps {
     isOpen: boolean;
@@ -8,10 +7,9 @@ interface ModalProps {
 
 const BaseModal: React.FC<ModalProps> = ({isOpen, onClose, children }) => {
     if (!isOpen) return;
-
+ 
     return (
         <div className='fixed inset-0 flex justify-center items-center'>
-
             {/* Overlay */}
             <div
                 onClick={onClose}

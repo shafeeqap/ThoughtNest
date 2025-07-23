@@ -5,17 +5,19 @@ import { NextResponse } from "next/server";
 // =====> API Endpoint to delete blogs <=====
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
 
-    const subscribe = await SubscribeModel.findById(params.id);
+    const { id } = await context.params;
+
+    const subscribe = await SubscribeModel.findById(id);
     if (!subscribe) {
       return NextResponse.json({ msg: "Subscribe not found" }, { status: 404 });
     }
 
-    await SubscribeModel.findByIdAndDelete(params.id);
+    await SubscribeModel.findByIdAndDelete(id);
 
     return NextResponse.json(
       { msg: "Subscribe deleted successfully" },

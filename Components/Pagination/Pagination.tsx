@@ -30,7 +30,7 @@ const Pagination: React.FC<PaginationPropsType> = ({ currentPage, pagesToShow, n
     return (
         <>
             {/* Pagination */}
-            <div className='sm:max-w-[850px] mt-3 py-2 px-5 flex justify-center sm:gap-2 border border-gray-300'>
+            <div className='mt-3 py-2 px-5 flex justify-center sm:gap-2 border border-gray-300'>
                 <button
                     aria-label="Go to previous page"
                     onClick={handlePrevious}

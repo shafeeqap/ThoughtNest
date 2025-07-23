@@ -1,4 +1,4 @@
-import ConfirmDeleteModal from '@/Components/Modal/ConfirmDeleteModal';
+import { ConfirmDeleteModal } from '@/Components/Modal';
 import { assets } from '@/data/assets'
 import { formatDate } from '@/lib/utils/helpers/formatDate';
 import { truncateText } from '@/lib/utils/helpers/truncateText';
@@ -30,12 +30,17 @@ const BlogTableItem: React.FC<IProps> = ({
 
     return (
         <>
-            <tr className='bg-white border-b'>
+            <tr className='bg-gray-100 border-b'>
                 <td className='px-6 py-4'>
                     {counter}
                 </td>
                 <th scope='row' className='items-center gap-3 hidden sm:flex px-6 py-4 font-medium text-gray-900 whitespace-nowrap'>
-                    <Image width={40} height={40} src={authorImg || assets.profile_icon} alt='author_img' />
+                    <Image
+                        width={40}
+                        height={40}
+                        src={authorImg || assets.profile_icon}
+                        alt='author_img'
+                    />
                     <p>{author ? author : "No author"}</p>
                 </th>
                 <td className='px-6 py-4'>
@@ -48,7 +53,13 @@ const BlogTableItem: React.FC<IProps> = ({
                     {category}
                 </td>
                 <td className='px-6 py-4'>
-                    <Image src={image} width={180} height={180} alt='blogImg' className='w-14 h-16  object-cover border border-black' />
+                    <Image
+                        src={image}
+                        width={180}
+                        height={180}
+                        alt='blogImg'
+                        className='w-14 h-12 object-cover border border-black'
+                    />
                 </td>
                 <td className='px-6 py-4 sm:flex justify-around items-center '>
 
@@ -67,7 +78,6 @@ const BlogTableItem: React.FC<IProps> = ({
                 </td>
             </tr>
         </>
-
     )
 }
 
