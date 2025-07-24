@@ -17,6 +17,7 @@ const ConfirmDeleteModal: React.FC<ConfirmModalProps> = ({
     title = 'Are you sure?',
     message = 'Do you really want to delete these records? This process cannot be undone.'
 }) => {
+
     return (
         <>
             <BaseModal isOpen={isOpen} onClose={onClose}>

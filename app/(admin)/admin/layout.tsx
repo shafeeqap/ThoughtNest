@@ -7,6 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
     const [openSidebar, setOpenSidebar] = useState(false);
+
+
     return (
         <div>
             <ToastContainer theme="dark" position="top-right" autoClose={3000} />
