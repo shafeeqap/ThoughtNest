@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import BlogItem from './BlogItem'
 import { BlogItemType, Category } from '@/types/blog'
 import { blogService } from '@/services/blogService'
-import Spinner from '../../Spinner/Spinner'
+import Blog from './Blog'
 
 const categories: Category[] = ["All", "Technology", "Startup", "Lifestyle"]
 
@@ -28,25 +27,22 @@ const BlogList: React.FC = () => {
         <>
             {/* Category Button */}
             <div className='flex justify-center gap-2 sm:gap-6 my-10'>
-                {categories.map((category, index) => (
-                    <button
+                {categories.map((category, index) => {
+                    return <button
                         key={index}
                         onClick={() => setCategoryMenu(category)}
-                        className={`${categoryMenu === category ? "bg-black text-white py-1 px-2 cursor-pointer" : "cursor-pointer hover:border border-solid border-gray-500 px-2"} `}>{category}</button>
-                ))}
+                        className={`${categoryMenu === category ? "bg-black text-white py-1 px-2 cursor-pointer" : "cursor-pointer hover:border border-solid border-gray-500 px-2"} `}>
+                        {category}
+                    </button>
+                })}
             </div>
 
-            {/* Loading and Blog List */}
-            {isLoading ? (
-                <Spinner />
-            ) : (
-                < div className='flex flex-wrap justify-around gap-1 gap-y-10 mb-16 xl:mx-24'>
-                    {filteredBlogs.map((item, index) => (
-                        <BlogItem key={index} {...item} />
-                    ))}
-                </div >
-            )}
-
+            {/* Blog Section */}
+            <Blog
+                filteredBlogs={filteredBlogs}
+                isLoading={isLoading}
+                categories={categories}
+            />
         </>
     )
 }

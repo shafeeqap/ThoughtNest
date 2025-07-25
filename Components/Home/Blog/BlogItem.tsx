@@ -10,10 +10,10 @@ const BlogItem: React.FC<BlogItemType> = ({ title, description, category, image,
     const sanitizedContent = sanitizeHtml(description)
 
     return (
-        <div className='max-w-[330px] sm:max-w-[300px] bg-white border border-black transition-all hover:scale-105 duration-500'>
+        <div className='max-w-full md:max-w-[330px] lg:max-w-[350px] bg-white border border-gray-300 transform-gpu will-change-transform hover:scale-105 duration-500'>
             {/* Blog Image */}
             <Link href={`/blogs/${_id}`}>
-                <Image src={image} alt='blogImage' width={400} height={400} className='border-b border-black' />
+                <Image src={image} alt={title} width={400} height={400} className='h-72 object-cover' />
             </Link>
 
             <p className='ml-5 mt-5 px-1 inline-block bg-black text-white text-sm'>{category}</p>
@@ -24,7 +24,7 @@ const BlogItem: React.FC<BlogItemType> = ({ title, description, category, image,
                 />
 
                 {/* Read more link */}
-                <Link href={`/blogs/${_id}`} className='inline-flex items-center py-2 font-semibold text-center gap-2 cursor-pointer'>
+                <Link href={`/blogs/${_id}`} className='inline-flex items-center py-2 font-semibold text-center gap-2 cursor-pointer hover:text-blue-500'>
                     Read more <FaArrowRight />
                 </Link>
             </div>
@@ -32,4 +32,4 @@ const BlogItem: React.FC<BlogItemType> = ({ title, description, category, image,
     )
 }
 
-export default BlogItem
+export default React.memo(BlogItem);

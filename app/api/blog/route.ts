@@ -7,12 +7,18 @@ import { NextResponse } from "next/server";
 
 // =====> API Endpoint to get all blogs <=====
 export async function GET(req: Request) {
-  // const blogId = await req.nextUrl.searchParams.get('id')
   try {
+    const category = new URL(req.url).searchParams.get("category");
+    console.log("Category from query:", category);
     await connectDB();
 
-    const blogs = await BlogModel.find({});
-    return NextResponse.json({ msg: "Blogs", blogs });
+    const query = category && category !== "All" ? { category } : {};
+    console.log("Query passed to MongoDB:", query);
+
+    const blogs = await BlogModel.find(query);
+
+    return NextResponse.json({ blogs });
+
   } catch (error) {
     console.error("GET /api/blog error:", error);
     return NextResponse.json({ msg: "Error fetching blogs" }, { status: 500 });
@@ -27,7 +33,7 @@ export async function POST(req: Request) {
     const formData = await req.formData();
 
     const image = formData.get("image") as File;
-    
+
     let fileName = "";
     const timestamp = Date.now();
 

@@ -54,7 +54,6 @@ const Page = () => {
     try {
       const res = await subscribeService.deleteSubscribe(id);
       toast.success(res.msg);
-
       setSubscribe(prev => {
         const updatedData = prev.filter(subs => subs._id !== id)
         const newTotalPages = Math.ceil(updatedData.length / recordsPerPage)
