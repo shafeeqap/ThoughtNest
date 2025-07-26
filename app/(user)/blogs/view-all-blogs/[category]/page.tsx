@@ -1,48 +1,27 @@
-import { sanitizeHtml } from "@/lib/utils/sanitize/sanitizeHtmlServer";
 import { blogService } from "@/services/blogService";
-import Image from "next/image";
-import Link from "next/link";
-import { FaArrowRight } from "react-icons/fa";
+import BlogListClient from "./BlogListClient";
 
-export default async function ViewAllBlogs({ params }: { params: { category: string } }) {
+export default async function ViewAllBlogs({ params }: { params: Promise<{ category: string }> }) {
 
-    const { category } = params;
-    console.log(category, "Category...");
+    const category  = (await params).category;
 
+    const blogs = await blogService.getBlogsByCategory(category);
 
-
-
-    const blog = await blogService.getBlogsByCategory(category)
-    console.log(blog, 'Blog by categry');
-    
-    // const sanitizedContent = sanitizeHtml(blog.description)
-
-    if (!blog) {
-      return <div>
-        <p>Blog not found</p>
-      </div>;
+    if (!blogs) {
+        return <div >
+            <p>Blog not found</p>
+        </div>;
     }
 
     return (
-        <div className='max-w-full md:max-w-[330px] lg:max-w-[350px] bg-white border border-gray-300 transform-gpu will-change-transform hover:scale-105 duration-500'>
-            {/* Blog Image */}
-            <Link href={`/blogs/${''}`}>
-                {/* <Image src={'image'} alt={'title'} width={400} height={400} className='h-72 object-cover' /> */}
-            </Link>
-
-            <p className='ml-5 mt-5 px-1 inline-block bg-black text-white text-sm'>{'category'}</p>
-            <div className="p-5">
-                <h5 className='mb-2 text-lg font-medium tracking-tight text-gray-700'>{'title'}</h5>
-                <div className='mb-3 text-sm tracking-tight text-gray-500 line-clamp-3'
-                    // dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-                />
-
-                {/* Read more link */}
-                <Link href={`/blogs/${'_id'}`} className='inline-flex items-center py-2 font-semibold text-center gap-2 cursor-pointer hover:text-blue-500'>
-                    Read more <FaArrowRight />
-                </Link>
+        <div className="flex flex-col justify-center items-center">
+            <div className="flex justify-center items-center w-full h-[350px] bg-[#93b7df]">
+                <div className="flex flex-col justify-center items-center mt-10 px-5">
+                    <h1 className="font-extrabold text-3xl tracking-widest md:text-6xl md:tracking-[0.7rem] uppercase text-white">{category}</h1>
+                    <p className="text-center font-medium text-lg max-w-2xl">Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam delectus culpa, dolorum nihil eum autem saepe eligendi tenetur debitis, hic laborum numquam...</p>
+                </div>
             </div>
+            <BlogListClient blogs={blogs} />
         </div>
-
     )
 }

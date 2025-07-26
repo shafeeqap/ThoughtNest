@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { FaSwatchbook, FaUserCircle } from 'react-icons/fa'
 import { RiMenuUnfold3Fill } from 'react-icons/ri';
 import { navLinks } from '@/constant/constant';

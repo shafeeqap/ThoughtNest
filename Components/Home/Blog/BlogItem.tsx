@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react'
 import { BlogItemType } from '@/types/blog'
 import Image from 'next/image'

@@ -9,16 +9,14 @@ import { NextResponse } from "next/server";
 export async function GET(req: Request) {
   try {
     const category = new URL(req.url).searchParams.get("category");
-    console.log("Category from query:", category);
+
     await connectDB();
 
     const query = category && category !== "All" ? { category } : {};
-    console.log("Query passed to MongoDB:", query);
 
     const blogs = await BlogModel.find(query);
 
     return NextResponse.json({ blogs });
-
   } catch (error) {
     console.error("GET /api/blog error:", error);
     return NextResponse.json({ msg: "Error fetching blogs" }, { status: 500 });

@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState } from 'react'
 import { BlogItemType, Category } from '@/types/blog'
 import { blogService } from '@/services/blogService'
