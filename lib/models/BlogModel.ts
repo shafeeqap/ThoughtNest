@@ -8,40 +8,40 @@ export interface IBlog extends Document {
   author: string;
   image: string;
   authorImg: string;
-  date?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 // Define the schema
-const BlogSchema: Schema<IBlog> = new Schema({
-  title: {
-    type: String,
-    required: true,
+const BlogSchema: Schema<IBlog> = new Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    category: {
+      type: String,
+      required: true,
+    },
+    author: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
+      required: true,
+    },
+    authorImg: {
+      type: String,
+      required: true,
+    },
   },
-  description: {
-    type: String,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-  },
-  author: {
-    type: String,
-    required: true,
-  },
-  image: {
-    type: String,
-    required: true,
-  },
-  authorImg: {
-    type: String,
-    required: true,
-  },
-  date: {
-    type: Date,
-    default: Date.now(),
-  },
-});
+  { timestamps: true }
+);
 
 const BlogModel: Model<IBlog> =
   mongoose.models.BlogModel || mongoose.model<IBlog>("BlogModel", BlogSchema);

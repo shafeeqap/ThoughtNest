@@ -7,14 +7,14 @@ export async function POST(req: Request) {
   try {
     await connectDB();
 
-    const { email } = await req.json();
+    const { email, userId } = await req.json();
     const existing = await SubscribeModel.findOne({ email });
 
     if (existing) {
       return NextResponse.json({ msg: "Already subscribed" }, { status: 409 });
     }
 
-    await SubscribeModel.create({ email });
+    await SubscribeModel.create({ email, userId: userId || null });
 
     return NextResponse.json(
       { success: true, msg: "Subscribed successfully!" },
@@ -32,7 +32,7 @@ export async function GET(req: Request) {
     await connectDB();
 
     const subscription = await SubscribeModel.find({});
-    
+
     return NextResponse.json(
       { msg: "Subscription", subscription },
       { status: 200 }

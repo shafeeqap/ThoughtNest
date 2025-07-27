@@ -33,7 +33,8 @@ const BlogList: React.FC = () => {
                     return <button
                         key={index}
                         onClick={() => setCategoryMenu(category)}
-                        className={`${categoryMenu === category ? "bg-black text-white py-1 px-2 cursor-pointer" : "cursor-pointer hover:border border-solid border-gray-500 px-2"} `}>
+                        className={`py-1 px-2 cursor-pointer border border-solid ${categoryMenu === category ? "bg-black text-white border-black" : "border-transparent hover:border-gray-500"}`}
+                    >
                         {category}
                     </button>
                 })}

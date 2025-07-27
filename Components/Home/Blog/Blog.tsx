@@ -37,7 +37,7 @@ const Blog: React.FC<PropType> = ({ filteredBlogs, isLoading, categories }) => {
                                 return (
                                     <div key={index} className='border-t border-gray-400 mt-10'>
                                         <div className='flex justify-between py-16'>
-                                            <h1 className='text-lg sm:text-4xl font-bold tracking-widest'>{category}</h1>
+                                            <h1 className='text-lg sm:text-4xl font-bold tracking-widest uppercase'>{category}</h1>
                                             <div onClick={() => handleViewAllBlogs(category)}
                                                 className='flex items-center gap-2 hover:text-blue-500 cursor-pointer mb-10'
                                             >

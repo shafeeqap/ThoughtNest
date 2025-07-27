@@ -40,17 +40,57 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           <p>No image available</p>
         )}
 
-        <div className="content prose prose-lg max-w-none"
+        <div className="content prose prose-lg max-w-none border-b border-gray-400 py-10"
           dangerouslySetInnerHTML={{ __html: safeHtml }}
         />
-        <div className='my-24'>
+
+        <div className=''>
           <p className='text-black font-semibold my-4'>Share this article on social media</p>
-          <div className='flex gap-1'>
+          <div className='flex gap-5'>
             <FaWhatsapp className='cursor-pointer text-xl text-gray-500' />
             <FaFacebook className='cursor-pointer text-xl text-gray-500' />
             <FaLinkedin className='cursor-pointer text-xl text-gray-500' />
             <FaInstagram className='cursor-pointer text-xl text-gray-500' />
           </div>
+        </div>
+        {/* Related Posts */}
+        <div className='my-24 flex flex-col'>
+          <p className='font-semibold text-lg'>Related Posts</p>
+          <div className='flex justify-around space-x-5 my-5'>
+            {/* Card 1 */}
+            <div className='max-w-[260px] w-full'>
+              <Image src={'/images/nature.jpg'} alt='image_01' width={260} height={260} />
+              <h1 className='mt-3 break-words'>Title 01</h1>
+            </div>
+            {/* Card 2 */}
+            <div className='max-w-[260px] w-full'>
+              <Image src={'/images/nature.jpg'} alt='image_01' width={260} height={260} />
+              <h1 className='mt-3 break-words'>Title 02</h1>
+            </div>
+            {/* Card 3 */}
+            <div className='max-w-[260px] w-full'>
+              <Image src={'/images/nature.jpg'} alt='image_01' width={260} height={260} />
+              <h1 className='mt-3 break-words'>Title 03</h1>
+            </div>
+          </div>
+        </div>
+        {/* Comments */}
+        <div className='flex flex-col'>
+          <div className='border-b border-gray-400 w-full pb-5'>
+            <p >Comments</p>
+          </div>
+          <form action="" className='mt-5 w-full'>
+            <textarea name="" placeholder='Write a comment...' id="" 
+              className='w-full min-h-32 border border-gray-300 p-3 my-5 resize-none'
+            />
+            <div className='w-full flex justify-between items-center'>
+              <p><span className='text-blue-500 cursor-pointer mr-2'>Log in</span>to publish as a member</p>
+              <div className='flex gap-2'>
+                <button className='text-blue-500 cursor-pointer hover:border-b'>Cancel</button>
+                <button className='bg-blue-600 px-3 py-1 text-white cursor-pointer hover:bg-blue-400'>Publish</button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </>

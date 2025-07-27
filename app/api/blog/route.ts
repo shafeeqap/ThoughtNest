@@ -15,7 +15,7 @@ export async function GET(req: Request) {
     const query = category && category !== "All" ? { category } : {};
 
     const blogs = await BlogModel.find(query);
-
+    
     return NextResponse.json({ blogs });
   } catch (error) {
     console.error("GET /api/blog error:", error);

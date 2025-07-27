@@ -22,8 +22,8 @@ const Header: React.FC = () => {
             <div className='flex justify-between items-center'>
                 {/* Logo */}
                 <div onClick={() => route.push('/')} className='flex items-center space-x-2 cursor-pointer'>
-                    <FaSwatchbook className='w-5 h-5 text-white md:w-10 md:h-10' />
-                    <h1 className='text-xl md:text-4xl font-medium text-white '>ThoughtNest</h1>
+                    <FaSwatchbook className='w-5 h-5 text-white md:w-8 md:h-8' />
+                    <h1 className='text-xl md:text-3xl font-bold text-white '>Thought<span className='font-light'>Nest</span></h1>
                 </div>
                 <button className='flex items-center gap-2 font-medium py-1 px-3 sm:py-3 sm:px-6 border border-solid border-white bg-white cursor-pointer uppercase text-black hover:bg-gray-300 transition-all duration-500'>Get started
                     <FaArrowRight />
