@@ -45,7 +45,7 @@ const Hero: React.FC = () => {
     }
 
     return (
-        <div className='flex flex-col justify-center items-center bg-[#c8ceca] w-full sm:h-[500px] md:h-screen px-5 md:py-[30%] md:px-8'>
+        <div className='flex flex-col justify-center items-center bg-gray-300 w-full sm:h-[500px] md:h-screen px-5 md:py-[30%] md:px-8'>
             <section className=' max-w-full py-28 lg:py-0'>
 
                 {/* Subscription */}

@@ -6,8 +6,6 @@ import { BlogItemType } from '@/types/blog';
 import Pagination from '@/Components/Pagination/Pagination';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-
-
 interface BlogListClientProps {
     blogs: BlogItemType[];
 }

@@ -17,7 +17,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   return (
     <>
-      <div className='bg-[#c8ceca] py-5 px-5 md:px-12 lg:px-28 '>
+      <div className='bg-gray-300 py-5 px-5 md:px-12 lg:px-28 '>
         {/* Blog Heading */}
         <div className='text-center my-24'>
           <h1 className='text-2xl sm:text-5xl font-semibold max-w-[700px] mx-auto'>{blog?.title}</h1>
@@ -81,13 +81,13 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           </div>
           <form action="" className='mt-5 w-full'>
             <textarea name="" placeholder='Write a comment...' id="" 
-              className='w-full min-h-32 border border-gray-300 p-3 my-5 resize-none'
+              className='w-full min-h-32 border border-gray-300 p-3 my-2 sm:my-5 resize-none'
             />
-            <div className='w-full flex justify-between items-center'>
+            <div className='w-full flex flex-col-reverse sm:flex-row sm:justify-between sm:items-center'>
               <p><span className='text-blue-500 cursor-pointer mr-2'>Log in</span>to publish as a member</p>
-              <div className='flex gap-2'>
-                <button className='text-blue-500 cursor-pointer hover:border-b'>Cancel</button>
-                <button className='bg-blue-600 px-3 py-1 text-white cursor-pointer hover:bg-blue-400'>Publish</button>
+              <div className='flex gap-3'>
+                <button className='text-blue-500 cursor-pointer hover:border-b hover:px-0'>Cancel</button>
+                <button className='bg-blue-500 px-3 py-1 text-white cursor-pointer hover:bg-blue-400'>Publish</button>
               </div>
             </div>
           </form>
