@@ -1,15 +1,16 @@
-import LogInForm from "@/Components/Auth/LogInForm";
+import LogInForm from "@/Components/Forms/LogInForm";
+import SocialAccount from "@/Components/SocialAccount/SocialAccount";
 
 export default function LoginPage() {
     return (
-        <div className="p-10 max-w-5xl mx-auto">
+        <div className="p-10 max-w-5xl mx-auto flex flex-col justify-center items-center">
             <div className="flex flex-col justify-center items-center mt-5 space-y-3">
-                <h1 className="text-4xl sm:font-semibold">Login</h1>
+                <h1 className="text-4xl sm:font-semibold transform">Log In</h1>
                 <p>Don&apos;t have an account? <span className="text-blue-500 cursor-pointer">Sign Up</span></p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 py-5 ">
+            <div className="flex flex-col sm:flex-row w-full lg:w-3/4 sm:gap-5 py-5 sm:mt-10">
                 {/* Email login form */}
-                <div className="ml-5 my-5">
+                <div className="my-5 w-full">
                     <LogInForm />
                 </div>
 
@@ -19,8 +20,8 @@ export default function LoginPage() {
                 </div>
 
                 {/* Google login section */}
-                <div className="bg-amber-500 ml-5 my-5">
-                    Log in with Google
+                <div className="my-5 w-full flex items-center">
+                    <SocialAccount />
                 </div>
             </div>
         </div>

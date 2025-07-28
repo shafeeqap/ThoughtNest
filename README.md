@@ -43,3 +43,4 @@ Tools & Packages Used:
 3. dompurify :- to prevent XSS (Cross-Site Scripting) attacks.
 4. jsdom :- for DOM support during server-side rendering (Next.js SSR)
 5. lodash :- For helping filter logic to prevent immediate triggers. When the user types in the search input.
+6. bcrypt :-
