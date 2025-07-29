@@ -12,7 +12,7 @@ const ACCEPTED_IMAGE_TYPES = [
 export const zodSchema = z.object({
   email: z
     .string()
-    .min(1, { message: "Email is required." })
+    .min(3, { message: "Email is required." })
     .email({ message: "Please enter a valid email address." }),
 });
 

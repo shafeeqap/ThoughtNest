@@ -18,7 +18,7 @@ const Header: React.FC = () => {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
     return (
-        <div className={`${headerBgColor ? 'bg-black/80 backdrop-blur-sm transition-colors duration-300' : 'bg-white'} py-5 px-5 md:px-12 lg:px-8 z-[1000] fixed w-full top-0 shadow-lg`}>
+        <div className={`${headerBgColor ? 'bg-[#00202e] transition-colors duration-300' : 'bg-white'} py-5 px-5 md:px-12 lg:px-8 z-[1000] fixed w-full top-0 shadow-lg`}>
             <div className='flex justify-between items-center'>
                 {/* Logo */}
                 <div onClick={() => route.push('/')} className='flex items-center space-x-2 cursor-pointer'>
