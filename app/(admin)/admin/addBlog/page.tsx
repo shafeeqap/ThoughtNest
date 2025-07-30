@@ -1,7 +1,7 @@
 'use client';
 import TiptapEditor from '@/Components/Tiptap/Editor';
 import { assets } from '@/data/assets';
-import { validateBlog } from '@/features/bloge/validateBlog';
+import { validateBlog } from '@/lib/validators/validateBlog';
 import { blogService } from '@/services/blogService';
 import Image from 'next/image';
 import React, { useState } from 'react'

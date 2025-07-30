@@ -18,12 +18,6 @@ const TextInput: React.FC<TextInputProps> = ({
     error,
 }) => {
 
-
-    const errorObj = {
-        username: 'Required user name',
-        password: 'Required email',
-    }
-
     return (
         <div className="relative z-0 w-full group mt-10">
             <input
@@ -45,9 +39,9 @@ const TextInput: React.FC<TextInputProps> = ({
                 <div className='flex items-center gap-0.5'>
                     <MdErrorOutline size={22} className='text-red-500' />
                     {error && type === 'text' ? (
-                        <span className='text-red-500 text-sm'>{errorObj.username}</span>
+                        <span className='text-red-500 text-sm'>{error}</span>
                     ) : (
-                        <span className='text-red-500 text-sm'>{errorObj.password}</span>
+                        <span className='text-red-500 text-sm'>{error}</span>
                     )}
                 </div>
             )}

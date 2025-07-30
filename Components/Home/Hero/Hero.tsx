@@ -1,5 +1,5 @@
 import SubscribeForm from '@/features/subscribe/SubscribeForm';
-import { validateEmail } from '@/features/subscribe/validateEmail';
+import { validateEmail } from '@/lib/validators/validateEmail';
 import { subscribeService } from '@/services/subscribeService';
 import { isAxiosError } from 'axios';
 import Image from 'next/image'

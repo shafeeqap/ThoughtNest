@@ -8,6 +8,7 @@ interface ButtonProps {
   className?: string;
   onClick?: () => void;
   icon: ReactNode;
+  disabled: boolean;
 }
 const Button: React.FC<ButtonProps> = ({
   size = 'medium',
@@ -16,6 +17,7 @@ const Button: React.FC<ButtonProps> = ({
   className,
   onClick,
   icon,
+  disabled,
   ...rest
 }) => {
 
@@ -30,6 +32,7 @@ const Button: React.FC<ButtonProps> = ({
       <button
         onClick={onClick}
         type={type}
+        disabled={disabled}
         className={clsx('text-blue-500 cursor-pointer hover:bg-blue-500 hover:text-white hover:border-transparent',
           sizeClasses[size],
           className)}

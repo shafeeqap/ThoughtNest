@@ -1,12 +1,17 @@
 import LogInForm from "@/Components/Forms/LogInForm";
 import SocialAccount from "@/Components/SocialAccount/SocialAccount";
+import Link from "next/link";
 
 export default function LoginPage() {
     return (
         <div className="p-10 max-w-5xl mx-auto flex flex-col justify-center items-center">
             <div className="flex flex-col justify-center items-center mt-5 space-y-3">
                 <h1 className="text-4xl sm:font-semibold transform">Log In</h1>
-                <p>Don&apos;t have an account? <span className="text-blue-500 cursor-pointer">Sign Up</span></p>
+                <p>Don&apos;t have an account?
+                    <Link href={'/signup'}>
+                        <span className="text-blue-500 cursor-pointer ml-1">Sign Up</span>
+                    </Link>
+                </p>
             </div>
             <div className="flex flex-col sm:flex-row w-full lg:w-3/4 sm:gap-5 py-5 sm:mt-10">
                 {/* Email login form */}

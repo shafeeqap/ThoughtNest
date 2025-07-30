@@ -5,6 +5,9 @@ import PasswordInput from '../Inputs/PasswordInput';
 import TextInput from '../Inputs/TextInput';
 import Button from '../Button/Button';
 import { authService } from '@/services/authService';
+import { validateSignUpForm } from '@/lib/validators/validateSignUpForm';
+import { ErrorType } from '@/types/error';
+import { toast } from 'react-toastify';
 
 
 const SignUpForm: React.FC = () => {
@@ -14,28 +17,48 @@ const SignUpForm: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<ErrorType>({});
+  const [loading, setLoading] = useState(false);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(username, 'User Name');
+    console.log('User Data', { username, email, password, confirmPassword });
 
-    if (!username || !email || !password) {
-      setError('Required all fields!')
-      setTimeout(() => {
-        setError('')
-      }, 3000)
-      return
+ 
+
+    const validationError = validateSignUpForm(username, email, password, confirmPassword)
+
+
+    if (validationError) {
+      setError(validationError)
+      return;
     }
 
-    if (password !== confirmPassword) {
-      setError('Passwords don’t match')
-      return
-    }
+    setLoading(true);
 
     const response = await authService.signUp({ username, email, password });
-    console.log(response.msg);
+
+    setLoading(false);
+
+    if (response.msg) {
+      setError(response.msg)
+      console.log(response.msg);
+      
+      toast.warning(response.msg)
+      return;
+    }
+
+    if (response) {
+      toast.success(response.msg)
+    }
+
+
+    setUsername('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
 
   }
 
@@ -46,8 +69,11 @@ const SignUpForm: React.FC = () => {
           id='username'
           label='Username'
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          error={error}
+          onChange={(e) => {
+            setUsername(e.target.value)
+            setError(prev => ({ ...prev, username: undefined }))
+          }}
+          error={error.username || null}
         />
 
         <TextInput
@@ -55,33 +81,43 @@ const SignUpForm: React.FC = () => {
           id='email'
           label='Email'
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          error={error}
+          onChange={(e) => {
+            setEmail(e.target.value)
+            setError(prev => ({ ...prev, email: undefined }))
+          }}
+          error={error.email || null}
         />
 
         <PasswordInput
           id='password'
           label='Password'
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {
+            setPassword(e.target.value)
+            setError(prev => ({ ...prev, password: undefined }))
+          }}
           showPassword={showPassword}
           toggleShowPassword={() => setShowPassword(prev => !prev)}
-          error={error}
+          error={error.password || null}
         />
 
         <PasswordInput
           id='confirmPassword'
           label='Confirm Password'
           value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          onChange={(e) => {
+            setConfirmPassword(e.target.value)
+            setError(prev => ({ ...prev, confirmPassword: undefined }))
+          }}
           showPassword={showConfirmPassword}
           toggleShowPassword={() => setShowConfirmPassword(prev => !prev)}
-          error={error}
+          error={error.confirmPassword || null}
         />
         <div className='mt-5 py-10'>
           <Button
             type='submit'
             label='Sign UP'
+            disabled={loading}
             className='flex items-center border border-gray-300 transform transition-colors duration-500 delay-150'
             icon={<MdOutlineKeyboardArrowRight size={22} />}
           />

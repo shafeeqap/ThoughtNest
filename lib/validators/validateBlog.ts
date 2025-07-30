@@ -1,4 +1,4 @@
-import { blogSchema } from "@/lib/validators/zodSchema";
+import { blogSchema } from "@/lib/schema/zodSchema";
 
 export const validateBlog = (
   title: string,

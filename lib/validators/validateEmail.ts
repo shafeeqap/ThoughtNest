@@ -1,4 +1,4 @@
-import { zodSchema } from "@/lib/validators/zodSchema";
+import { zodSchema } from "@/lib/schema/zodSchema";
 
 export const validateEmail = (email: string) => {
   const result = zodSchema.safeParse({ email });
