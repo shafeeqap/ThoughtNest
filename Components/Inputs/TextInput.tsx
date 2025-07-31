@@ -37,11 +37,11 @@ const TextInput: React.FC<TextInputProps> = ({
             </label>
             {error && (
                 <div className='flex items-center gap-0.5'>
-                    <MdErrorOutline size={22} className='text-red-500' />
+                    <MdErrorOutline size={18} className='text-red-500' />
                     {error && type === 'text' ? (
-                        <span className='text-red-500 text-sm'>{error}</span>
+                        <span className='text-red-500 text-xs'>{error}</span>
                     ) : (
-                        <span className='text-red-500 text-sm'>{error}</span>
+                        <span className='text-red-500 text-xs'>{error}</span>
                     )}
                 </div>
             )}

@@ -1,3 +1,4 @@
+import { connectDB } from "@/lib/config/db";
 import { createJWT } from "@/lib/jwt/jwt";
 import UserModal from "@/lib/models/UserModel";
 import bcrypt from "bcrypt";
@@ -6,12 +7,22 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
+    await connectDB();
+
     const { email, password } = await req.json();
 
     const user = await UserModal.findOne({ email });
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return NextResponse.json({ msg: "Invalid credentials" }, { status: 401 });
+    if (!user) {
+      return NextResponse.json(
+        { msg: "User does not exist!" },
+        { status: 401 }
+      );
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return NextResponse.json({ msg: "Invalid password" }, { status: 401 });
     }
 
     const token = createJWT({ userId: user._id });

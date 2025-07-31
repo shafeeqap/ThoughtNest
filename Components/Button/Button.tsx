@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react'
 import clsx from 'clsx';
 
+
 interface ButtonProps {
   size?: "small" | "medium" | "large";
   type: "submit" | "reset" | "button";
@@ -9,6 +10,7 @@ interface ButtonProps {
   onClick?: () => void;
   icon: ReactNode;
   disabled: boolean;
+  loading: boolean;
 }
 const Button: React.FC<ButtonProps> = ({
   size = 'medium',
@@ -17,7 +19,8 @@ const Button: React.FC<ButtonProps> = ({
   className,
   onClick,
   icon,
-  disabled,
+  disabled = false,
+  loading = false,
   ...rest
 }) => {
 
@@ -27,19 +30,28 @@ const Button: React.FC<ButtonProps> = ({
     large: 'px-5 py-3 text-lg',
   }
 
+  const baseClass = clsx('text-blue-500 cursor-pointer hover:bg-blue-500 hover:text-white hover:border-transparent',
+    sizeClasses[size], className, (disabled || loading) && 'opacity-50 cursor-not-allowed')
+
   return (
     <>
       <button
         onClick={onClick}
         type={type}
         disabled={disabled}
-        className={clsx('text-blue-500 cursor-pointer hover:bg-blue-500 hover:text-white hover:border-transparent',
-          sizeClasses[size],
-          className)}
+        className={baseClass}
         {...rest}
       >
-        {label}
-        {icon}
+        {loading ? (
+          <div className='flex items-center justify-center gap-2'>
+            <span>Loading...</span>
+          </div>
+        ) : (
+          <>
+            <span>{label}</span>
+            <span>{icon}</span>
+          </>
+        )}
       </button>
     </>
   )

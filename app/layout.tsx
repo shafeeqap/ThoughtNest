@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import { ToastContainer } from "react-toastify";
 
 
 const poppins = Poppins({
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body
         className={`${poppins.className} antialiased overflow-x-hidden`}
       >
+        <ToastContainer theme="dark" position="top-right" autoClose={3000} />
         {children}
       </body>
     </html>

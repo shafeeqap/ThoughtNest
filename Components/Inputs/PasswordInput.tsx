@@ -31,6 +31,9 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
                 placeholder=' '
                 value={value}
                 onChange={onChange}
+                onCopy={(e) => e.preventDefault()}
+                onCut={(e) => e.preventDefault()}
+                onPaste={(e) => e.preventDefault()}
                 className='block py-2.5 px-0 text-sm text-gray-900 border-0 border-b-2 bg-transparent border-gray-300 outline-0 w-full appearance-none focus:outline-none focus:border-blue-500 peer'
             />
             <label
@@ -50,8 +53,8 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
             </div>
             {error && (
                 <div className='flex items-center gap-0.5'>
-                    <MdErrorOutline size={22} className='text-red-500' />
-                    <span className='text-red-500 text-sm'>{error}</span>
+                    <MdErrorOutline size={18} className='text-red-500' />
+                    <span className='text-red-500 text-xs'>{error}</span>
                 </div>
             )}
         </div>

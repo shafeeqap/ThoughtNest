@@ -1,4 +1,4 @@
-import { signUpFormSchema } from "@/lib/schema/signUpFormSchema";
+import { signUpSchema } from "@/lib/schema/signUpSchema";
 
 type FieldErrors = {
   username?: string;
@@ -13,7 +13,7 @@ export const validateSignUpForm = (
   password: string,
   confirmPassword: string
 ): FieldErrors | null => {
-  const result = signUpFormSchema.safeParse({
+  const result = signUpSchema.safeParse({
     username,
     email,
     password,

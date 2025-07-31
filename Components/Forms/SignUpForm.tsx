@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import PasswordInput from '../Inputs/PasswordInput';
 import TextInput from '../Inputs/TextInput';
@@ -8,6 +8,7 @@ import { authService } from '@/services/authService';
 import { validateSignUpForm } from '@/lib/validators/validateSignUpForm';
 import { ErrorType } from '@/types/error';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 
 const SignUpForm: React.FC = () => {
@@ -19,17 +20,21 @@ const SignUpForm: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<ErrorType>({});
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
+  useEffect(() => {
+    const token = document.cookie.includes("token");
+    console.log(token, 'Token...');
+    
+    if (token) {
+      router.replace('/')
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log('User Data', { username, email, password, confirmPassword });
-
- 
-
     const validationError = validateSignUpForm(username, email, password, confirmPassword)
-
 
     if (validationError) {
       setError(validationError)
@@ -38,28 +43,25 @@ const SignUpForm: React.FC = () => {
 
     setLoading(true);
 
-    const response = await authService.signUp({ username, email, password });
+    try {
+      const response = await authService.signUp({ username, email, password });
+      toast.success(response.msg || 'User registered successfully');
 
+      router.replace('/login');
+
+      setUsername('');
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      setError({});
+    } catch (error: any) {
+      toast.warning(error.message);
+      console.log(error.message, 'Error');
+
+    } finally {
+      setLoading(false);
+    }
     setLoading(false);
-
-    if (response.msg) {
-      setError(response.msg)
-      console.log(response.msg);
-      
-      toast.warning(response.msg)
-      return;
-    }
-
-    if (response) {
-      toast.success(response.msg)
-    }
-
-
-    setUsername('');
-    setEmail('');
-    setPassword('');
-    setConfirmPassword('');
-
   }
 
   return (
@@ -118,6 +120,7 @@ const SignUpForm: React.FC = () => {
             type='submit'
             label='Sign UP'
             disabled={loading}
+            loading={loading}
             className='flex items-center border border-gray-300 transform transition-colors duration-500 delay-150'
             icon={<MdOutlineKeyboardArrowRight size={22} />}
           />
