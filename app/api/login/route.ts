@@ -2,7 +2,6 @@ import { connectDB } from "@/lib/config/db";
 import { createJWT } from "@/lib/jwt/jwt";
 import UserModal from "@/lib/models/UserModel";
 import bcrypt from "bcrypt";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -27,18 +26,21 @@ export async function POST(req: Request) {
 
     const token = createJWT({ userId: user._id });
 
-    (await cookies()).set("token", token, {
+    const res = NextResponse.json({
+      msg: "Login successful",
+      user: { id: user._id, username: user.username, email: user.email },
+    });
+
+    res.cookies.set("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "development",
+      secure: process.env.NODE_ENV !== "development",
       sameSite: "strict",
       path: "/",
       maxAge: 7 * 24 * 60 * 60,
     });
 
-    return NextResponse.json({
-      msg: "Login successful",
-      user: { id: user._id, username: user.username, email: user.email },
-    });
+    return res;
+    
   } catch (error) {
     return NextResponse.json({ msg: "Server error", error }, { status: 500 });
   }

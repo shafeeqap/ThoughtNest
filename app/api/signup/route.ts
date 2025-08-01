@@ -35,15 +35,7 @@ export async function POST(req: Request) {
 
     const token = createJWT({ userId: newUser._id });
 
-    (await cookies()).set("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      path: "/",
-      maxAge: 7 * 24 * 60 * 60,
-    });
-
-    return NextResponse.json(
+    const res = NextResponse.json(
       {
         msg: "User registered successfully",
         user: {
@@ -54,6 +46,17 @@ export async function POST(req: Request) {
       },
       { status: 201 }
     );
+
+    res.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== "development",
+      sameSite: "strict",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60,
+    });
+
+    return res;
+    
   } catch (error) {
     return NextResponse.json({ msg: "Server error", error }, { status: 500 });
   }

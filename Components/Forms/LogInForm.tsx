@@ -20,19 +20,23 @@ const LogInForm: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
-    useEffect(() => {
-        const token = document.cookie.includes('token');
-        console.log(token, 'Token...');
-        if (token) {
-            router.replace("/");
-        }
-    }, []);
+    // useEffect(() => {
+    //     const storedUser = localStorage.getItem('user')
+    //     if (storedUser) {
+    //         try {
+    //             JSON.parse(storedUser);
+    //             router.replace("/");
+    //         } catch (error) {
+    //             console.error("Error parsing user:", error);
+    //             localStorage.removeItem("user");
+    //         }
+    //     }
+    // }, [router]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const validationError = validateLoginForm(email, password)
-        console.log(validationError);
 
         if (validationError) {
             setError(validationError)
@@ -43,8 +47,12 @@ const LogInForm: React.FC = () => {
 
         try {
             const response = await authService.login(email, password)
+            console.log(response.user, "User Logged...");
+            // if (response.user) {
+            //     localStorage.setItem('user', JSON.stringify(response.user));
+            // }
             toast.success(response.msg)
-            route.replace('/')
+            router.replace('/')
 
             setEmail('');
             setPassword('')

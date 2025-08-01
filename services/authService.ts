@@ -26,12 +26,13 @@ export const authService = {
       throw new Error("Signup failed");
     }
   },
-  login: async (email: string, password: string): Promise<{ msg: string }> => {
+  login: async (email: string, password: string): Promise<{ msg: string, user: string }> => {
     try {
       const response = await axiosInstance.post(`/api/login`, {
         email,
         password,
       });
+      
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

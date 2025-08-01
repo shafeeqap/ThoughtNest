@@ -23,13 +23,17 @@ const SignUpForm: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const token = document.cookie.includes("token");
-    console.log(token, 'Token...');
-    
-    if (token) {
-      router.replace('/')
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      try {
+        JSON.parse(storedUser)
+        router.replace('/')
+      } catch (error) {
+        console.error("Error parsing user:", error);
+        localStorage.removeItem("user");
+      }
     }
-  }, [])
+  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
