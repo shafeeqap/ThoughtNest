@@ -1,4 +1,3 @@
-import { IconType } from "react-icons";
 
 export type Category = "All" | "Technology" | "Startup" | "Lifestyle";
 
@@ -12,10 +11,3 @@ export interface BlogItemType {
   author: string;
   authorImg: string;
 }
-
-export type NavLinksType = {
-  id: number;
-  url: string;
-  label: string;
-  icon: IconType;
-};

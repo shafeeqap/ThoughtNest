@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import PasswordInput from '../Inputs/PasswordInput';
 import TextInput from '../Inputs/TextInput';
@@ -21,19 +21,6 @@ const SignUpForm: React.FC = () => {
   const [error, setError] = useState<ErrorType>({});
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    if (storedUser) {
-      try {
-        JSON.parse(storedUser)
-        router.replace('/')
-      } catch (error) {
-        console.error("Error parsing user:", error);
-        localStorage.removeItem("user");
-      }
-    }
-  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,9 +45,14 @@ const SignUpForm: React.FC = () => {
       setPassword('');
       setConfirmPassword('');
       setError({});
-    } catch (error: any) {
-      toast.warning(error.message);
-      console.log(error.message, 'Error');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.warning(error.message);
+        console.log(error.message, 'Error');
+      } else {
+        toast.warning('An unexpected error occurred.');
+        console.log(error, 'Unknown error...');
+      }
 
     } finally {
       setLoading(false);

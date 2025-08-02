@@ -1,7 +1,7 @@
 import React from 'react'
 import { FaSwatchbook, FaUserCircle } from 'react-icons/fa'
 import { RiMenuUnfold3Fill } from 'react-icons/ri';
-import { navLinks } from '@/constant/constant';
+import { adminNavLinks } from '@/constant/constant';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -38,17 +38,17 @@ const Sidebar: React.FC<SidebarProps> = ({ openSidebar, setOpenSidebar }) => {
 
                 {/* Body */}
                 <ul className='flex-1'>
-                    {navLinks.map((item) => {
+                    {adminNavLinks.map((item) => {
                         const Icon = item.icon;
                         return (
                             <li
                                 key={item.id}
-                                className={`flex gap-2 items-center px-3 my-3 hover:bg-gray-400 rounded-md duration-300 cursor-pointer relative group ${pathname===item.url ? 'bg-gray-400' : ''}`}
+                                className={`flex gap-2 items-center px-3 my-3 hover:bg-gray-400 rounded-md duration-300 cursor-pointer relative group ${pathname === item.url ? 'bg-gray-400' : ''}`}
                             >
                                 <Link
                                     href={item.url}
                                     className='flex items-center gap-3 py-2'>
-                                    <div >{<Icon size={22} />}</div>
+                                    <div >{Icon && <Icon size={22} />}</div>
                                     <p className={`${!openSidebar && "w-0 translate-x-24"} duration-500 overflow-hidden`}>{item.label}</p>
                                 </Link>
 

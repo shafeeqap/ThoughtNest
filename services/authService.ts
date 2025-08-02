@@ -26,19 +26,27 @@ export const authService = {
       throw new Error("Signup failed");
     }
   },
-  login: async (email: string, password: string): Promise<{ msg: string, user: string }> => {
+  login: async (email: string, password: string): Promise<{ msg: string }> => {
     try {
       const response = await axiosInstance.post(`/api/login`, {
         email,
         password,
       });
-      
+
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         throw new Error(error.response.data?.msg || "Login failed");
       }
       throw new Error("Login failed");
+    }
+  },
+  logout: async () => {
+    try {
+      const response = await axiosInstance.post("/api/logout");
+      return response.data;
+    } catch (error:any) {
+      throw new Error(error.response?.data?.message || "Logout failed");
     }
   },
 };

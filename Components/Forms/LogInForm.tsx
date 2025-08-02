@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import TextInput from '../Inputs/TextInput';
 import Button from '../Button/Button';
@@ -20,19 +20,6 @@ const LogInForm: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
-    // useEffect(() => {
-    //     const storedUser = localStorage.getItem('user')
-    //     if (storedUser) {
-    //         try {
-    //             JSON.parse(storedUser);
-    //             router.replace("/");
-    //         } catch (error) {
-    //             console.error("Error parsing user:", error);
-    //             localStorage.removeItem("user");
-    //         }
-    //     }
-    // }, [router]);
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -46,19 +33,21 @@ const LogInForm: React.FC = () => {
         setLoading(true);
 
         try {
-            const response = await authService.login(email, password)
-            console.log(response.user, "User Logged...");
-            // if (response.user) {
-            //     localStorage.setItem('user', JSON.stringify(response.user));
-            // }
+            const response = await authService.login(email, password);
+
             toast.success(response.msg)
             router.replace('/')
 
             setEmail('');
             setPassword('')
-        } catch (error: any) {
-            toast.warning(error.message)
-            console.log(error.message, 'Error...');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                toast.warning(error.message)
+                console.log(error.message, 'Error...');
+            } else {
+                toast.warning('An unexpected error occurred.');
+                console.log(error, 'Unknown error...');
+            }
         } finally {
             setLoading(false)
         }
