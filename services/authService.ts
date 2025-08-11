@@ -45,8 +45,15 @@ export const authService = {
     try {
       const response = await axiosInstance.post("/api/logout");
       return response.data;
-    } catch (error:any) {
-      throw new Error(error.response?.data?.message || "Logout failed");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const message = error.response?.data?.message || "Logout failed";
+        throw new Error(message);
+      } else if (error instanceof Error) {
+        throw error;
+      } else {
+        throw new Error("An unexpected error occurred during logout.");
+      }
     }
   },
 };

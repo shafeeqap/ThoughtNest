@@ -6,8 +6,8 @@ import { authService } from '@/services/authService';
 import Link from 'next/link';
 import { CgClose } from 'react-icons/cg';
 import { toast } from 'react-toastify';
-import { useRouter } from 'next/navigation';
-// import { getUserSession } from '@/lib/utils/auth/auth';
+import { useRouter, usePathname } from 'next/navigation';
+import { sessionService } from '@/services/sessionService';
 
 
 type Props = {
@@ -16,37 +16,41 @@ type Props = {
 }
 
 const MobileNavbar: React.FC<Props> = ({ showNav, toggleOpenNav }) => {
-  const router = useRouter();
   const [authStatus, setAuthStatus] = useState(false)
-
-
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const fetchSessionStatus = async () => {
-      const response = await fetch('/api/session');
-      const data = await response.json()
-      setAuthStatus(data.isAuthenticated)
-
+      try {
+        const data = await sessionService.session()
+        setAuthStatus(data.isAuthenticated);
+      } catch (error) {
+        console.error('Failed to fetch session status:', error);
+      }
     }
     fetchSessionStatus();
-  }, [])
+  }, [pathname])
 
-  console.log(authStatus, 'Auth Status...');
 
   const handleLogout = async () => {
     try {
       const response = await authService.logout();
       if (response) {
         toast.success(response.msg);
+        setAuthStatus(false);
         toggleOpenNav();
-
-        router.refresh();
         router.push('/');
       }
-    } catch (error: any) {
-      toast.error(error.message || 'Logout failed');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('Logout failed')
+      }
     }
   }
+
   return (
     <>
       {/* Overlay */}
@@ -73,7 +77,7 @@ const MobileNavbar: React.FC<Props> = ({ showNav, toggleOpenNav }) => {
               </div>
             ) : (
               <Link href={'/login'}>
-                <p className='text-lg sm:text-2xl hover:text-gray-400 cursor-pointer'>Login</p>
+                <p className='text-lg sm:text-2xl hover:text-gray-400 cursor-pointer'>Log In</p>
               </Link>
             )}
             <button className='bg-amber-600 px-5 py-2 uppercase cursor-pointer hover:bg-amber-500'>Get started</button>
