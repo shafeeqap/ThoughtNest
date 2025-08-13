@@ -1,9 +1,12 @@
 import { TbReportSearch } from "react-icons/tb";
 import { IoLogoBuffer } from "react-icons/io5";
-import { MdOutlineDashboard, MdUnsubscribe } from "react-icons/md";
+import { MdOutlineDashboard, MdUnsubscribe, MdLogout, MdPermContactCalendar  } from "react-icons/md";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaHome, FaUsers  } from "react-icons/fa";
 import { NavLinksType } from "@/types/nav";
+import { CgProfile } from "react-icons/cg";
+import { SiMicrodotblog } from "react-icons/si";
+
 
 export const adminNavLinks: NavLinksType[] = [
   { id: 1, url: "/admin", label: "Dashboard", icon: MdOutlineDashboard },
@@ -25,11 +28,10 @@ export const adminNavLinks: NavLinksType[] = [
 ];
 
 export const navLink: NavLinksType[] = [
-  { id: 1, url: "/", label: "Home" },
-  { id: 2, url: "/profile", label: "Profile" },
-  { id: 3, url: "/blog", label: "Blog" },
-  { id: 4, url: "/about", label: "About" },
-  { id: 5, url: "/contact", label: "Contact" },
-  // { id: 6, url: "/login", label: "Login" },
-  // { id: 7, url: "/logout", label: "Logout" },
+  { id: 1, url: "/", label: "Home", icon: FaHome },
+  { id: 2, url: "/profile", label: "Profile", icon: CgProfile },
+  { id: 3, url: "#", label: "Blogs", icon: SiMicrodotblog },
+  { id: 4, url: "/about", label: "About Us", icon: FaUsers },
+  { id: 5, url: "/contact", label: "Contact", icon: MdPermContactCalendar },
+  { id: 6, url: "#", label: "Logout", icon: MdLogout },
 ];

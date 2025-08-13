@@ -1,5 +1,6 @@
 'use client';
 
+import DropdownMenu from '@/Components/DropdownMenu/DropdownMenu';
 import { authService } from '@/services/authService';
 import { sessionService } from '@/services/sessionService';
 import Link from 'next/link';
@@ -31,8 +32,6 @@ const Navbar: React.FC<Props> = ({ headerBgColor, toggleOpenNav }) => {
         fetchSessionStatus();
     }, [pathname])
 
-    console.log(authStatus, 'Auth Status...');
-
 
     const handleLogout = async () => {
         try {
@@ -52,23 +51,36 @@ const Navbar: React.FC<Props> = ({ headerBgColor, toggleOpenNav }) => {
     }
 
     return (
-        <div className='flex items-center gap-5'>
+        <div className={`flex ${authStatus ? 'flex-row-reverse' : 'flex-row'} items-center gap-5`}>
             {authStatus ? (
-                <div onClick={handleLogout}>
-                    <p className={`hidden lg:block text-lg cursor-pointer text-gray-400 hover:text-gray-600 ${headerBgColor ? 'text-white' : 'text-black'}`}>Log Out</p>
+                <div className='hidden lg:block'>
+                    {/* Dropdown Menu */}
+                    <DropdownMenu handleLogout={handleLogout} />
                 </div>
             ) : (
-                <Link href={'/login'}>
-                    <p className={`hidden lg:block text-lg cursor-pointer underline ${headerBgColor ? 'text-white' : 'text-black'} hover:text-gray-500`}>Login</p>
+                <Link
+                    href={'/login'}
+                >
+                    <p className={`hidden lg:block text-lg cursor-pointer underline 
+                        ${headerBgColor ? 'text-white' : 'text-black'} hover:text-gray-500`}
+                    >
+                        Login
+                    </p>
                 </Link>
             )}
-            <button className='hidden lg:flex items-center gap-2 font-medium py-1 px-3 sm:py-2 sm:px-6 border bg-white cursor-pointer uppercase text-black hover:bg-[#9b9a9a] hover:text-white transition-all duration-500'>Get started
+            <button
+                className='hidden lg:flex items-center gap-2 font-medium py-1 px-3 sm:py-2 sm:px-6 border bg-white cursor-pointer uppercase text-black hover:bg-[#9b9a9a] hover:text-white transition-all duration-500'
+            >
+                Get started
                 <FaArrowRight />
             </button>
+
             {/* Burger Menu */}
             <HiBars3BottomRight
                 onClick={toggleOpenNav}
-                className={`w-8 h-8 cursor-pointer transition-colors duration-300 lg:hidden ${headerBgColor ? 'text-white hover:text-white/80' : 'text-black hover:text-black/60'}`} />
+                className={`w-8 h-8 cursor-pointer transition-colors duration-300 lg:hidden 
+                ${headerBgColor ? 'text-white hover:text-white/80' : 'text-black hover:text-black/60'}`}
+            />
         </div>
     )
 }

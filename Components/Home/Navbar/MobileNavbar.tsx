@@ -61,15 +61,23 @@ const MobileNavbar: React.FC<Props> = ({ showNav, toggleOpenNav }) => {
       )}
 
       {/* Side Nav */}
-      <div className={`fixed top-0 left-0 flex flex-col lg:hidden justify-center h-screen w-[80%] sm:w-[60%] bg-[#07183d] space-y-6 z-[1000] transform transition-all duration-500 delay-300 ${showNav ? 'translate-x-0' : '-translate-x-full'}`}>
+      <div className={`fixed top-0 left-0 flex flex-col lg:hidden justify-center h-screen w-[80%] sm:w-[60%] bg-[#07183d] space-y-6 z-[1000] transform transition-all duration-500 delay-300 
+        ${showNav ? 'translate-x-0' : '-translate-x-full'}`}
+      >
         <div className='p-5 text-white h-[70%]'>
           <div className='mb-15 h-full flex flex-col justify-center border-b-2 border-b-gray-600 space-y-6'>
             {navLink.map((link) => (
-              <Link key={link.id} href={link.url}>
-                <p className='sm:text-2xl border-b-2 w-fit pb-1 ml-5 cursor-pointer hover:text-gray-400 transform transition-all duration-300'>{link.label}</p>
+              <Link
+                key={link.id}
+                href={link.url}
+              >
+                {link.label !== 'Logout' && (
+                  <p className='sm:text-2xl border-b-2 w-fit pb-1 ml-5 cursor-pointer hover:text-gray-400 transform transition-all duration-300'>{link.label}</p>
+                )}
               </Link>
             ))}
           </div>
+
           <div className='flex justify-around gap-5'>
             {authStatus ? (
               <div onClick={handleLogout} className='cursor-pointer'>

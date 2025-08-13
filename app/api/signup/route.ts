@@ -2,8 +2,7 @@ import { connectDB } from "@/lib/config/db";
 import UserModal from "@/lib/models/UserModel";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { createJWT } from "@/lib/jwt/jwt";
-import { cookies } from "next/headers";
+import { createAccessToken, createRefreshToken } from "@/lib/jwt/jwt";
 
 export async function POST(req: Request) {
   try {
@@ -33,31 +32,47 @@ export async function POST(req: Request) {
     });
     await newUser.save();
 
-    const token = createJWT({ userId: newUser._id });
+    const accessToken = createAccessToken({
+      userId: newUser._id,
+      role: newUser.role,
+    });
+    const refreshToken = createRefreshToken({
+      userId: newUser._id,
+      role: newUser.role,
+    });
 
     const res = NextResponse.json(
       {
         msg: "User registered successfully",
         user: {
           id: newUser._id,
-          uername: newUser.username,
+          username: newUser.username,
           email: newUser.email,
         },
       },
       { status: 201 }
     );
 
-    res.cookies.set("token", token, {
+    res.cookies.set("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
       sameSite: "strict",
       path: "/",
+      maxAge: 15 * 60,
+    });
+
+    res.cookies.set("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== "development",
+      sameSite: "strict",
+      path: "/api/token/refresh",
       maxAge: 7 * 24 * 60 * 60,
     });
 
     return res;
     
   } catch (error) {
+    console.error("Signup Error:", error);
     return NextResponse.json({ msg: "Server error", error }, { status: 500 });
   }
 }

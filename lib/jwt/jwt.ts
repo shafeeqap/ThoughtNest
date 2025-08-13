@@ -1,15 +1,24 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "default-secret";
+const ACCESS_SECRET = process.env.ACCESS_TOKEN_SECRET || "default-secret"
+const REFRESH_SECRET = process.env.REFRESH_TOKEN_SECRET || "default-secret"
 
-if (!JWT_SECRET_KEY) {
-  throw new Error("JWT_SECRET is missing in environment variables.");
+if (!ACCESS_SECRET) {
+  throw new Error("ACCESS_SECRET is missing in environment variables.");
 }
 
-export function createJWT(payload: object) {
-  return jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "7d" });
+export function createAccessToken(payload: object) {
+  return jwt.sign(payload, ACCESS_SECRET, { expiresIn: "15m" });
 }
 
-export function verifyJWT(token: string) {
-  return jwt.verify(token, JWT_SECRET_KEY);
+export function createRefreshToken(payload: object) {
+  return jwt.sign(payload, REFRESH_SECRET, { expiresIn: "7d" });
+}
+
+export function verifyAccessToken(token: string) {
+  return jwt.verify(token, ACCESS_SECRET);
+}
+
+export function verifyRefreshToken(token: string) {
+  return jwt.verify(token, REFRESH_SECRET);
 }
