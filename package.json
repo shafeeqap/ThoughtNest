@@ -19,6 +19,7 @@
     "dompurify": "^3.2.6",
     "he": "^1.2.0",
     "isomorphic-dompurify": "^2.26.0",
+    "jose": "^6.0.12",
     "js-cookie": "^3.0.5",
     "jsdom": "^26.1.0",
     "jsonwebtoken": "^9.0.2",

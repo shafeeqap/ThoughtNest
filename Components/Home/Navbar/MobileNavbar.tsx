@@ -20,8 +20,9 @@ const MobileNavbar: React.FC<Props> = ({ showNav, toggleOpenNav }) => {
   const router = useRouter();
   const pathname = usePathname();
 
+
   useEffect(() => {
-    const fetchSessionStatus = async () => {
+    const checkAuthStatus = async () => {
       try {
         const data = await sessionService.session()
         setAuthStatus(data.isAuthenticated);
@@ -29,7 +30,11 @@ const MobileNavbar: React.FC<Props> = ({ showNav, toggleOpenNav }) => {
         console.error('Failed to fetch session status:', error);
       }
     }
-    fetchSessionStatus();
+    checkAuthStatus();
+
+    const interval = setInterval(checkAuthStatus, 5 * 60 * 1000);
+
+    return () => clearInterval(interval);
   }, [pathname])
 
 
@@ -72,7 +77,12 @@ const MobileNavbar: React.FC<Props> = ({ showNav, toggleOpenNav }) => {
                 href={link.url}
               >
                 {link.label !== 'Logout' && (
-                  <p className='sm:text-2xl border-b-2 w-fit pb-1 ml-5 cursor-pointer hover:text-gray-400 transform transition-all duration-300'>{link.label}</p>
+                  <p
+                    onClick={toggleOpenNav}
+                    className='sm:text-2xl border-b-2 w-fit pb-1 ml-5 cursor-pointer hover:text-gray-400 transform transition-all duration-300'
+                  >
+                    {link.label}
+                  </p>
                 )}
               </Link>
             ))}

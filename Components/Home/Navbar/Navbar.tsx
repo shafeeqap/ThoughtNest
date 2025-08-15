@@ -21,7 +21,7 @@ const Navbar: React.FC<Props> = ({ headerBgColor, toggleOpenNav }) => {
     const pathname = usePathname();
 
     useEffect(() => {
-        const fetchSessionStatus = async () => {
+        const checkAuthStatus = async () => {
             try {
                 const data = await sessionService.session()
                 setAuthStatus(data.isAuthenticated);
@@ -29,8 +29,14 @@ const Navbar: React.FC<Props> = ({ headerBgColor, toggleOpenNav }) => {
                 console.error('Failed to fetch session status:', error);
             }
         }
-        fetchSessionStatus();
+        checkAuthStatus();
+
+        const interval = setInterval(checkAuthStatus, 5 * 60 * 1000);
+
+        return () => clearInterval(interval);
     }, [pathname])
+
+    console.log(authStatus, 'Auth Status...');
 
 
     const handleLogout = async () => {

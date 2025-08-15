@@ -9,8 +9,9 @@ type Props = {
     headerBgColor?: boolean;
 }
 
-const ResponsiveNav: React.FC<Props> = ({ headerBgColor}) => {
+const ResponsiveNav: React.FC<Props> = ({ headerBgColor }) => {
     const [showNav, setShowNav] = useState(false);
+
     const toggleOpenNav = () => setShowNav((prev) => !prev);
 
 

@@ -15,7 +15,7 @@ export async function POST() {
     httpOnly: true,
     secure: true,
     sameSite: "strict",
-    path: "/api/token/refresh",
+    path: "/",
     maxAge: 0,
   });
 

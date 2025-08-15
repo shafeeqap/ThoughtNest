@@ -1,7 +1,6 @@
+import { authenticateUser } from "@/lib/auth/auth";
 import { connectDB } from "@/lib/config/db";
 import { createAccessToken, createRefreshToken } from "@/lib/jwt/jwt";
-import UserModal from "@/lib/models/UserModel";
-import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -10,32 +9,20 @@ export async function POST(req: Request) {
 
     const { email, password } = await req.json();
 
-    const user = await UserModal.findOne({ email });
+    const user = await authenticateUser(email, password);
 
-    if (!user) {
-      return NextResponse.json(
-        { msg: "User does not exist!" },
-        { status: 401 }
-      );
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return NextResponse.json({ msg: "Invalid password" }, { status: 401 });
-    }
-
-    const accessToken = createAccessToken({
-      userId: user._id,
+    const accessToken = await createAccessToken({
+      userId: user.id,
       role: user.role,
     });
-    const refreshToken = createRefreshToken({
-      userId: user._id,
+    const refreshToken = await createRefreshToken({
+      userId: user.id,
       role: user.role,
     });
 
     const res = NextResponse.json({
       msg: "Login successful",
-      user: { id: user._id, username: user.username, email: user.email },
+      user: { id: user.id, username: user.username, email: user.email },
     });
 
     res.cookies.set("accessToken", accessToken, {
@@ -50,12 +37,21 @@ export async function POST(req: Request) {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
       sameSite: "strict",
-      path: "/api/token/refresh",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60,
     });
 
     return res;
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (
+        error.message === "User does not exist" ||
+        error.message === "Invalid password"
+      ) {
+        return NextResponse.json({ msg: error.message }, { status: 401 });
+      }
+    }
+    console.error("Login error:", error);
     return NextResponse.json({ msg: "Server error", error }, { status: 500 });
   }
 }

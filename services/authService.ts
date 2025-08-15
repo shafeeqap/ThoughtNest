@@ -20,8 +20,12 @@ export const authService = {
 
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data?.msg || "Signup failed");
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          throw new Error(error.response.data?.msg || "Authentication failed");
+        }
+
+        throw new Error(error.response?.data.msg || "Signup failed");
       }
       throw new Error("Signup failed");
     }
@@ -35,8 +39,12 @@ export const authService = {
 
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data?.msg || "Login failed");
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          throw new Error(error.response.data?.msg || "Authentication failed");
+        }
+
+        throw new Error(error.response?.data.msg || "Login failed");
       }
       throw new Error("Login failed");
     }
