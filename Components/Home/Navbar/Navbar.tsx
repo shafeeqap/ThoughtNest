@@ -10,12 +10,12 @@ import { FaArrowRight } from 'react-icons/fa'
 import { HiBars3BottomRight } from 'react-icons/hi2'
 import { toast } from 'react-toastify';
 
-type Props = {
+type NavbarProps = {
     headerBgColor?: boolean;
     toggleOpenNav: () => void;
 }
 
-const Navbar: React.FC<Props> = ({ headerBgColor, toggleOpenNav }) => {
+const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
     const [authStatus, setAuthStatus] = useState(false);
     const router = useRouter();
     const pathname = usePathname();

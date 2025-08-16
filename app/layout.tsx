@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import "./globals.css";
 import { ToastContainer } from "react-toastify";
-
+import { SessionProvider } from "next-auth/react";
+import "./globals.css";
 
 
 const poppins = Poppins({
@@ -27,7 +27,9 @@ export default function RootLayout({
         className={`${poppins.className} antialiased overflow-x-hidden`}
       >
         <ToastContainer theme="dark" position="top-right" autoClose={3000} />
-        {children}
+        <SessionProvider>
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );

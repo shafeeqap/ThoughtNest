@@ -3,21 +3,21 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const session = await getAcceessToken();
+    const accessToken = await getAcceessToken();
 
-    if (session) {
+    if (accessToken) {
       return NextResponse.json({
         isAuthenticated: true,
-        userId: session.userId,
+        userId: accessToken.userId,
       });
     }
 
-    const refresh = await getRefreshToken();
+    const refreshToken = await getRefreshToken();
 
-    if (refresh) {
+    if (refreshToken) {
       return NextResponse.json({
         isAuthenticated: true,
-        userId: refresh.userId,
+        userId: refreshToken.userId,
       });
     }
 

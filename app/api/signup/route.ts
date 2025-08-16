@@ -41,7 +41,7 @@ export async function POST(req: Request) {
       role: newUser.role,
     });
 
-    const res = NextResponse.json(
+    const response = NextResponse.json(
       {
         msg: "User registered successfully",
         user: {
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
       { status: 201 }
     );
 
-    res.cookies.set("accessToken", accessToken, {
+    response.cookies.set("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
       sameSite: "strict",
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       maxAge: 15 * 60,
     });
 
-    res.cookies.set("refreshToken", refreshToken, {
+    response.cookies.set("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
       sameSite: "strict",
@@ -69,7 +69,7 @@ export async function POST(req: Request) {
       maxAge: 7 * 24 * 60 * 60,
     });
 
-    return res;
+    return response;
   } catch (error) {
     console.error("Signup Error:", error);
     return NextResponse.json({ msg: "Server error", error }, { status: 500 });

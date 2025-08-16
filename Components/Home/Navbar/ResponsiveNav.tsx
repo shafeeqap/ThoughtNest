@@ -5,11 +5,11 @@ import Navbar from './Navbar';
 import MobileNavbar from './MobileNavbar';
 
 
-type Props = {
+type ResponsiveNavProps = {
     headerBgColor?: boolean;
 }
 
-const ResponsiveNav: React.FC<Props> = ({ headerBgColor }) => {
+const ResponsiveNav: React.FC<ResponsiveNavProps> = ({ headerBgColor }) => {
     const [showNav, setShowNav] = useState(false);
 
     const toggleOpenNav = () => setShowNav((prev) => !prev);

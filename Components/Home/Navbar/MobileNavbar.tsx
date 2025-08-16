@@ -10,12 +10,12 @@ import { useRouter, usePathname } from 'next/navigation';
 import { sessionService } from '@/services/sessionService';
 
 
-type Props = {
+type MobileNavbarProps = {
   showNav: boolean;
   toggleOpenNav: () => void;
 }
 
-const MobileNavbar: React.FC<Props> = ({ showNav, toggleOpenNav }) => {
+const MobileNavbar: React.FC<MobileNavbarProps> = ({ showNav, toggleOpenNav }) => {
   const [authStatus, setAuthStatus] = useState(false)
   const router = useRouter();
   const pathname = usePathname();

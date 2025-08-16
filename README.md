@@ -38,9 +38,13 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 Tools & Packages Used:
 ----------------------
-1. zod :- form data validation
-2. Tiptap :- rich text editor
-3. dompurify :- to prevent XSS (Cross-Site Scripting) attacks.
-4. jsdom :- for DOM support during server-side rendering (Next.js SSR)
+1. zod :- Form data validation.
+2. Tiptap :- Rich text editor.
+3. dompurify :- To prevent XSS (Cross-Site Scripting) attacks.
+4. jsdom :- For DOM support during server-side rendering (Next.js SSR).
 5. lodash :- For helping filter logic to prevent immediate triggers. When the user types in the search input.
-6. bcrypt :-
+6. bcrypt :- For password-hashing.
+7. auth.js :- For helping simplify authentication and authorization with using socieal media account.
+8. jose :- Providing support for JSON Web Tokens (JWT).
+9. axios :- Handle HTTP request.
+10. 

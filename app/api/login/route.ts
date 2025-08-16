@@ -20,12 +20,12 @@ export async function POST(req: Request) {
       role: user.role,
     });
 
-    const res = NextResponse.json({
+    const response = NextResponse.json({
       msg: "Login successful",
       user: { id: user.id, username: user.username, email: user.email },
     });
 
-    res.cookies.set("accessToken", accessToken, {
+    response.cookies.set("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
       sameSite: "strict",
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
       maxAge: 15 * 60,
     });
 
-    res.cookies.set("refreshToken", refreshToken, {
+    response.cookies.set("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
       sameSite: "strict",
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
       maxAge: 7 * 24 * 60 * 60,
     });
 
-    return res;
+    return response;
   } catch (error: unknown) {
     if (error instanceof Error) {
       if (
