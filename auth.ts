@@ -1,11 +1,10 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import { findOrCreateUser } from "./lib/db/users";
-import { createAccessToken, createRefreshToken } from "./lib/jwt/jwt";
-import { cookies } from "next/headers";
 // import Facebook from "next-auth/providers/facebook";
+import type { NextAuthConfig } from "next-auth";
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const authConfig = {
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID!,
@@ -13,59 +12,44 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    // async signIn({ user, account }) {
-    //   try {
-    //     const dbUser = await findOrCreateUser({
-    //       email: user.email,
-    //       username: user.name || "Anonymous",
-    //       provider: account?.provider || "google",
-    //     });
+    async signIn({ user, account }) {
+      console.log(user, "Google User...");
 
-    //     const accessToken = await createAccessToken({
-    //       userId: dbUser.id,
-    //       role: dbUser.role,
-    //     });
+      try {
+        if (account?.provider !== "google") return true;
+        if (!user.email) throw new Error("No email found");
 
-    //     const refreshToken = await createRefreshToken({
-    //       userId: dbUser.id,
-    //       role: dbUser.role,
-    //     });
+        await findOrCreateUser({
+          email: user.email,
+          username: user.name || "Anonymous",
+          provider: account.provider,
+          providerId: account.providerAccountId,
+        });
 
-    //     const cookieStore = await cookies();
-    //     cookieStore.set("accessToken", accessToken, {
-    //       httpOnly: true,
-    //       maxAge: 15 * 60,
-    //       path: "/",
-    //     });
-    //     cookieStore.set("refreshToken", refreshToken, {
-    //       httpOnly: true,
-    //       maxAge: 15 * 60,
-    //       path: "/",
-    //     });
-
-    //     return true;
-    //   } catch (error) {
-    //     console.error("SignIn error:", error);
-    //     return false;
-    //   }
-    // },
-    async jwt({ token, user, account, profile }) {
-      if (user) {
-        token.id = user.id;
+        return true;
+      } catch (error) {
+        console.error("SignIn error:", error);
+        return false;
       }
-      if (account) {
-        token.accessToken = account.access_token;
+    },
+    async jwt({ token, user, account }) {
+      if (account?.provider === "google" && user) {
+        token.sub = user.id;
       }
       return token;
     },
     async session({ session, token }) {
-      if (token?.id) {
-        session.user.id = token.id as string;
-      }
-      if (token?.accessToken) {
-        session.accessToken = token.accessToken as string;
+      if (token.sub) {
+        session.user.id = token.sub;
       }
       return session;
     },
   },
-});
+  session: {
+    strategy: "jwt",
+    maxAge: 7 * 24 * 60 * 60,
+  },
+  secret: process.env.AUTH_SECRET,
+} satisfies NextAuthConfig;
+
+export const { handlers, auth, signIn, signOut } = NextAuth(authConfig);

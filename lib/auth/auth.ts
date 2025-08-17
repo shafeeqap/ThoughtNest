@@ -47,14 +47,21 @@ export async function authenticateUser(
   email: string,
   password: string
 ): Promise<IUser> {
-  const user: IUser | null = await UserModal.findOne({ email });
+  const user: IUser | null = await UserModal.findOne({ email }).select(
+    "+password"
+  );
+
   if (!user) {
-    throw new Error("User does not exist");
+    throw new Error("ACCOUNT_NOT_FOUND");
+  }
+
+  if (!user.password) {
+    throw new Error("SOCIAL_ACCOUNT");
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
-    throw new Error("Invalid password");
+    throw new Error("INVALID_PASSWORD");
   }
   return user;
 }

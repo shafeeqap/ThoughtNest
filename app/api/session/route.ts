@@ -1,27 +1,55 @@
-import { getAcceessToken, getRefreshToken } from "@/lib/auth/auth";
-import { NextResponse } from "next/server";
+import { verifyAccessToken, verifyRefreshToken } from "@/lib/jwt/jwt";
+import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const accessToken = await getAcceessToken();
+    const nextAuthToken = await getToken({
+      req,
+      secret: process.env.AUTH_SECRET,
+    });
+
+    console.log(nextAuthToken, 'NextAuthToken...');
+    
+    if (nextAuthToken?.sub) {
+      return NextResponse.json({
+        isAuthenticated: true,
+        userId: nextAuthToken.sub,
+        name: nextAuthToken.name,
+        image: nextAuthToken.picture,
+        role: nextAuthToken.role,
+        authMethod: "oauth",
+      });
+    }
+
+    const accessToken = req.cookies.get("accessToken")?.value;
+    const refreshToken = req.cookies.get("refreshToken")?.value;
 
     if (accessToken) {
-      return NextResponse.json({
-        isAuthenticated: true,
-        userId: accessToken.userId,
-      });
+      const payload = await verifyAccessToken(accessToken);
+      if (payload) {
+        return NextResponse.json({
+          isAuthenticated: true,
+          userId: payload.userId,
+          role: payload.role,
+          authMethod: "jwt",
+        });
+      }
     }
-
-    const refreshToken = await getRefreshToken();
 
     if (refreshToken) {
-      return NextResponse.json({
-        isAuthenticated: true,
-        userId: refreshToken.userId,
-      });
+      const payload = await verifyRefreshToken(refreshToken);
+      if (payload) {
+        return NextResponse.json({
+          isAuthenticated: true,
+          userId: payload.userId,
+          role: payload.role,
+          authMethod: "jwt",
+        });
+      }
     }
 
-    return NextResponse.json({ isAuthenticated: false });
+    return NextResponse.json({ isAuthenticated: false, authMethod: "none" });
   } catch (error) {
     console.error("Session check failed:", error);
     return NextResponse.json({ isAuthenticated: false });

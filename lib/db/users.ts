@@ -1,29 +1,42 @@
+import { connectDB } from "@/lib/config/db";
 import UserModal from "../models/UserModel";
-
 interface UserInput {
-  email: string | null | undefined;
-  username?: string | null;
+  email: string;
+  username?: string;
   provider: string;
+  providerId: string;
 }
 
 export async function findOrCreateUser({
   email,
-  username,
+  username = "Anonymous",
   provider,
+  providerId,
 }: UserInput) {
-  if (!email) {
-    throw new Error("Email is required");
-  }
+  await connectDB();
 
-  let user = await UserModal.findOne({ email });
+  let user = await UserModal.findOne({
+    $or: [{ email }, { "providers.id": providerId }],
+  });
+  console.log(user, "Google Auth...");
 
   if (!user) {
     user = new UserModal({
       email,
       username,
-      provider,
+      providers: [{ name: provider, id: providerId }],
     });
     await user.save();
+  } else {
+    // provider if not already linked
+    const hasProvider = user.providers.some(
+      (p) => p.name === provider && p.id === providerId
+    );
+
+    if (!hasProvider) {
+      user.providers.push({ name: provider, id: providerId });
+      await user.save();
+    }
   }
 
   return user;

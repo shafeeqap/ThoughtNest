@@ -7,9 +7,13 @@ import React, { useEffect, useRef, useState } from 'react'
 
 type DropdownMenuProps = {
     handleLogout: () => void;
+    image: string;
+    name: string;
+    email: string;
+    authMethod: string;
 };
 
-const DropdownMenu = ({ handleLogout }: DropdownMenuProps) => {
+const DropdownMenu = ({ handleLogout, image, name, email, authMethod }: DropdownMenuProps) => {
     const [toggleMenu, setToggleMenu] = useState(false);
     const imgRef = useRef<HTMLImageElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -31,7 +35,7 @@ const DropdownMenu = ({ handleLogout }: DropdownMenuProps) => {
                 <Image
                     ref={imgRef}
                     onClick={() => setToggleMenu(!toggleMenu)}
-                    src={'/author_img.png'}
+                    src={image || '/author_img.png'}
                     width={150}
                     height={150}
                     alt='profil-img'

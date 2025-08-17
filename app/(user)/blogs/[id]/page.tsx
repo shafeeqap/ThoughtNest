@@ -9,6 +9,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const blog = await blogService.fetchBlogById(id)
   const safeHtml = sanitizeHtml(blog.description)
 
+  
   if (!blog) {
     return <div>
       <p>Blog not found</p>

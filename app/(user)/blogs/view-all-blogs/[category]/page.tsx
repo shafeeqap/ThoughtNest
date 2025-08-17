@@ -6,6 +6,7 @@ export default async function ViewAllBlogs({ params }: { params: Promise<{ categ
     const category  = (await params).category;
 
     const blogs = await blogService.getBlogsByCategory(category);
+    
 
     if (!blogs) {
         return <div >

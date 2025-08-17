@@ -16,21 +16,31 @@ type NavbarProps = {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
-    const [authStatus, setAuthStatus] = useState(false);
+    const [authStatus, setAuthStatus] = useState({
+        isAuthenticated: false,
+        userId: "",
+        name: "",
+        email: "",
+        image: "",
+        authMethod: ""
+    });
     const router = useRouter();
     const pathname = usePathname();
 
     useEffect(() => {
         const checkAuthStatus = async () => {
             try {
-                const data = await sessionService.session()
-                setAuthStatus(data.isAuthenticated);
+                const data = await sessionService.session();
+
+                console.log(data, 'Session Data...');
+
+                setAuthStatus(data);
             } catch (error) {
                 console.error('Failed to fetch session status:', error);
             }
         }
-        checkAuthStatus();
 
+        checkAuthStatus();
         const interval = setInterval(checkAuthStatus, 5 * 60 * 1000);
 
         return () => clearInterval(interval);
@@ -44,7 +54,15 @@ const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
             const response = await authService.logout();
             if (response) {
                 toast.success(response.msg);
-                setAuthStatus(false);
+                setAuthStatus({
+                    isAuthenticated: false,
+                    userId: "",
+                    name: "",
+                    email: "",
+                    image: "",
+                    authMethod: ""
+                  });
+                  ;
                 router.push('/');
             }
         } catch (error: unknown) {
@@ -57,11 +75,17 @@ const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
     }
 
     return (
-        <div className={`flex ${authStatus ? 'flex-row-reverse' : 'flex-row'} items-center gap-5`}>
-            {authStatus ? (
+        <div className={`flex ${authStatus.isAuthenticated ? 'flex-row-reverse' : 'flex-row'} items-center gap-5`}>
+            {authStatus.isAuthenticated ? (
                 <div className='hidden lg:block'>
                     {/* Dropdown Menu */}
-                    <DropdownMenu handleLogout={handleLogout} />
+                    <DropdownMenu
+                        handleLogout={handleLogout}
+                        image={authStatus.image}
+                        name={authStatus.name}
+                        email={authStatus.email}
+                        authMethod={authStatus.authMethod}
+                    />
                 </div>
             ) : (
                 <Link

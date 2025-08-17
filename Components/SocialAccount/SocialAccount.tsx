@@ -1,22 +1,56 @@
 'use client';
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebookF } from "react-icons/fa6";
-import { useSession, signIn} from 'next-auth/react';
+import { signIn } from 'next-auth/react';
+import { sessionService } from '@/services/sessionService';
+import { usePathname, useRouter } from 'next/navigation';
 
 
 const SocialAccount: React.FC = () => {
-    const { data: session, status } = useSession();
+    const [authStatus, setAuthStatus] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const pathname = usePathname();
+    const router = useRouter();
 
+    useEffect(() => {
+        const checkAuthStatus = async () => {
+            try {
+                setLoading(true);
+                const data = await sessionService.session();
+                console.log(data, 'Session Data...');
+                
+                setAuthStatus(data.isAuthenticated);
+
+                if (data.isAuthenticated) {
+                    router.push('/');
+                }
+            } catch (error) {
+                console.error('Failed to fetch session status:', error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        checkAuthStatus();
+        const interval = setInterval(checkAuthStatus, 5 * 60 * 1000);
+
+        return () => clearInterval(interval);
+    }, [pathname, router])
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    console.log(authStatus, 'Auth Status...');
+    
 
     return (
         <div className='flex flex-col gap-5 w-full'>
-            {status === 'loading' ? (
-                <span className='text-gray-400'>Loading...</span>
-            ) : !session && (
+            {!authStatus && (
                 <div
-                    onClick={() => signIn('google')}
+                    onClick={() => signIn('google', { callbackUrl: '/' })}
                     className='flex items-center border border-blue-500 text-white w-full cursor-pointer'
                 >
                     <div className='w-14 flex justify-center items-center'>
@@ -27,6 +61,7 @@ const SocialAccount: React.FC = () => {
                     </div>
                 </div>
             )}
+
             <div className='flex items-center border border-blue-800 w-full cursor-pointer'>
                 <div className='w-14 flex justify-center items-center'>
                     <FaFacebookF size={22} className='text-blue-800' />

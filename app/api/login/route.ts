@@ -1,6 +1,7 @@
 import { authenticateUser } from "@/lib/auth/auth";
 import { connectDB } from "@/lib/config/db";
 import { createAccessToken, createRefreshToken } from "@/lib/jwt/jwt";
+import { handleError } from "@/lib/utils/errorHandler/errorHandler";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -43,15 +44,6 @@ export async function POST(req: Request) {
 
     return response;
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      if (
-        error.message === "User does not exist" ||
-        error.message === "Invalid password"
-      ) {
-        return NextResponse.json({ msg: error.message }, { status: 401 });
-      }
-    }
-    console.error("Login error:", error);
-    return NextResponse.json({ msg: "Server error", error }, { status: 500 });
+    return handleError(error);
   }
 }

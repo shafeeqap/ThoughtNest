@@ -11,6 +11,7 @@ import { sanitizeHtml } from '@/lib/utils/sanitize/sanitizeHtmlClient'
 const BlogItem: React.FC<BlogItemType> = ({ title, description, category, image, _id }) => {
     const sanitizedContent = sanitizeHtml(description)
 
+    
     return (
         <div className='max-w-full md:max-w-[330px] lg:max-w-[350px] bg-white border border-gray-300 transform-gpu will-change-transform hover:scale-105 duration-500'>
             {/* Blog Image */}
