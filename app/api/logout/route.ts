@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+
 export async function POST() {
   const cookiesStore = await cookies();
 
@@ -19,5 +20,5 @@ export async function POST() {
     maxAge: 0,
   });
 
-  return NextResponse.json({ msg: "Logged out" });
+  return NextResponse.json({ msg: "Logout successful" });
 }

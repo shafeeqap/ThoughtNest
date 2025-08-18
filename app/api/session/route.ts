@@ -1,23 +1,31 @@
 import { verifyAccessToken, verifyRefreshToken } from "@/lib/jwt/jwt";
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+import UserModal from "@/lib/models/UserModel";
+import { auth } from "@/auth";
 
 export async function GET(req: NextRequest) {
   try {
-    const nextAuthToken = await getToken({
-      req,
-      secret: process.env.AUTH_SECRET,
-    });
+    // const nextAuthToken = await getToken({
+    //   req,
+    //   secret: process.env.AUTH_SECRET,
+    // });
 
-    console.log(nextAuthToken, 'NextAuthToken...');
-    
-    if (nextAuthToken?.sub) {
+    const session = await auth();
+
+    const email = session?.user?.email;
+
+    const user = await UserModal.findOne({ email });
+
+    if (user) {
       return NextResponse.json({
         isAuthenticated: true,
-        userId: nextAuthToken.sub,
-        name: nextAuthToken.name,
-        image: nextAuthToken.picture,
-        role: nextAuthToken.role,
+        userId: user?.id,
+        name: user?.username,
+        email: user?.email,
+        image: session?.user?.image,
+        role: user?.role,
+        provider: user?.providers,
         authMethod: "oauth",
       });
     }
@@ -27,11 +35,16 @@ export async function GET(req: NextRequest) {
 
     if (accessToken) {
       const payload = await verifyAccessToken(accessToken);
+
       if (payload) {
+        const user = await UserModal.findById(payload.userId);
+
         return NextResponse.json({
           isAuthenticated: true,
-          userId: payload.userId,
-          role: payload.role,
+          userId: user?._id,
+          name: user?.username,
+          email: user?.email,
+          role: user?.role,
           authMethod: "jwt",
         });
       }
@@ -39,11 +52,16 @@ export async function GET(req: NextRequest) {
 
     if (refreshToken) {
       const payload = await verifyRefreshToken(refreshToken);
+
       if (payload) {
+        const user = await UserModal.findById(payload.userId);
+
         return NextResponse.json({
           isAuthenticated: true,
-          userId: payload.userId,
-          role: payload.role,
+          userId: user?._id,
+          name: user?.username,
+          email: user?.email,
+          role: user?.role,
           authMethod: "jwt",
         });
       }

@@ -1,9 +1,11 @@
 'use client';
 
+import React, { useEffect, useRef, useState } from 'react'
 import { navLink } from '@/constant/constant';
+import { FcGoogle } from "react-icons/fc";
 import Image from 'next/image'
 import Link from 'next/link';
-import React, { useEffect, useRef, useState } from 'react'
+import { signOut } from "@/auth";
 
 type DropdownMenuProps = {
     handleLogout: () => void;
@@ -11,9 +13,10 @@ type DropdownMenuProps = {
     name: string;
     email: string;
     authMethod: string;
+    provider: string;
 };
 
-const DropdownMenu = ({ handleLogout, image, name, email, authMethod }: DropdownMenuProps) => {
+const DropdownMenu = ({ handleLogout, image, name, email, provider }: DropdownMenuProps) => {
     const [toggleMenu, setToggleMenu] = useState(false);
     const imgRef = useRef<HTMLImageElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -35,18 +38,32 @@ const DropdownMenu = ({ handleLogout, image, name, email, authMethod }: Dropdown
                 <Image
                     ref={imgRef}
                     onClick={() => setToggleMenu(!toggleMenu)}
-                    src={image || '/author_img.png'}
+                    src={image || '/user.svg'}
                     width={150}
                     height={150}
                     alt='profil-img'
-                    className='rounded-full h-10 w-10 object-cover cursor-pointer border border-black'
+                    className='rounded-full h-10 w-10 object-cover cursor-pointer'
                 />
 
                 {toggleMenu && (
                     <div
                         ref={menuRef}
-                        className='bg-white p-4 shadow-lg w-[12rem] absolute right-0.5 top-16'
+                        className='bg-white p-4 shadow-lg absolute right-0.5 top-16'
                     >
+                        <div className='flex flex-col items-center p-1 border-b border-gray-300 mb-3'>
+                            <Image
+                                src={image || '/user.svg'}
+                                width={150}
+                                height={150}
+                                alt='profil-img'
+                                className='rounded-full h-10 w-10 object-cover'
+                            />
+                            <p className='text-xs'>{email}</p>
+                            <p className='uppercase text-sm font-bold'>{name}</p>
+                            {provider === 'google' && (
+                                <p><FcGoogle size={22} /> </p>
+                            )}
+                        </div>
                         <ul>
                             {navLink.map((link) => {
                                 const Icon = link.icon
