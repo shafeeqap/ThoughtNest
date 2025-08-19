@@ -6,6 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import Image from 'next/image'
 import Link from 'next/link';
 import { signOut } from "@/auth";
+import { useSession } from 'next-auth/react';
 
 type DropdownMenuProps = {
     handleLogout: () => void;
@@ -20,7 +21,7 @@ const DropdownMenu = ({ handleLogout, image, name, email, provider }: DropdownMe
     const [toggleMenu, setToggleMenu] = useState(false);
     const imgRef = useRef<HTMLImageElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
-
+    const { data: session, status } = useSession();
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -31,6 +32,8 @@ const DropdownMenu = ({ handleLogout, image, name, email, provider }: DropdownMe
         window.addEventListener('click', handleClickOutside);
         return () => window.removeEventListener('click', handleClickOutside);
     }, [])
+
+
 
     return (
         <>
@@ -74,7 +77,7 @@ const DropdownMenu = ({ handleLogout, image, name, email, provider }: DropdownMe
                                     >
                                         {link.label === 'Logout' ? (
                                             <div
-                                                onClick={() => handleLogout()}
+                                                onClick={handleLogout}
                                                 className='flex items-center gap-2'
                                             >
                                                 {Icon && <Icon />}

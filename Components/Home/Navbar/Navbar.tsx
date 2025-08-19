@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react'
 import { FaArrowRight } from 'react-icons/fa'
 import { HiBars3BottomRight } from 'react-icons/hi2'
 import { toast } from 'react-toastify';
-import { signOut } from "@/auth";
+import { useSession, signOut } from 'next-auth/react';
 
 
 type NavbarProps = {
@@ -45,7 +45,10 @@ const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
     const [authStatus, setAuthStatus] = useState(initialState);
     const router = useRouter();
     const pathname = usePathname();
+    const { data: session, status } = useSession();
 
+    console.log(session, 'Session Navbar...');
+    
 
     useEffect(() => {
         const checkAuthStatus = async () => {
@@ -73,8 +76,8 @@ const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
         try {
             setAuthStatus(initialState);
 
-            if (authStatus.authMethod === "oauth") {
-                // await signOut({ redirect: false });
+            if (session) {
+                await signOut({ redirect: false });
                 toast.success('Logged out successfully');
                 router.push('/');
             } else {

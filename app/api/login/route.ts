@@ -1,5 +1,5 @@
-import { authenticateUser } from "@/lib/auth/auth";
 import { connectDB } from "@/lib/config/db";
+import { authenticateUser } from "@/lib/db/users";
 import { createAccessToken, createRefreshToken } from "@/lib/jwt/jwt";
 import { handleError } from "@/lib/utils/errorHandler/errorHandler";
 import { NextResponse } from "next/server";

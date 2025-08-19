@@ -10,7 +10,8 @@ const SocialAccount: React.FC = () => {
     return (
         <div className='flex flex-col gap-5 w-full'>
             <div
-                onClick={() => signIn('google', { callbackUrl: '/' })}
+                onClick={() =>
+                    signIn('google', { callbackUrl: '/' })}
                 className='flex items-center border border-blue-500 text-white w-full cursor-pointer'
             >
                 <div className='w-14 flex justify-center items-center'>

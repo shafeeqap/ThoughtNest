@@ -1,5 +1,5 @@
-import LogInForm from "@/Components/Forms/LogInForm";
-import SocialAccount from "@/Components/SocialAccount/SocialAccount";
+import LogInForm from "@/Components/ui/Forms/LogInForm";
+import SocialAccount from "@/Components/ui/SocialAccount/SocialAccount";
 import Link from "next/link";
 
 export default function LoginPage() {

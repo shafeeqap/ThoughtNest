@@ -1,6 +1,6 @@
 import { verifyAccessToken, verifyRefreshToken } from "@/lib/jwt/jwt";
 import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
+// import { getToken } from "next-auth/jwt";
 import UserModal from "@/lib/models/UserModel";
 import { auth } from "@/auth";
 

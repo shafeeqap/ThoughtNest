@@ -1,5 +1,5 @@
-import SignUpForm from "@/Components/Forms/SignUpForm";
-import SocialAccount from "@/Components/SocialAccount/SocialAccount";
+import SignUpForm from "@/Components/ui/Forms/SignUpForm";
+import SocialAccount from "@/Components/ui/SocialAccount/SocialAccount";
 import Link from "next/link";
 
 export default function SignUpPage() {

@@ -1,5 +1,9 @@
+import "server-only";
+
 import { connectDB } from "@/lib/config/db";
-import UserModal from "../models/UserModel";
+import UserModal, { IUser } from "../models/UserModel";
+import bcrypt from "bcrypt";
+
 interface UserInput {
   email: string;
   username?: string;
@@ -7,6 +11,7 @@ interface UserInput {
   providerId: string;
 }
 
+// ===> Helper function to find/create users when the user log in with OAuth <=== //
 export async function findOrCreateUser({
   email,
   username = "Anonymous",
@@ -39,5 +44,30 @@ export async function findOrCreateUser({
     }
   }
 
+  return user;
+}
+
+
+// ===> Helper function to access authenticate users when the user log in <=== //
+export async function authenticateUser(
+  email: string,
+  password: string
+): Promise<IUser> {
+  const user: IUser | null = await UserModal.findOne({ email }).select(
+    "+password"
+  );
+
+  if (!user) {
+    throw new Error("ACCOUNT_NOT_FOUND");
+  }
+
+  if (!user.password) {
+    throw new Error("SOCIAL_ACCOUNT");
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) {
+    throw new Error("INVALID_PASSWORD");
+  }
   return user;
 }
