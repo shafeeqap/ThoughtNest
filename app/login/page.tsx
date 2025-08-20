@@ -2,7 +2,9 @@ import LogInForm from "@/Components/ui/Forms/LogInForm";
 import SocialAccount from "@/Components/ui/SocialAccount/SocialAccount";
 import Link from "next/link";
 
+
 export default function LoginPage() {
+    
     return (
         <div className="p-10 max-w-5xl mx-auto flex flex-col justify-center items-center">
             <div className="flex flex-col justify-center items-center mt-5 space-y-3">

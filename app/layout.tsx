@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
+import GlobalLoader from "@/Components/GlobalLoader/GlobalLoader";
 
 
 const poppins = Poppins({
@@ -28,6 +29,7 @@ export default function RootLayout({
       >
         <ToastContainer theme="dark" position="top-right" autoClose={3000} />
         <SessionProvider>
+          <GlobalLoader />
           {children}
         </SessionProvider>
       </body>

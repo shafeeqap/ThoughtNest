@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
 
     const session = await auth();
 
-    // console.log(session, 'Session...');
+    console.log(session, 'Session...');
     // console.log(nextAuthToken, 'Next Auth...');
     
     

@@ -3,12 +3,21 @@
 import React from 'react'
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebookF } from "react-icons/fa6";
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
+import Spinner from '@/Components/Spinner/Spinner';
+
+
 
 const SocialAccount: React.FC = () => {
+    const { status } = useSession();
+
+    if (status === 'loading') {
+        return <div><Spinner /></div>;
+    }
 
     return (
         <div className='flex flex-col gap-5 w-full'>
+            {/* Google */}
             <div
                 onClick={() =>
                     signIn('google', { callbackUrl: '/' })}
@@ -22,7 +31,11 @@ const SocialAccount: React.FC = () => {
                 </div>
             </div>
 
-            <div onClick={()=> signIn('facebook')} className='flex items-center border border-blue-800 w-full cursor-pointer'>
+            {/* Facebook */}
+            <div
+                onClick={() => signIn('facebook', { callbackUrl: '/' })}
+                className='flex items-center border border-blue-800 w-full cursor-pointer'
+            >
                 <div className='w-14 flex justify-center items-center'>
                     <FaFacebookF size={22} className='text-blue-800' />
                 </div>

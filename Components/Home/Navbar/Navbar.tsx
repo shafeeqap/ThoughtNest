@@ -13,6 +13,7 @@ import { useSession, signOut } from 'next-auth/react';
 import Spinner from '@/Components/Spinner/Spinner';
 
 
+
 type NavbarProps = {
     headerBgColor?: boolean;
     toggleOpenNav: () => void;
@@ -45,6 +46,7 @@ const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
     const { data: session } = useSession();
 
 
+
     useEffect(() => {
         const checkAuthStatus = async () => {
             try {
@@ -66,7 +68,7 @@ const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
 
     console.log(authStatus, 'Auth Status...');
 
-
+  
     const handleLogout = async () => {
         try {
             setAuthStatus(initialState);
@@ -94,7 +96,7 @@ const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
     }
 
     if (loading) {
-        return <div><Spinner size='small'/></div>;
+        return <div><Spinner size='small' /></div>;
     }
 
     return (
@@ -112,9 +114,7 @@ const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
                     />
                 </div>
             ) : (
-                <Link
-                    href={'/login'}
-                >
+                <Link href={'/login'}>
                     <p className={`hidden lg:block text-lg cursor-pointer underline 
                         ${headerBgColor ? 'text-white' : 'text-black'} hover:text-gray-500`}
                     >

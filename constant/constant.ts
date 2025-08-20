@@ -9,7 +9,7 @@ import { SiMicrodotblog } from "react-icons/si";
 
 
 export const adminNavLinks: NavLinksType[] = [
-  { id: 1, url: "/admin", label: "Dashboard", icon: MdOutlineDashboard },
+  { id: 1, url: "/admin/dashboard", label: "Dashboard", icon: MdOutlineDashboard },
   {
     id: 2,
     url: "/admin/addBlog",

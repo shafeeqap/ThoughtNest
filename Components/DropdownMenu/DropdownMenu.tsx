@@ -32,8 +32,6 @@ const DropdownMenu = ({ handleLogout, image, name, email, provider }: DropdownMe
         return () => window.removeEventListener('click', handleClickOutside);
     }, [])
 
-    console.log(provider, 'Provider...');
-
 
     return (
         <>

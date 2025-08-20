@@ -77,7 +77,7 @@ const Page = () => {
 
   return (
     <>
-      <form onSubmit={onSubmitHandler} className='py-10 pt-5 px-5 sm:pt-12 sm:pl-16 absolute w-[78%] md:w-2xl'>
+      <form onSubmit={onSubmitHandler} className='ml-14 md:ml-10 py-10 pt-5 px-5 sm:pt-12 sm:pl-16 absolute w-[78%] md:w-2xl'>
         <p className='text-xl'>Upload thumbnail</p>
         <label htmlFor="image">
           <Image className='mt-4 cursor-pointer'

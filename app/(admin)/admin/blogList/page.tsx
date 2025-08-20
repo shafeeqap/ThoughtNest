@@ -81,7 +81,7 @@ const Page = () => {
   }
 
   return (
-    <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16'>
+    <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
       <div className='flex max-w-[850px]'>
         <h1 className='hidden sm:block font-semibold w-full'>All blogs</h1>
         <div className='w-full flex justify-center'>
