@@ -15,6 +15,7 @@ export async function middleware(req: NextRequest) {
     req,
     secret: process.env.AUTH_SECRET,
   });
+
   if (nextAuthToken?.sub) {
     if (pathname.startsWith("/admin") && nextAuthToken.role !== "admin") {
       return NextResponse.redirect(new URL("/", req.url));
@@ -37,9 +38,9 @@ export async function middleware(req: NextRequest) {
   }
 
   // Handle unauthenticated users for protected routes
-  if (!["/login", "/signup"].includes(pathname)) {
-    return NextResponse.redirect(new URL("/login", req.url));
-  }
+  // if (!["/login", "/signup"].includes(pathname)) {
+  //   return NextResponse.redirect(new URL("/login", req.url));
+  // }
 
   return NextResponse.next();
 }
@@ -110,10 +111,6 @@ async function handleJwtAuth(req: NextRequest) {
 
     return res;
   }
-  // Handle unauthenticated users
-  // if (!["/login", "/signup"].includes(pathname)) {
-  //   return NextResponse.redirect(new URL("/login", req.url));
-  // }
 
   return NextResponse.next();
 }
@@ -125,7 +122,6 @@ export const config = {
     "/dashboard/:path*",
     "/profile/:path*",
     "/admin/:path*",
-    // "/api/((?!login|signup|token/refresh|auth|session).*)",
     "/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$).*)",
   ],
 };

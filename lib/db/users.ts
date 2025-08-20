@@ -9,6 +9,7 @@ interface UserInput {
   username?: string;
   provider: string;
   providerId: string;
+  image: string | null;
 }
 
 // ===> Helper function to find/create users when the user log in with OAuth <=== //
@@ -17,19 +18,21 @@ export async function findOrCreateUser({
   username = "Anonymous",
   provider,
   providerId,
+  image,
 }: UserInput) {
   await connectDB();
 
   let user = await UserModal.findOne({
     $or: [{ email }, { "providers.id": providerId }],
   });
-  console.log(user, "Google Auth...");
+
 
   if (!user) {
     user = new UserModal({
       email,
       username,
       providers: [{ name: provider, id: providerId }],
+      image,
     });
     await user.save();
   } else {
@@ -46,7 +49,6 @@ export async function findOrCreateUser({
 
   return user;
 }
-
 
 // ===> Helper function to access authenticate users when the user log in <=== //
 export async function authenticateUser(

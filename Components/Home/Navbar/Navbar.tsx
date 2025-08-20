@@ -10,16 +10,12 @@ import { FaArrowRight } from 'react-icons/fa'
 import { HiBars3BottomRight } from 'react-icons/hi2'
 import { toast } from 'react-toastify';
 import { useSession, signOut } from 'next-auth/react';
+import Spinner from '@/Components/Spinner/Spinner';
 
 
 type NavbarProps = {
     headerBgColor?: boolean;
     toggleOpenNav: () => void;
-}
-
-interface ProviderInfo {
-    id: string;
-    name: string;
 }
 
 interface AuthStatus {
@@ -29,7 +25,7 @@ interface AuthStatus {
     email: string;
     image: string;
     authMethod: string;
-    provider: ProviderInfo[];
+    provider: string;
 }
 
 const initialState: AuthStatus = {
@@ -39,27 +35,26 @@ const initialState: AuthStatus = {
     email: "",
     image: "",
     authMethod: "",
-    provider: [],
+    provider: "",
 }
 const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
     const [authStatus, setAuthStatus] = useState(initialState);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
     const pathname = usePathname();
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
 
-    console.log(session, 'Session Navbar...');
-    
 
     useEffect(() => {
         const checkAuthStatus = async () => {
             try {
                 const data = await sessionService.session();
 
-                console.log(data, 'Session Data...');
-
                 setAuthStatus(data);
             } catch (error) {
                 console.error('Failed to fetch session status:', error);
+            } finally {
+                setLoading(false);
             }
         }
 
@@ -98,6 +93,10 @@ const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
         }
     }
 
+    if (loading) {
+        return <div><Spinner size='small'/></div>;
+    }
+
     return (
         <div className={`flex ${authStatus.isAuthenticated ? 'flex-row-reverse' : 'flex-row'} items-center gap-5`}>
             {authStatus.isAuthenticated ? (
@@ -109,7 +108,7 @@ const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
                         name={authStatus.name}
                         email={authStatus.email}
                         authMethod={authStatus.authMethod}
-                        provider={authStatus.provider?.[0]?.name}
+                        provider={authStatus.provider}
                     />
                 </div>
             ) : (

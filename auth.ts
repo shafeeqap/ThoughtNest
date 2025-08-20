@@ -2,8 +2,8 @@
 
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
+import Facebook from "next-auth/providers/facebook";
 import { findOrCreateUser } from "./lib/db/users";
-// import Facebook from "next-auth/providers/facebook";
 import type { NextAuthConfig } from "next-auth";
 
 export const authConfig = {
@@ -17,13 +17,17 @@ export const authConfig = {
         },
       },
     }),
+    Facebook({
+      clientId: process.env.AUTH_FACEBOOK_ID!,
+      clientSecret: process.env.AUTH_FACEBOOK_SECRET!,
+    }),
   ],
   callbacks: {
     async signIn({ user, account }) {
-      console.log(user, "Google User...");
+      console.log(user, "Google / Facebook User...");
 
       try {
-        if (account?.provider !== "google") return true;
+        if (!account) return true;
         if (!user.email) throw new Error("No email found");
 
         await findOrCreateUser({
@@ -31,6 +35,7 @@ export const authConfig = {
           username: user.name || "Anonymous",
           provider: account.provider,
           providerId: account.providerAccountId,
+          image: user.image ?? null,
         });
 
         return true;
@@ -40,14 +45,20 @@ export const authConfig = {
       }
     },
     async jwt({ token, user, account }) {
-      if (account?.provider === "google" && user) {
-        token.sub = user.id;
+      if (account?.provider) {
+        token.provider = account.provider;
+      }
+      if (user) {
+        token.sub = user.id ?? token.sub;
       }
       return token;
     },
     async session({ session, token }) {
       if (token.sub) {
         session.user.id = token.sub;
+      }
+      if (token.provider) {
+        session.user.provider = token.provider;
       }
 
       return session;

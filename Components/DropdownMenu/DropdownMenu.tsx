@@ -3,10 +3,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { navLink } from '@/constant/constant';
 import { FcGoogle } from "react-icons/fc";
+import { FaFacebookF } from "react-icons/fa6";
 import Image from 'next/image'
 import Link from 'next/link';
-import { signOut } from "@/auth";
-import { useSession } from 'next-auth/react';
+
 
 type DropdownMenuProps = {
     handleLogout: () => void;
@@ -21,7 +21,6 @@ const DropdownMenu = ({ handleLogout, image, name, email, provider }: DropdownMe
     const [toggleMenu, setToggleMenu] = useState(false);
     const imgRef = useRef<HTMLImageElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
-    const { data: session, status } = useSession();
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -33,6 +32,7 @@ const DropdownMenu = ({ handleLogout, image, name, email, provider }: DropdownMe
         return () => window.removeEventListener('click', handleClickOutside);
     }, [])
 
+    console.log(provider, 'Provider...');
 
 
     return (
@@ -63,8 +63,14 @@ const DropdownMenu = ({ handleLogout, image, name, email, provider }: DropdownMe
                             />
                             <p className='text-xs'>{email}</p>
                             <p className='uppercase text-sm font-bold'>{name}</p>
-                            {provider === 'google' && (
-                                <p><FcGoogle size={22} /> </p>
+                            {provider && (
+                                <div>
+                                    {provider === 'google' ? (
+                                        <FcGoogle size={22} />
+                                    ) : (
+                                        <FaFacebookF size={22} className='text-blue-800' />
+                                    )}
+                                </div>
                             )}
                         </div>
                         <ul>

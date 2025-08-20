@@ -22,7 +22,7 @@ const SocialAccount: React.FC = () => {
                 </div>
             </div>
 
-            <div className='flex items-center border border-blue-800 w-full cursor-pointer'>
+            <div onClick={()=> signIn('facebook')} className='flex items-center border border-blue-800 w-full cursor-pointer'>
                 <div className='w-14 flex justify-center items-center'>
                     <FaFacebookF size={22} className='text-blue-800' />
                 </div>

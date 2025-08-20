@@ -13,6 +13,10 @@ export async function GET(req: NextRequest) {
 
     const session = await auth();
 
+    // console.log(session, 'Session...');
+    // console.log(nextAuthToken, 'Next Auth...');
+    
+    
     const email = session?.user?.email;
 
     const user = await UserModal.findOne({ email });
@@ -25,7 +29,7 @@ export async function GET(req: NextRequest) {
         email: user?.email,
         image: session?.user?.image,
         role: user?.role,
-        provider: user?.providers,
+        provider: session?.user.provider,
         authMethod: "oauth",
       });
     }
