@@ -10,7 +10,10 @@ import { getToken } from "next-auth/jwt";
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Check for NextAuth session
+  if (pathname === "/admin") {
+    return NextResponse.next();
+  }
+
   const nextAuthToken = await getToken({
     req,
     secret: process.env.AUTH_SECRET,
@@ -33,14 +36,23 @@ export async function middleware(req: NextRequest) {
   const accessToken = req.cookies.get("accessToken")?.value;
   const refreshToken = req.cookies.get("refreshToken")?.value;
 
+  // If accessing admin routes without any tokens, redirect to login
+  if (
+    pathname.startsWith("/admin") &&
+    pathname !== "/admin" &&
+    !accessToken &&
+    !refreshToken
+  ) {
+    return NextResponse.redirect(new URL("/admin", req.url));
+  }
+
+  if (pathname.startsWith("/profile") && !accessToken && !refreshToken) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
   if (accessToken || refreshToken) {
     return handleJwtAuth(req);
   }
-
-  // Handle unauthenticated users for protected routes
-  // if (!["/login", "/signup"].includes(pathname)) {
-  //   return NextResponse.redirect(new URL("/login", req.url));
-  // }
 
   return NextResponse.next();
 }
@@ -69,13 +81,11 @@ async function handleJwtAuth(req: NextRequest) {
         refreshToken
       )) as TokenPayload;
 
-      // Generate new access token
       newAccessToken = await createAccessToken({
         userId: decodedRefresh.userId,
         role: decodedRefresh.role,
       });
 
-      // Verify new token
       decoded = (await verifyAccessToken(newAccessToken)) as { role: string };
     } catch (error) {
       console.error("Refresh failed:", error);
@@ -86,41 +96,56 @@ async function handleJwtAuth(req: NextRequest) {
     }
   }
 
-  if (decoded) {
-    // Admin route protection
-    if (pathname.startsWith("/admin") && decoded?.role !== "admin") {
-      return NextResponse.redirect(new URL("/", req.url));
+  if (!decoded) {
+    if (pathname.startsWith("/admin")) {
+      const response = NextResponse.redirect(new URL("/admin", req.url));
+      response.cookies.delete("accessToken");
+      response.cookies.delete("refreshToken");
+      return response;
     }
+    return NextResponse.next();
+  }
 
-    // Redirect to home if trying to access login/signup while authenticated
-    if (["/login", "/signup"].includes(pathname)) {
-      return NextResponse.redirect(new URL("/", req.url));
-    }
+  // Admin route protection
+  if (pathname.startsWith("/admin") && decoded?.role !== "admin") {
+    const response = NextResponse.redirect(new URL("/login", req.url));
+    response.cookies.delete("accessToken");
+    response.cookies.delete("refreshToken");
+    return response;
+  }
 
-    const res = NextResponse.next();
+  if (pathname === "/admin" && decoded.role === "admin") {
+    return NextResponse.redirect(new URL("/admin/dashboard", req.url));
+  }
 
-    if (newAccessToken) {
-      res.cookies.set("accessToken", newAccessToken, {
-        httpOnly: true,
-        maxAge: 15 * 60,
-        path: "/",
-        sameSite: "lax",
-        secure: process.env.NODE_ENV !== "development",
-      });
-    }
+  // Redirect to home if trying to access login/signup while authenticated
+  if (["/login", "/signup"].includes(pathname)) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
 
-    return res;
+  if (newAccessToken) {
+    const response = NextResponse.next();
+
+    response.cookies.set("accessToken", newAccessToken, {
+      httpOnly: true,
+      maxAge: 15 * 60,
+      path: "/",
+      sameSite: "lax",
+      secure: process.env.NODE_ENV !== "development",
+    });
+
+    return response;
   }
 
   return NextResponse.next();
 }
 
+// Ref: https://nextjs.org/docs/app/api-reference/file-conventions/middleware#matcher
 export const config = {
   matcher: [
     "/login",
     "/signup",
-    "/dashboard/:path*",
-    "/profile/:path*",
+    "/profile",
     "/admin/:path*",
     "/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$).*)",
   ],

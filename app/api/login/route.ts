@@ -23,7 +23,7 @@ export async function POST(req: Request) {
 
     const response = NextResponse.json({
       msg: "Login successful",
-      user: { id: user.id, username: user.username, email: user.email },
+      user: { id: user.id, username: user.username, email: user.email, role: user.role },
     });
 
     response.cookies.set("accessToken", accessToken, {

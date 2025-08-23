@@ -1,8 +1,11 @@
 // import "server-only";
 
+// Ref: https://authjs.dev/guides/role-based-access-control
+
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Facebook from "next-auth/providers/facebook";
+import GitHub from "next-auth/providers/github";
 import { findOrCreateUser } from "./lib/db/users";
 import type { NextAuthConfig } from "next-auth";
 
@@ -21,6 +24,7 @@ export const authConfig = {
       clientId: process.env.AUTH_FACEBOOK_ID!,
       clientSecret: process.env.AUTH_FACEBOOK_SECRET!,
     }),
+    GitHub({})
   ],
   callbacks: {
     async signIn({ user, account }) {

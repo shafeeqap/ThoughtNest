@@ -91,8 +91,6 @@ const Page = () => {
           />
         </div>
       </div>
-
-
       <div className='relative max-w-[850px] overflow-x-auto mt-4 scrollbar-hide'>
         <table className='w-full text-sm text-gray-500'>
           <thead className='text-sm text-white text-left uppercase bg-[#626a7a]'>

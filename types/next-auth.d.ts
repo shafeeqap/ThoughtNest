@@ -1,3 +1,5 @@
+// Ref: https://authjs.dev/getting-started/typescript#module-augmentation
+
 import { DefaultSession } from "next-auth";
 
 declare module "next-auth" {

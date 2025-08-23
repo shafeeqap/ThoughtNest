@@ -1,5 +1,7 @@
 import { type JWTPayload } from "jose";
 
+type UserRole = "admin" | "user" | "author";
+
 export interface SignUpFormData {
   username: string;
   email: string;
@@ -12,9 +14,19 @@ export interface AuthFormData {
   password: string;
 }
 
-type UserRole = "admin" | "user" | "author";
-
 export interface TokenPayload extends JWTPayload {
   userId: string;
   role?: UserRole;
+}
+
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+  role: UserRole;
+}
+
+export interface LoginResponse {
+  msg: string;
+  user: User;
 }

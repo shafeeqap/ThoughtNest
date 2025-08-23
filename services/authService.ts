@@ -1,4 +1,4 @@
-import { SignUpFormData } from "@/types/auth";
+import { LoginResponse, SignUpFormData } from "@/types/auth";
 import axios from "axios";
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
@@ -30,7 +30,7 @@ export const authService = {
       throw new Error("Signup failed");
     }
   },
-  login: async (email: string, password: string): Promise<{ msg: string }> => {
+  login: async (email: string, password: string): Promise<LoginResponse> => {
     try {
       const response = await axiosInstance.post(`/api/login`, {
         email,

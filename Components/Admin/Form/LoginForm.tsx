@@ -2,17 +2,17 @@
 
 import React, { useState } from 'react';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
-import TextInput from '../Inputs/TextInput';
-import Button from '../Button/Button';
-import PasswordInput from '../Inputs/PasswordInput';
 import { ErrorType } from '@/types/error';
 import { validateLoginForm } from '@/lib/validators/validateLoginForm';
 import { authService } from '@/services/authService';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import TextInput from '@/Components/ui/Inputs/TextInput';
+import PasswordInput from '@/Components/ui/Inputs/PasswordInput';
+import Button from '@/Components/ui/Button/Button';
 
 
-const LogInForm: React.FC = () => {
+const AdminLogInForm: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('');
@@ -20,11 +20,11 @@ const LogInForm: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const validationError = validateLoginForm(email, password)
-
         if (validationError) {
             setError(validationError)
             return
@@ -34,9 +34,14 @@ const LogInForm: React.FC = () => {
 
         try {
             const response = await authService.login(email, password);
-
-            toast.success(response.msg)
-            router.replace('/')
+            console.log(response.user, "Admin log...");
+            if (response.user.role === 'admin') {
+                toast.success(response.msg)
+                router.replace('/admin/dashboard')
+            } else {
+                // router.replace('/login')
+                toast.warning('No admin role')
+            }
 
             setEmail('');
             setPassword('')
@@ -52,7 +57,7 @@ const LogInForm: React.FC = () => {
             setLoading(false)
         }
     }
-    
+
     return (
         <>
             <form onSubmit={handleSubmit} >
@@ -82,9 +87,10 @@ const LogInForm: React.FC = () => {
                 />
                 <div className='mt-10 py-10'>
                     <Button
+                        size='large'
                         type='submit'
                         label='Continue with Email'
-                        className='flex items-center border border-gray-300 transform transition-colors duration-500 delay-150'
+                        className='flex items-center bg-blue-500 text-white w-full transform transition-colors duration-500 delay-150'
                         icon={<MdOutlineKeyboardArrowRight size={22} />}
                         disabled={loading}
                         loading={loading}
@@ -95,4 +101,4 @@ const LogInForm: React.FC = () => {
     )
 }
 
-export default LogInForm
+export default AdminLogInForm
