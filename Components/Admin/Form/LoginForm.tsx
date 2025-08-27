@@ -36,8 +36,8 @@ const AdminLogInForm: React.FC = () => {
             const response = await authService.login(email, password);
             console.log(response.user, "Admin log...");
             if (response.user.role === 'admin') {
-                toast.success(response.msg)
                 router.replace('/admin/dashboard')
+                toast.success(response.msg)
             } else {
                 // router.replace('/login')
                 toast.warning('No admin role')

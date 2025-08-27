@@ -16,7 +16,7 @@ type MobileNavbarProps = {
 }
 
 const MobileNavbar: React.FC<MobileNavbarProps> = ({ showNav, toggleOpenNav }) => {
-  const [authStatus, setAuthStatus] = useState(false)
+  const [authStatus, setAuthStatus] = useState<{ isAuthenticated: string, role: string }>({ isAuthenticated: '', role: '' })
   const router = useRouter();
   const pathname = usePathname();
 
@@ -25,7 +25,7 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({ showNav, toggleOpenNav }) =
     const checkAuthStatus = async () => {
       try {
         const data = await sessionService.session()
-        setAuthStatus(data.isAuthenticated);
+        setAuthStatus(data);
       } catch (error) {
         console.error('Failed to fetch session status:', error);
       }
@@ -37,13 +37,15 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({ showNav, toggleOpenNav }) =
     return () => clearInterval(interval);
   }, [pathname])
 
+  console.log(authStatus, 'Auth Status Mobile menu...');
+
 
   const handleLogout = async () => {
     try {
       const response = await authService.logout();
       if (response) {
         toast.success(response.msg);
-        setAuthStatus(false);
+        setAuthStatus({ isAuthenticated: '', role: '' });
         toggleOpenNav();
         router.push('/');
       }
@@ -89,7 +91,7 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({ showNav, toggleOpenNav }) =
           </div>
 
           <div className='flex justify-around gap-5'>
-            {authStatus ? (
+            {authStatus.isAuthenticated && authStatus.role !== 'admin' ? (
               <div onClick={handleLogout} className='cursor-pointer'>
                 <p className='text-lg sm:text-2xl hover:text-gray-400'>Logout</p>
               </div>

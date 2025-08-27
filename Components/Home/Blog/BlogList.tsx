@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react'
 import { BlogItemType, Category } from '@/types/blog'
 import { blogService } from '@/services/blogService'
 import Blog from './Blog'
+import Banner from '@/Components/ui/Banner/Banner'
+
 
 const categories: Category[] = ["All", "Technology", "Startup", "Lifestyle"]
 
@@ -39,6 +41,9 @@ const BlogList: React.FC = () => {
                     </button>
                 })}
             </div>
+
+            {/* Banner Section */}
+            {/* <Banner /> */}
 
             {/* Blog Section */}
             <Blog

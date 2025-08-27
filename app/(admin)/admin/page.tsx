@@ -14,8 +14,8 @@ const AdminHomepage = () => {
             Thought
             <span className='font-light'>Nest</span>
           </h1>
-
         </div>
+
         <div className="w-full md:w-100 lg:w-3/4 flex flex-col md:items-center mx-auto my-auto">
           <div className="flex flex-col justify-center items-center mt-20">
             <h1 className="text-4xl sm:font-semibold transform">Admin Login</h1>
@@ -28,10 +28,8 @@ const AdminHomepage = () => {
           </div>
         </div>
       </div>
-      {/* Vertical Divider */}
-      {/* <div className="hidden md:flex justify-center items-center">
-        <div className="h-1/2 w-px bg-gray-300" />
-    </div> */}
+      
+      {/* Background Image */}
       <div className="hidden lg:block w-1/2 h-screen bg-[url('/blogging.png')] bg-cover bg-center"></div>
     </div>
   )

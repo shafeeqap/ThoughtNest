@@ -10,6 +10,7 @@ export interface IUser extends Document {
     name: string;
   }[];
   role: "admin" | "user" | "author";
+  status: "active" | "blocked";
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -42,6 +43,11 @@ const UserSchema: Schema<IUser> = new Schema(
       type: String,
       enum: ["user", "admin", "author"],
       default: "user",
+    },
+    status: {
+      type: String,
+      enum: ["active", "blocked"],
+      default: "active",
     },
   },
   { timestamps: true }

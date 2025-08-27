@@ -5,9 +5,10 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Facebook from "next-auth/providers/facebook";
-import GitHub from "next-auth/providers/github";
+import Credentials from "next-auth/providers/credentials";
 import { findOrCreateUser } from "./lib/db/users";
 import type { NextAuthConfig } from "next-auth";
+
 
 export const authConfig = {
   providers: [
@@ -24,7 +25,13 @@ export const authConfig = {
       clientId: process.env.AUTH_FACEBOOK_ID!,
       clientSecret: process.env.AUTH_FACEBOOK_SECRET!,
     }),
-    GitHub({})
+    Credentials({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+    }),
   ],
   callbacks: {
     async signIn({ user, account }) {

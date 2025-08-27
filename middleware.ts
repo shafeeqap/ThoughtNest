@@ -119,7 +119,7 @@ async function handleJwtAuth(req: NextRequest) {
   }
 
   // Redirect to home if trying to access login/signup while authenticated
-  if (["/login", "/signup"].includes(pathname)) {
+  if (["/login", "/signup"].includes(pathname) && decoded.role !== "admin") {
     return NextResponse.redirect(new URL("/", req.url));
   }
 

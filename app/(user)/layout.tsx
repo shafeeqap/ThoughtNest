@@ -1,7 +1,7 @@
 
 
-import Footer from "@/Components/Home/Footer/Footer";
-import Header from "@/Components/Home/Header/Header";
+import Footer from "@/Components/ui/Footer/Footer";
+import Header from "@/Components/ui/Header/Header";
 import { ReactNode } from "react";
 import { ToastContainer } from "react-toastify";
 

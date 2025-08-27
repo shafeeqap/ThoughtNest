@@ -24,6 +24,7 @@ export interface User {
   username: string;
   email: string;
   role: UserRole;
+  status: string;
 }
 
 export interface LoginResponse {

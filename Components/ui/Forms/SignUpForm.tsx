@@ -26,7 +26,6 @@ const SignUpForm: React.FC = () => {
     e.preventDefault();
 
     const validationError = validateSignUpForm(username, email, password, confirmPassword)
-
     if (validationError) {
       setError(validationError)
       return;
@@ -36,6 +35,7 @@ const SignUpForm: React.FC = () => {
 
     try {
       const response = await authService.signUp({ username, email, password });
+
       toast.success(response.msg || 'User registered successfully');
 
       router.replace('/login');
@@ -45,6 +45,7 @@ const SignUpForm: React.FC = () => {
       setPassword('');
       setConfirmPassword('');
       setError({});
+
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.warning(error.message);

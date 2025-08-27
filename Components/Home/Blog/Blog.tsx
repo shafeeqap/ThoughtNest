@@ -41,6 +41,7 @@ const Blog: React.FC<PropType> = ({ filteredBlogs, categories }) => {
                                             <FaArrowRightLong />
                                         </div>
                                     </div>
+
                                     {/* Blog Item List */}
                                     < div className='flex flex-wrap justify-self-auto gap-5 lg:gap-10 gap-y-10 mb-16'>
                                         {blogsForCategory.slice(0, 3).map((item, index) => (

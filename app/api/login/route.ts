@@ -11,19 +11,35 @@ export async function POST(req: Request) {
     const { email, password } = await req.json();
 
     const user = await authenticateUser(email, password);
+    console.log(user, "User...");
+
+    if (user.status === "blocked") {
+      return NextResponse.json(
+        { msg: "Your account has been blocked." },
+        { status: 403 }
+      );
+    }
 
     const accessToken = await createAccessToken({
       userId: user.id,
       role: user.role,
+      status: user.status,
     });
     const refreshToken = await createRefreshToken({
       userId: user.id,
       role: user.role,
+      status: user.status,
     });
 
     const response = NextResponse.json({
       msg: "Login successful",
-      user: { id: user.id, username: user.username, email: user.email, role: user.role },
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+      },
     });
 
     response.cookies.set("accessToken", accessToken, {

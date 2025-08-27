@@ -2,7 +2,7 @@ import { connectDB } from "@/lib/config/db";
 import UserModal, { IUser } from "@/lib/models/UserModel";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { createAccessToken, createRefreshToken } from "@/lib/jwt/jwt";
+
 
 export async function POST(req: Request) {
   try {
@@ -32,14 +32,6 @@ export async function POST(req: Request) {
     });
     await newUser.save();
 
-    const accessToken = await createAccessToken({
-      userId: newUser.id,
-      role: newUser.role,
-    });
-    const refreshToken = await createRefreshToken({
-      userId: newUser.id,
-      role: newUser.role,
-    });
 
     const response = NextResponse.json(
       {
@@ -53,21 +45,6 @@ export async function POST(req: Request) {
       { status: 201 }
     );
 
-    response.cookies.set("accessToken", accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
-      sameSite: "strict",
-      path: "/",
-      maxAge: 15 * 60,
-    });
-
-    response.cookies.set("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
-      sameSite: "strict",
-      path: "/",
-      maxAge: 7 * 24 * 60 * 60,
-    });
 
     return response;
   } catch (error) {

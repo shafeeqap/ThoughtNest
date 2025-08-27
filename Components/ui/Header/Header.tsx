@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { FaSwatchbook } from 'react-icons/fa6';
-import ResponsiveNav from '../Navbar/ResponsiveNav';
+import ResponsiveNav from '../../Home/Navbar/ResponsiveNav';
 
 
 

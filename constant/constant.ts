@@ -23,8 +23,8 @@ export const adminNavLinks: NavLinksType[] = [
     label: "Subscriptions",
     icon: MdUnsubscribe,
   },
-  { id: 5, url: "#", label: "Category", icon: IoLogoBuffer },
-  { id: 6, url: "#", label: "Users", icon: FaUserCircle },
+  { id: 5, url: "/admin/category", label: "Category", icon: IoLogoBuffer },
+  { id: 6, url: "/admin/users", label: "Users", icon: FaUserCircle },
 ];
 
 export const navLink: NavLinksType[] = [

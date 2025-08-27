@@ -27,6 +27,7 @@ interface AuthStatus {
     image: string;
     authMethod: string;
     provider: string;
+    role: string;
 }
 
 const initialState: AuthStatus = {
@@ -37,6 +38,7 @@ const initialState: AuthStatus = {
     image: "",
     authMethod: "",
     provider: "",
+    role: "",
 }
 const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
     const [authStatus, setAuthStatus] = useState(initialState);
@@ -68,7 +70,7 @@ const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
 
     console.log(authStatus, 'Auth Status...');
 
-  
+
     const handleLogout = async () => {
         try {
             setAuthStatus(initialState);
@@ -100,8 +102,8 @@ const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
     }
 
     return (
-        <div className={`flex ${authStatus.isAuthenticated ? 'flex-row-reverse' : 'flex-row'} items-center gap-5`}>
-            {authStatus.isAuthenticated ? (
+        <div className={`flex ${authStatus.isAuthenticated && authStatus.role !== 'admin' ? 'flex-row-reverse' : 'flex-row'} items-center gap-5`}>
+            {authStatus.isAuthenticated && authStatus.role !== 'admin' ? (
                 <div className='hidden lg:block'>
                     {/* Dropdown Menu */}
                     <DropdownMenu

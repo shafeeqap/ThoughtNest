@@ -45,9 +45,8 @@ const Hero: React.FC = () => {
     }
 
     return (
-        <div className='flex flex-col justify-center items-center bg-gray-300 w-full sm:h-[500px] md:h-screen px-5 md:py-[30%] md:px-8'>
-            <section className=' max-w-full py-28 lg:py-0'>
-
+        <div className='flex justify-center items-center bg-radial-[at_25%_25%] from-whitel to-zinc-400 to-35% w-full sm:h-[500px] md:h-screen px-5 md:py-[30%] md:px-8'>
+            <section className='max-w-full py-28 lg:py-0'>
                 {/* Subscription */}
                 <SubscribeForm
                     handleSubmit={handleSubmit}
@@ -59,8 +58,7 @@ const Hero: React.FC = () => {
                 <header className='text-start sm:py-10 py-5'>
                     <h1 className='text-3xl sm:text-4xl font-medium'>Latest Blogs</h1>
                 </header>
-
-                <div className=' grid grid-col-1 md:grid-cols-2 lg:grid-cols-2 gap-4'>
+                <div className='grid grid-col-1 md:grid-cols-2 lg:grid-cols-2 gap-4'>
                     {/* Text Content */}
                     <div className='w-fit h-fit'>
                         <h1 className='text-2xl font-semibold mb-5'>Title</h1>
