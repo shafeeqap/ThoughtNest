@@ -27,8 +27,6 @@ const Page = () => {
     useEffect(() => {
         const getCategoryData = async () => {
             const response = await categoryService.fetchCategory();
-            console.log(response, 'Response...');
-
             setCategory(response);
             setIsLoading(false);
         }
@@ -59,9 +57,7 @@ const Page = () => {
 
     const handleCategoryAction = async (id: string) => {
         try {
-              const res = await categoryService.toggleCategoryStatus(id)
-              console.log(res, 'Res...');
-              
+              const res = await categoryService.toggleCategoryStatus(id);
               setCategory(prev => {
                 return prev.map(category => {
                   if (category._id === id) {
@@ -84,7 +80,6 @@ const Page = () => {
         try {
             const response = await categoryService.addCategory(categoryName, description);
             toast.success(response.msg);
-            // setCategory((prev) => [...prev, response.newCategory]);
             setCategoryName('');
             setDescription('');
             setShowModal(false);

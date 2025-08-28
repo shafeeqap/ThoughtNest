@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { debounce } from 'lodash';
 import { formatDate } from '@/lib/utils/helpers/formatDate';
 import Search from '@/features/search/Search';
+import { FiPlus } from 'react-icons/fi';
 
 const Page = () => {
   const [allBlogs, setAllBlogs] = useState<BlogItemType[]>([]);
@@ -70,7 +71,7 @@ const Page = () => {
         if (currentPage > newTotalPages) {
           setCurrentPage(prevPage => Math.max(1, prevPage - 1))
         }
-        
+
         return updatedBlog
       })
 
@@ -82,16 +83,22 @@ const Page = () => {
 
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
-      <div className='flex max-w-[850px]'>
-        <h1 className='hidden sm:block font-semibold w-full'>All blogs</h1>
-        <div className='w-full flex justify-center'>
+      <div className='flex max-w-[1100px] flex-col md:flex-row justify-between items-center gap-5'>
+        <h1 className='hidden sm:block font-semibold w-[30%]'>All blogs</h1>
+        <div className='w-[40%] flex justify-around items-center'>
           <Search
             handleSearch={handleSearch}
             searchTerm={searchTerm}
           />
         </div>
+        <div
+          // onClick={() => setShowModal(true)}
+          className='w-full md:w-fit gap-1 bg-gray-200 px-3 py-2 flex justify-center items-center cursor-pointer hover:bg-gray-300'
+        >
+          <FiPlus size={22} />Add blog
+        </div>
       </div>
-      <div className='relative max-w-[850px] overflow-x-auto mt-4 scrollbar-hide'>
+      <div className='relative max-w-[1100px] overflow-x-auto mt-4 scrollbar-hide'>
         <table className='w-full text-sm text-gray-500'>
           <thead className='text-sm text-white text-left uppercase bg-[#626a7a]'>
             <tr>
@@ -101,6 +108,8 @@ const Page = () => {
               <th scope='col' className='px-6 py-3'>Date</th>
               <th scope='col' className='px-6 py-3'>Category</th>
               <th scope='col' className='px-6 py-3'>Image</th>
+              <th scope='col' className='px-6 py-3'>Status</th>
+              <th scope='col' className='px-6 py-3'>Update</th>
               <th scope='col' className='px-6 py-3'>Action</th>
             </tr>
           </thead>

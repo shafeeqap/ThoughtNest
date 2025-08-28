@@ -6,7 +6,7 @@ import { BlogItemType } from '@/types/blog';
 import Image from 'next/image'
 import React, { useState } from 'react'
 import { IoTrashBinOutline } from 'react-icons/io5';
-
+import { CiEdit } from "react-icons/ci";
 
 interface IProps extends BlogItemType {
     onDelete: (id: string) => void;
@@ -61,11 +61,17 @@ const BlogTableItem: React.FC<IProps> = ({
                         className='w-14 h-12 object-cover border border-black'
                     />
                 </td>
+                <td className='px-6 py-4'>
+                    Approved
+                </td>
+                <td className='px-6 py-4'>
+                    <CiEdit size={32} title='Edit blog' className='cursor-pointer'/>
+                </td>
                 <td className='px-6 py-4 sm:flex justify-around items-center '>
-
                     <IoTrashBinOutline
                         onClick={() => setShowModal(true)}
                         size={20}
+                        title='Delete blog'
                         className='text-black hover:text-red-500 cursor-pointer'
                     />
                     {showModal && (
