@@ -20,9 +20,7 @@ const Page = () => {
   useEffect(() => {
     const getUserData = async () => {
       const response = await userService.getUsers()
-      console.log(response);
-
-      setUsers(response);
+      setUsers(Array.isArray(response) ? response : []);
       setIsLoading(false);
     }
 
@@ -36,7 +34,7 @@ const Page = () => {
   }, [searchTerm])
 
   const filteredUser = useMemo(() => {
-    return users.filter((item) => {
+    return (users || []).filter((item) => {
 
       return `${item.username} ${item.email} ${item.role} ${item.status}`
         .toLowerCase()
@@ -45,15 +43,27 @@ const Page = () => {
   }, [users, searchTerm])
 
   // Pagination logic
-  const paginatedSubscription = useMemo(() => {
+  const paginatedUser = useMemo(() => {
     return filteredUser.slice((currentPage - 1) * recordsPerPage, currentPage * recordsPerPage)
   }, [filteredUser, currentPage])
 
+
   const numberOfPages = Math.ceil(filteredUser.length / recordsPerPage);
 
-  const handleUserAction = async (id: string, currentStatus: boolean) => {
+  const handleUserAction = async (id: string) => {
     try {
-      const res = await userService.toggleUserStatus(id, !currentStatus)
+      const res = await userService.toggleUserStatus(id)
+      setUsers(prev => {
+        return prev.map(user => {
+          if (user._id === id) {
+            return {
+              ...user,
+              status: res.updatedUser.status
+            }
+          }
+          return user
+        })
+      })
       toast.success(res.msg);
     } catch (error) {
       toast.error("Failed to update user status");
@@ -107,14 +117,14 @@ const Page = () => {
                   </div>
                 </td>
               </tr>
-            ) : paginatedSubscription.length === 0 ? (
+            ) : paginatedUser.length === 0 ? (
               <tr>
                 <td colSpan={7} className='text-center py-6 text-gray-600'>
                   No subscription found.
                 </td>
               </tr>
             ) : (
-              paginatedSubscription.map((item, index) => (
+              paginatedUser.map((item, index) => (
                 <UserTableItem
                   key={index}
                   {...item}

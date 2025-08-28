@@ -1,4 +1,4 @@
-import { ConfirmDeleteModal } from '@/Components/Modal';
+import { ConfirmModal } from '@/Components/Modal';
 import { assets } from '@/data/assets'
 import { formatDate } from '@/lib/utils/helpers/formatDate';
 import { truncateText } from '@/lib/utils/helpers/truncateText';
@@ -69,7 +69,7 @@ const BlogTableItem: React.FC<IProps> = ({
                         className='text-black hover:text-red-500 cursor-pointer'
                     />
                     {showModal && (
-                        <ConfirmDeleteModal
+                        <ConfirmModal
                             isOpen={showModal}
                             onClose={() => setShowModal(false)}
                             onConfirm={() => onDelete(_id)}

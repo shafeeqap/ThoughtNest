@@ -8,14 +8,16 @@ interface ConfirmModalProps {
     onConfirm: () => void;
     title?: string;
     message?: string;
+    buttonText?: string;
 }
 
-const ConfirmDeleteModal: React.FC<ConfirmModalProps> = ({
+const ConfirmModal: React.FC<ConfirmModalProps> = ({
     isOpen,
     onClose,
     onConfirm,
     title = 'Are you sure?',
-    message = 'Do you really want to delete these records? This process cannot be undone.'
+    message = 'Do you really want to delete these records? This process cannot be undone.',
+    buttonText = 'Delete'
 }) => {
 
     return (
@@ -40,7 +42,7 @@ const ConfirmDeleteModal: React.FC<ConfirmModalProps> = ({
                         onClick={onConfirm}
                         className='bg-red-500 px-7 py-2 rounded cursor-pointer uppercase hover:bg-red-600'
                     >
-                        Delete
+                        {buttonText}
                     </button>
                 </div>
             </BaseModal>
@@ -48,4 +50,4 @@ const ConfirmDeleteModal: React.FC<ConfirmModalProps> = ({
     )
 }
 
-export default ConfirmDeleteModal
+export default ConfirmModal

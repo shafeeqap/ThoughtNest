@@ -10,8 +10,8 @@ export const userService = {
     const response = await axiosInstance.get("/api/user");
     return response.data.user;
   },
-  toggleUserStatus: async (id: string, status: boolean) => {
-    const response = await axiosInstance.patch(`/api/user/${id}`, status);
+  toggleUserStatus: async (id: string) => {
+    const response = await axiosInstance.patch(`/api/user/${id}`);
     return response.data;
   },
 };

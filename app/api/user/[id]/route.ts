@@ -4,13 +4,12 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
 
-    const { id } = params;
-    const { status } = await req.json();
+    const { id } = await context.params;
 
     const user = await UserModal.findById(id);
 
@@ -18,9 +17,11 @@ export async function PATCH(
       return NextResponse.json({ msg: "User not found" }, { status: 404 });
     }
 
+    const newStatus = user.status === "active" ? "blocked" : "active";
+
     const updatedUser = await UserModal.findByIdAndUpdate(
       id,
-      { status },
+      { status: newStatus },
       { new: true }
     );
 
@@ -29,6 +30,8 @@ export async function PATCH(
       { status: 200 }
     );
   } catch (error) {
+    console.log(error);
+
     return NextResponse.json(
       { msg: "Error user action by ID", error },
       { status: 500 }

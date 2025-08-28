@@ -1,4 +1,4 @@
-import { ConfirmDeleteModal } from '@/Components/Modal';
+import { ConfirmModal } from '@/Components/Modal';
 import { formatDate } from '@/lib/utils/helpers/formatDate';
 import { SubscriptionType } from '@/types/subscription';
 import React, { useState } from 'react'
@@ -28,7 +28,7 @@ const SubsTableItem: React.FC<IProps> = ({ _id, email, date, counter, onDelete }
                         className='text-black hover:text-red-500 cursor-pointer'
                     />
                     {showModal && (
-                        <ConfirmDeleteModal
+                        <ConfirmModal
                             isOpen={showModal}
                             onClose={() => setShowModal(false)}
                             onConfirm={async () => {
