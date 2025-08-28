@@ -1,6 +1,6 @@
+import React, { useState } from 'react'
 import { ConfirmModal } from '@/Components/Modal';
 import { User } from '@/types/auth';
-import React, { useState } from 'react'
 import { IoBanOutline, IoCheckmarkCircleOutline } from 'react-icons/io5'
 
 interface IProps extends User {
@@ -28,9 +28,9 @@ const UserTableItem: React.FC<IProps> = ({ counter, _id, username, email, role, 
                     )}
                 </td>
                 <td className='px-6 py-4 flex justify-center'>
-                    {status === 'active' ? (
+                    {status === 'active' && role !=='admin' ? (
                         <button
-                            disabled={role === 'admin'}
+                            // disabled={role === 'admin'}
                             onClick={() => setShowModal(true)}
                         >
                             <IoBanOutline

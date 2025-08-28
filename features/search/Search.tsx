@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaSearch } from 'react-icons/fa'
+// import { FaSearch } from 'react-icons/fa'
 
 type SearchPropsType = {
     handleSearch: (value: string) => void;
@@ -13,11 +13,11 @@ const Search: React.FC<SearchPropsType> = ({ searchTerm, handleSearch, placehold
                 placeholder={placeholder}
                 onChange={(e) => handleSearch(e.target.value)}
                 value={searchTerm}
-                className='border-b border-gray-400 pl-8 p-2 outline-0 w-full text-black placeholder-gray-700 peer'
+                className='border-b border-gray-400 p-2 outline-0 w-full text-black placeholder-gray-700 peer'
             />
-            {searchTerm === '' && (
+            {/* {searchTerm === '' && (
                 <FaSearch className='absolute left-3 top-3 text-gray-700 pointer-events-none' />
-            )}
+            )} */}
         </div>
     )
 }

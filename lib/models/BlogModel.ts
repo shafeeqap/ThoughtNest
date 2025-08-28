@@ -2,6 +2,7 @@ import mongoose, { Document, Schema, Model } from "mongoose";
 
 // Define TypeScript interface
 export interface IBlog extends Document {
+  userId: mongoose.Types.ObjectId;
   title: string;
   description: string;
   category: string;
@@ -15,6 +16,11 @@ export interface IBlog extends Document {
 // Define the schema
 const BlogSchema: Schema<IBlog> = new Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
     title: {
       type: String,
       required: true,
