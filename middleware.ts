@@ -10,10 +10,6 @@ import { getToken } from "next-auth/jwt";
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (pathname === "/admin") {
-    return NextResponse.next();
-  }
-
   const nextAuthToken = await getToken({
     req,
     secret: process.env.AUTH_SECRET,

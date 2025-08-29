@@ -3,4 +3,6 @@ export type ErrorType = {
   email?: string;
   password?: string;
   confirmPassword?: string;
+  categoryName?: string;
+  description?: string;
 };

@@ -51,6 +51,7 @@ const Page = () => {
 
   const numberOfPages = Math.ceil(filteredSubscription.length / recordsPerPage);
 
+  // =====================> Handle Subscription Delete <===================== //
   const handleDelete = async (id: string) => {
     try {
       const res = await subscribeService.deleteSubscribe(id);
@@ -64,8 +65,6 @@ const Page = () => {
         }
         return updatedData
       })
-
-
 
     } catch (error) {
       toast.error("Failed to delete blog");

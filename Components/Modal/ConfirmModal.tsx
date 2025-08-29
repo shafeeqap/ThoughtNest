@@ -1,6 +1,6 @@
-import React from 'react'
-import { IoCloseCircleOutline } from 'react-icons/io5'
+import React, { ReactNode } from 'react'
 import BaseModal from './BaseModal';
+
 
 interface ConfirmModalProps {
     isOpen: boolean;
@@ -9,6 +9,7 @@ interface ConfirmModalProps {
     title?: string;
     message?: string;
     buttonText?: string;
+    icon: ReactNode;
 }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
@@ -17,7 +18,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     onConfirm,
     title = 'Are you sure?',
     message = 'Do you really want to delete these records? This process cannot be undone.',
-    buttonText = 'Delete'
+    buttonText = 'Delete',
+    icon,
 }) => {
 
     return (
@@ -25,11 +27,12 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
             <BaseModal isOpen={isOpen} onClose={onClose}>
                 <div className='flex flex-col justify-center items-center gap-2 py-3'>
                     <div>
-                        <IoCloseCircleOutline size={80} className='text-red-500' />
+                        <span>{icon}</span>
                     </div>
                     <h1 className='text-2xl font-semibold'>{title}</h1>
                     <p className='text-center'>{message}</p>
                 </div>
+
                 {/* Modal Footer */}
                 <div className='sm:w-full flex justify-around gap-5 sm:pr-5 py-2 text-white'>
                     <button

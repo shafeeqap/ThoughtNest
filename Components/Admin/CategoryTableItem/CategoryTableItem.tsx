@@ -1,20 +1,48 @@
 import React, { useState } from 'react'
-import { ConfirmModal } from '@/Components/Modal';
-import { IoBanOutline, IoCheckmarkCircleOutline } from 'react-icons/io5';
+import { ConfirmModal, EditModal } from '@/Components/Modal';
+import { IoBanOutline, IoCheckmarkCircleOutline, IoTrashBinOutline } from 'react-icons/io5';
 import { CategoryType } from '@/types/category';
 import { CiEdit } from 'react-icons/ci';
 import { truncateText } from '@/lib/utils/helpers/truncateText';
+import { IoCloseCircleOutline, IoWarningOutline } from 'react-icons/io5'
+
 
 interface IProps extends CategoryType {
     counter: number;
-    handleUserAction: (id: string) => Promise<void>;
+    handleCategoryAction: (id: string) => Promise<void>;
+    handleDelete: (id: string) => Promise<void>;
 }
 
-const CategoryTableItem: React.FC<IProps> = ({ counter, _id, categoryName, description, status, handleUserAction }) => {
+const CategoryTableItem: React.FC<IProps> = ({
+    _id,
+    counter,
+    categoryName,
+    description,
+    status,
+    handleCategoryAction,
+    handleDelete,
+}) => {
     const [showModal, setShowModal] = useState<boolean>(false);
+    const [shwoEditModal, setShowEditModal] = useState<boolean>(false);
+    const [actionType, setActionType] = useState<"action" | "delete" | null>(null);
     const truncatedText = truncateText(description);
-    // const formattedDate = formatDate(date);
 
+    const Title = actionType === "action" ? status === 'active' ? "Block Category" : "Activate Category" : "Delete Category";
+    const Msg = actionType === "action" ? `Are you sure you want to ${status === 'active' ? "blocke" : "activate"} this category?`
+        : 'Are you sure you want to delete this category?';
+    const Btn = actionType === "action" ? status === 'active' ? "blocke" : "activate" : 'delete';
+    const Icon = actionType === "action" ? <IoWarningOutline size={80} color='#ffa500' /> : <IoCloseCircleOutline size={80} color='red' />;
+
+
+    const handleConfirmModal = async (id: string) => {
+        if (actionType === "action") {
+            await handleCategoryAction(id)
+        } else if (actionType === "delete") {
+            await handleDelete(id)
+        }
+        setShowModal(false);
+        setActionType(null);
+    }
 
     return (
         <>
@@ -29,43 +57,77 @@ const CategoryTableItem: React.FC<IProps> = ({ counter, _id, categoryName, descr
                         <span className="text-red-600">Blocked</span>
                     )}
                 </td>
-                <td className='px-6 py-4'><CiEdit size={32} title='Edit category' className='cursor-pointer' /></td>
                 <td className='px-6 py-4'>
-                    {status === 'active' ? (
+                    <button onClick={() => setShowEditModal(true)}>
+                        <CiEdit
+                            size={32}
+                            title='Edit category'
+                            className='cursor-pointer'
+                        />
+                    </button>
+                </td>
+                <td className='px-6 py-4'>
+                    <div className='content-center flex gap-2'>
+                        {status === 'active' ? (
+                            <button
+                                onClick={() => {
+                                    setActionType('action')
+                                    setShowModal(true)
+                                }}
+                            >
+                                <IoBanOutline
+                                    size={20}
+                                    className='text-black hover:text-red-500 cursor-pointer'
+                                    title="Block Category"
+                                />
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => {
+                                    setActionType('action')
+                                    setShowModal(true)
+                                }}
+                            >
+                                <IoCheckmarkCircleOutline
+                                    size={20}
+                                    className="text-green-500 hover:text-green-700 cursor-pointer"
+                                    title="Activate Category"
+                                />
+                            </button>
+                        )} |
                         <button
-                            // disabled={role === 'admin'}
-                            onClick={() => setShowModal(true)}
+                            onClick={() => {
+                                setActionType('delete')
+                                setShowModal(true)
+                            }}
                         >
-                            <IoBanOutline
+                            <IoTrashBinOutline
                                 size={20}
-                                className='text-black hover:text-red-500 cursor-pointer'
-                                title="Block Category"
+                                title='Delete category'
+                                className='cursor-pointer hover:text-red-500'
                             />
                         </button>
-                    ) : (
-                        <button
-                            // disabled={role === 'admin'}
-                            onClick={() => setShowModal(true)}
-                        >
-                            <IoCheckmarkCircleOutline
-                                size={20}
-                                className="text-green-500 hover:text-green-700 cursor-pointer"
-                                title="Activate Category"
-                            />
-                        </button>
-                    )}
+                    </div>
 
                     {showModal && (
                         <ConfirmModal
                             isOpen={showModal}
                             onClose={() => setShowModal(false)}
-                            title={status === 'active' ? "Block Category" : "Activate Category"}
-                            message={`Are you sure you want to ${status === 'active' ? "blocke" : "activate"} this category?`}
-                            buttonText={status === 'active' ? "blocke" : "activate"}
-                            onConfirm={async () => {
-                                await handleUserAction(_id)
-                                setShowModal(false)
-                            }}
+                            title={Title}
+                            message={Msg}
+                            buttonText={Btn}
+                            onConfirm={() => handleConfirmModal(_id)}
+                            icon={Icon}
+                        />
+                    )}
+
+                    {shwoEditModal && (
+                        <EditModal 
+                        isOpen={shwoEditModal} 
+                        onClose={() => setShowEditModal(false)}
+                        title='Edit category'
+                        message='Edit your content'
+                        buttonText='save changes' 
                         />
                     )}
                 </td>

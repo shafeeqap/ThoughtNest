@@ -24,4 +24,8 @@ export const categoryService = {
     const response = await axiosInstance.patch(`/api/category/${id}`);
     return response.data;
   },
+  deleteCategory: async (id: string) => {
+    const response = await axiosInstance.delete(`/api/category/${id}`);
+    return response.data;
+  },
 };

@@ -6,10 +6,12 @@ import Spinner from '@/Components/Spinner/Spinner';
 import Search from '@/features/search/Search';
 import { toast } from 'react-toastify';
 import { FiPlus } from "react-icons/fi";
-import AddModal from '@/Components/Modal/AddModal';
 import { categoryService } from '@/services/categoryService';
 import { CategoryType } from '@/types/category';
 import Pagination from '@/Components/Pagination/Pagination';
+import { validateCategory } from '@/lib/validators/validateCategory';
+import { ErrorType } from '@/types/error';
+import AddModalItems from '@/Components/ModalItems/AddModalItems';
 
 
 const Page = () => {
@@ -18,6 +20,7 @@ const Page = () => {
     const [categoryName, setCategoryName] = useState('');
     const [description, setDescription] = useState('');
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const [error, setError] = useState<ErrorType>({});
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const recordsPerPage = 5;
@@ -55,40 +58,70 @@ const Page = () => {
 
     const numberOfPages = Math.ceil(filteredCategory.length / recordsPerPage);
 
+    // =====================> HandleCategory Action <===================== //
     const handleCategoryAction = async (id: string) => {
         try {
-              const res = await categoryService.toggleCategoryStatus(id);
-              setCategory(prev => {
+            const res = await categoryService.toggleCategoryStatus(id);
+            setCategory(prev => {
                 return prev.map(category => {
-                  if (category._id === id) {
-                    return {
-                      ...category,
-                      status: res.updatedCategory.status
+                    if (category._id === id) {
+                        return {
+                            ...category,
+                            status: res.updatedCategory.status
+                        }
                     }
-                  }
-                  return category
+                    return category
                 })
-              })
-              toast.success(res.msg);
+            })
+            toast.success(res.msg);
         } catch (error) {
             toast.error("Failed to update user status");
             console.error(error);
         }
     }
 
+    // =====================> Handle Category Submit <===================== //
     const handleSubmit = async (categoryName: string, description: string) => {
         try {
+            const validationError = validateCategory(categoryName, description);
+            if (validationError) {
+                setError(validationError)
+                return;
+            }
             const response = await categoryService.addCategory(categoryName, description);
+            setCategory((prev) => [...prev, response.newCategory])
+
             toast.success(response.msg);
             setCategoryName('');
             setDescription('');
             setShowModal(false);
+            setError({})
         } catch (error) {
             console.log(error);
         }
     }
 
-    console.log(category, 'Category...');
+    const handleDelete = async (id: string) => {
+        try {
+            const res = await categoryService.deleteCategory(id);
+            toast.success(res.msg);
+            setCategory(prev => {
+                const updatedData = prev.filter(cat => cat._id !== id)
+                const newTotalPages = Math.ceil(updatedData.length / recordsPerPage)
+
+                if (currentPage > newTotalPages) {
+                    setCurrentPage(prevPage => Math.max(1, prevPage - 1))
+                }
+                return updatedData
+            })
+
+        } catch (error) {
+            toast.error("Failed to delete blog");
+            console.error(error);
+        }
+    }
+
+
 
     return (
         <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
@@ -152,7 +185,8 @@ const Page = () => {
                                     key={index}
                                     {...item}
                                     counter={(currentPage - 1) * recordsPerPage + index + 1}
-                                    handleUserAction={handleCategoryAction}
+                                    handleCategoryAction={handleCategoryAction}
+                                    handleDelete={handleDelete}
                                 />
                             ))
                         )}
@@ -161,7 +195,7 @@ const Page = () => {
             </div>
 
             {showModal && (
-                <AddModal
+                <AddModalItems
                     isOpen={showModal}
                     onClose={() => setShowModal(false)}
                     handleSubmit={handleSubmit}
@@ -169,6 +203,8 @@ const Page = () => {
                     description={description}
                     setCategoryName={setCategoryName}
                     setDescription={setDescription}
+                    error={error}
+                    setError={setError}
                 />
             )}
 
