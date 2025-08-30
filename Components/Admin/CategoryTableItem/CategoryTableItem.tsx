@@ -1,16 +1,22 @@
-import React, { useState } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import { ConfirmModal, EditModal } from '@/Components/Modal';
 import { IoBanOutline, IoCheckmarkCircleOutline, IoTrashBinOutline } from 'react-icons/io5';
 import { CategoryType } from '@/types/category';
 import { CiEdit } from 'react-icons/ci';
 import { truncateText } from '@/lib/utils/helpers/truncateText';
 import { IoCloseCircleOutline, IoWarningOutline } from 'react-icons/io5'
+import { ErrorType } from '@/types/error';
 
 
 interface IProps extends CategoryType {
     counter: number;
     handleCategoryAction: (id: string) => Promise<void>;
     handleDelete: (id: string) => Promise<void>;
+    setCategoryName: Dispatch<SetStateAction<string>>;
+    setDescription: Dispatch<SetStateAction<string>>;
+    handleCategoryEdit: (id: string, categoryName: string, description: string) => void;
+    error: ErrorType;
+    setError: (value: React.SetStateAction<ErrorType>) => void;
 }
 
 const CategoryTableItem: React.FC<IProps> = ({
@@ -21,9 +27,16 @@ const CategoryTableItem: React.FC<IProps> = ({
     status,
     handleCategoryAction,
     handleDelete,
+    setCategoryName,
+    setDescription,
+    handleCategoryEdit,
+    error,
+    setError
 }) => {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [shwoEditModal, setShowEditModal] = useState<boolean>(false);
+    const [editCategoryName, setEditCategoryName] = useState(categoryName);
+    const [editDescription, setEditDescription] = useState(description);
     const [actionType, setActionType] = useState<"action" | "delete" | null>(null);
     const truncatedText = truncateText(description);
 
@@ -57,8 +70,15 @@ const CategoryTableItem: React.FC<IProps> = ({
                         <span className="text-red-600">Blocked</span>
                     )}
                 </td>
+
+                {/* Edit category */}
                 <td className='px-6 py-4'>
-                    <button onClick={() => setShowEditModal(true)}>
+                    <button onClick={() => {
+                        setShowEditModal(true)
+                        setEditCategoryName(categoryName);
+                        setEditDescription(description);
+                    }}
+                    >
                         <CiEdit
                             size={32}
                             title='Edit category'
@@ -66,6 +86,8 @@ const CategoryTableItem: React.FC<IProps> = ({
                         />
                     </button>
                 </td>
+
+                {/* Action category */}
                 <td className='px-6 py-4'>
                     <div className='content-center flex gap-2'>
                         {status === 'active' ? (
@@ -121,16 +143,25 @@ const CategoryTableItem: React.FC<IProps> = ({
                         />
                     )}
 
-                    {shwoEditModal && (
-                        <EditModal 
-                        isOpen={shwoEditModal} 
+                </td>
+
+                {shwoEditModal && (
+                    <EditModal
+                        isOpen={shwoEditModal}
                         onClose={() => setShowEditModal(false)}
                         title='Edit category'
                         message='Edit your content'
-                        buttonText='save changes' 
-                        />
-                    )}
-                </td>
+                        buttonText='save changes'
+                        categoryName={editCategoryName}
+                        description={editDescription}
+                        setCategoryName={setEditCategoryName}
+                        setDescription={setEditDescription}
+                        handleCategoryEdit={handleCategoryEdit}
+                        error={error}
+                        setError={setError}
+                        id={_id}
+                    />
+                )}
             </tr>
         </>
     )

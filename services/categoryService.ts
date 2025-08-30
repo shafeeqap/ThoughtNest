@@ -28,4 +28,15 @@ export const categoryService = {
     const response = await axiosInstance.delete(`/api/category/${id}`);
     return response.data;
   },
+  editCategory: async (
+    id: string,
+    categoryName: string,
+    description: string
+  ) => {
+    const response = await axiosInstance.put(`/api/category/${id}`, {
+      categoryName,
+      description,
+    });
+    return response.data;
+  },
 };

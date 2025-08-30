@@ -75,7 +75,7 @@ const Page = () => {
             })
             toast.success(res.msg);
         } catch (error) {
-            toast.error("Failed to update user status");
+            toast.error("Failed to update category");
             console.error(error);
         }
     }
@@ -98,9 +98,11 @@ const Page = () => {
             setError({})
         } catch (error) {
             console.log(error);
+            toast.error("Failed to submit category");
         }
     }
 
+    // =====================> Handle Category Delete <===================== //
     const handleDelete = async (id: string) => {
         try {
             const res = await categoryService.deleteCategory(id);
@@ -116,12 +118,28 @@ const Page = () => {
             })
 
         } catch (error) {
-            toast.error("Failed to delete blog");
+            toast.error("Failed to delete category");
             console.error(error);
         }
     }
 
+    // =====================> Handle Category Edit <===================== //
+    const handleCategoryEdit = async (id: string, categoryName: string, description: string) => {
+        try {
+            const validationError = validateCategory(categoryName, description);
+            if (validationError) {
+                setError(validationError)
+                return;
+            }
 
+            const response = await categoryService.editCategory(id, categoryName, description);
+            console.log(response, 'Edit response...');
+
+        } catch (error) {
+            toast.error("Failed to delete category");
+            console.error(error);
+        }
+    }
 
     return (
         <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
@@ -187,6 +205,11 @@ const Page = () => {
                                     counter={(currentPage - 1) * recordsPerPage + index + 1}
                                     handleCategoryAction={handleCategoryAction}
                                     handleDelete={handleDelete}
+                                    setCategoryName={setCategoryName}
+                                    setDescription={setDescription}
+                                    handleCategoryEdit={handleCategoryEdit}
+                                    error={error}
+                                    setError={setError}
                                 />
                             ))
                         )}

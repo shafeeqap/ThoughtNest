@@ -48,7 +48,7 @@ export async function DELETE(
     const { id } = await context.params;
 
     const category = await categoryModel.findById(id);
-    
+
     if (!category) {
       return NextResponse.json({ msg: "Category not found" }, { status: 404 });
     }
@@ -62,6 +62,36 @@ export async function DELETE(
   } catch (error) {
     return NextResponse.json(
       { msg: "Error delete category by ID", error },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    await connectDB();
+
+    const { id } = await context.params;
+    console.log(id);
+    const { categoryName, description } = await req.json();
+    console.log('CategoryName:', categoryName, 'Description:', description );
+    
+
+    const category = await categoryModel.findById(id);
+    console.log(category, 'Category...');
+    
+
+    if (!category) {
+      return NextResponse.json({ msg: "Category not found" }, { status: 404 });
+    }
+
+
+  } catch (error) {
+    return NextResponse.json(
+      { msg: "Error update category by ID", error },
       { status: 500 }
     );
   }
