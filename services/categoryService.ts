@@ -32,7 +32,7 @@ export const categoryService = {
     id: string,
     categoryName: string,
     description: string
-  ) => {
+  ): Promise<{ updatedCategory: CategoryType; msg: string }> => {
     const response = await axiosInstance.put(`/api/category/${id}`, {
       categoryName,
       description,

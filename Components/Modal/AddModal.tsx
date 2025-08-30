@@ -15,7 +15,7 @@ const AddModal: React.FC<AddModalProps> = ({
     isOpen,
     onClose,
     onSubmit,
-    title = 'Add Category',
+    title = 'Add Category.',
     buttonText = 'Add Category',
     children,
 }) => {

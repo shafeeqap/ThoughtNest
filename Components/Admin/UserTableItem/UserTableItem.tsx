@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ConfirmModal } from '@/Components/Modal';
 import { User } from '@/types/auth';
-import { IoBanOutline, IoCheckmarkCircleOutline } from 'react-icons/io5'
+import { IoBanOutline, IoCheckmarkCircleOutline, IoWarningOutline } from 'react-icons/io5'
 
 interface IProps extends User {
     counter: number;
@@ -12,6 +12,7 @@ const UserTableItem: React.FC<IProps> = ({ counter, _id, username, email, role, 
     const [showModal, setShowModal] = useState<boolean>(false);
     // const formattedDate = formatDate(date);
 
+    // const Icon = actionType === "action" ? <IoWarningOutline size={80} color='#ffa500' /> : <IoCloseCircleOutline size={80} color='red' />;
 
     return (
         <>
@@ -63,6 +64,7 @@ const UserTableItem: React.FC<IProps> = ({ counter, _id, username, email, role, 
                                 await handleUserAction(_id)
                                 setShowModal(false)
                             }}
+                            icon={<IoWarningOutline size={80} color='#ffa500' />}
                         />
                     )}
                 </td>

@@ -5,7 +5,7 @@ import { truncateText } from '@/lib/utils/helpers/truncateText';
 import { BlogItemType } from '@/types/blog';
 import Image from 'next/image'
 import React, { useState } from 'react'
-import { IoTrashBinOutline } from 'react-icons/io5';
+import { IoCloseCircleOutline, IoTrashBinOutline, IoWarningOutline } from 'react-icons/io5';
 import { CiEdit } from "react-icons/ci";
 
 interface IProps extends BlogItemType {
@@ -27,6 +27,8 @@ const BlogTableItem: React.FC<IProps> = ({
     const [showModal, setShowModal] = useState<boolean>(false);
     const formattedDate = formatDate(date);
     const truncatedText = truncateText(title);
+
+    // const Icon = actionType === "action" ? <IoWarningOutline size={80} color='#ffa500' /> : <IoCloseCircleOutline size={80} color='red' />;
 
     return (
         <>
@@ -65,7 +67,11 @@ const BlogTableItem: React.FC<IProps> = ({
                     Approved
                 </td>
                 <td className='px-6 py-4'>
-                    <CiEdit size={32} title='Edit blog' className='cursor-pointer'/>
+                    <CiEdit
+                        size={32}
+                        title='Edit blog'
+                        className='cursor-pointer'
+                    />
                 </td>
                 <td className='px-6 py-4 sm:flex justify-around items-center '>
                     <IoTrashBinOutline
@@ -79,6 +85,7 @@ const BlogTableItem: React.FC<IProps> = ({
                             isOpen={showModal}
                             onClose={() => setShowModal(false)}
                             onConfirm={() => onDelete(_id)}
+                            icon={<IoCloseCircleOutline size={80} color='red' />}
                         />
                     )}
                 </td>

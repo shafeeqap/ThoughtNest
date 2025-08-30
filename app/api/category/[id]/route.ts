@@ -77,17 +77,25 @@ export async function PUT(
     const { id } = await context.params;
     console.log(id);
     const { categoryName, description } = await req.json();
-    console.log('CategoryName:', categoryName, 'Description:', description );
-    
+    console.log("CategoryName:", categoryName, "Description:", description);
 
     const category = await categoryModel.findById(id);
-    console.log(category, 'Category...');
-    
+    console.log(category, "Category...");
 
     if (!category) {
       return NextResponse.json({ msg: "Category not found" }, { status: 404 });
     }
 
+    const updatedCategory = await categoryModel.findByIdAndUpdate(
+      id,
+      { categoryName, description },
+      { new: true }
+    );
+
+    return NextResponse.json(
+      { msg: "Category updated successfully", updatedCategory },
+      { status: 200 }
+    );
 
   } catch (error) {
     return NextResponse.json(

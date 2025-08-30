@@ -123,23 +123,6 @@ const Page = () => {
         }
     }
 
-    // =====================> Handle Category Edit <===================== //
-    const handleCategoryEdit = async (id: string, categoryName: string, description: string) => {
-        try {
-            const validationError = validateCategory(categoryName, description);
-            if (validationError) {
-                setError(validationError)
-                return;
-            }
-
-            const response = await categoryService.editCategory(id, categoryName, description);
-            console.log(response, 'Edit response...');
-
-        } catch (error) {
-            toast.error("Failed to delete category");
-            console.error(error);
-        }
-    }
 
     return (
         <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
@@ -207,7 +190,7 @@ const Page = () => {
                                     handleDelete={handleDelete}
                                     setCategoryName={setCategoryName}
                                     setDescription={setDescription}
-                                    handleCategoryEdit={handleCategoryEdit}
+                                    setCategory={setCategory}
                                     error={error}
                                     setError={setError}
                                 />

@@ -6,6 +6,9 @@ import { CiEdit } from 'react-icons/ci';
 import { truncateText } from '@/lib/utils/helpers/truncateText';
 import { IoCloseCircleOutline, IoWarningOutline } from 'react-icons/io5'
 import { ErrorType } from '@/types/error';
+import { toast } from 'react-toastify';
+import { validateCategory } from '@/lib/validators/validateCategory';
+import { categoryService } from '@/services/categoryService';
 
 
 interface IProps extends CategoryType {
@@ -14,7 +17,8 @@ interface IProps extends CategoryType {
     handleDelete: (id: string) => Promise<void>;
     setCategoryName: Dispatch<SetStateAction<string>>;
     setDescription: Dispatch<SetStateAction<string>>;
-    handleCategoryEdit: (id: string, categoryName: string, description: string) => void;
+    setCategory: Dispatch<SetStateAction<CategoryType[]>>;
+    // handleCategoryEdit: (id: string, categoryName: string, description: string) => void;
     error: ErrorType;
     setError: (value: React.SetStateAction<ErrorType>) => void;
 }
@@ -29,7 +33,7 @@ const CategoryTableItem: React.FC<IProps> = ({
     handleDelete,
     setCategoryName,
     setDescription,
-    handleCategoryEdit,
+    setCategory,
     error,
     setError
 }) => {
@@ -56,6 +60,32 @@ const CategoryTableItem: React.FC<IProps> = ({
         setShowModal(false);
         setActionType(null);
     }
+
+    // =====================> Handle Category Edit <===================== //
+    const handleCategoryEdit = async (id: string, categoryName: string, description: string) => {
+        try {
+            const validationError = validateCategory(categoryName, description);
+            if (validationError) {
+                setError(validationError)
+                return;
+            }
+
+            const response = await categoryService.editCategory(id, categoryName, description);
+            
+            setCategory(prev => prev.map(cat => cat._id === id ? response.updatedCategory : cat))
+
+            toast.success(response.msg);
+            setCategoryName('');
+            setDescription('');
+            setShowEditModal(false);
+            setError({})
+
+        } catch (error) {
+            toast.error("Failed to delete category");
+            console.error(error);
+        }
+    }
+
 
     return (
         <>
@@ -149,8 +179,8 @@ const CategoryTableItem: React.FC<IProps> = ({
                     <EditModal
                         isOpen={shwoEditModal}
                         onClose={() => setShowEditModal(false)}
-                        title='Edit category'
-                        message='Edit your content'
+                        title='Edit category.'
+                        message='Update your category content.'
                         buttonText='save changes'
                         categoryName={editCategoryName}
                         description={editDescription}
