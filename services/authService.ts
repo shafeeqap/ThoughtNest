@@ -44,7 +44,7 @@ export const authService = {
           throw new Error(error.response.data?.msg || "Authentication failed");
         }
 
-        throw new Error(error.response?.data.msg || "Login failed");
+        throw new Error(error.response?.data?.msg || "Login failed");
       }
       throw new Error("Login failed");
     }

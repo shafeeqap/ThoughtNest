@@ -7,6 +7,7 @@ export async function GET() {
     await connectDB();
 
     const user = await UserModal.find();
+    console.log(user, "user...");
 
     return NextResponse.json({ user }, { status: 200 });
   } catch (error) {

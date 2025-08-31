@@ -1,15 +1,47 @@
 import SubscribeForm from '@/features/subscribe/SubscribeForm';
 import { validateEmail } from '@/lib/validators/validateEmail';
+import { sessionService } from '@/services/sessionService';
 import { subscribeService } from '@/services/subscribeService';
 import { isAxiosError } from 'axios';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image'
-import React, { useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 
 
 const Hero: React.FC = () => {
     const [email, setEmail] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
+    const [authStatus, setAuthStatus] = useState();
+    const [loading, setLoading] = useState(true);
+    const router = useRouter();
+    const pathname = usePathname();
+    const { data: session } = useSession();
+
+console.log(session, "Session...");
+
+
+    useEffect(() => {
+        const checkAuthStatus = async () => {
+            try {
+                const data = await sessionService.session();
+                setAuthStatus(data);
+            } catch (error) {
+                console.error('Failed to fetch session status:', error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        checkAuthStatus();
+        const interval = setInterval(checkAuthStatus, 5 * 60 * 1000);
+
+        return () => clearInterval(interval);
+    }, [pathname])
+
+    console.log(authStatus, 'Auth...');
+
 
 
     const handleSubmit = async (e: React.FormEvent) => {

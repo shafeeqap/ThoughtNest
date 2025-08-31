@@ -11,7 +11,6 @@ export async function POST(req: Request) {
     const { email, password } = await req.json();
 
     const user = await authenticateUser(email, password);
-    console.log(user, "User...");
 
     if (user.status === "blocked") {
       return NextResponse.json(

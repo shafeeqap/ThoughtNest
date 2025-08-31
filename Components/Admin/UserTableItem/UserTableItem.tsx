@@ -8,11 +8,15 @@ interface IProps extends User {
     handleUserAction: (id: string) => Promise<void>
 }
 
-const UserTableItem: React.FC<IProps> = ({ counter, _id, username, email, role, status, handleUserAction }) => {
+const UserTableItem: React.FC<IProps> = ({ counter, _id, username, email, role, status, providers, handleUserAction }) => {
     const [showModal, setShowModal] = useState<boolean>(false);
     // const formattedDate = formatDate(date);
 
     // const Icon = actionType === "action" ? <IoWarningOutline size={80} color='#ffa500' /> : <IoCloseCircleOutline size={80} color='red' />;
+
+    console.log(providers);
+
+
 
     return (
         <>
@@ -28,8 +32,15 @@ const UserTableItem: React.FC<IProps> = ({ counter, _id, username, email, role, 
                         <span className="text-red-600">Blocked</span>
                     )}
                 </td>
+                <td className='px-6 py-4 capitalize font-semibold'>
+                    {providers && providers.length > 0 ? providers?.map((p, i) => (
+                        <p className={`${p.name==='google' ? 'text-red-500' : 'text-blue-500'}`} key={i}>{p.name}</p>
+                    )) : (
+                        <p className='text-yellow-500'>Traditional</p>
+                    )}
+                </td>
                 <td className='px-6 py-4 flex justify-center'>
-                    {status === 'active' && role !=='admin' ? (
+                    {status === 'active' && role !== 'admin' ? (
                         <button
                             // disabled={role === 'admin'}
                             onClick={() => setShowModal(true)}

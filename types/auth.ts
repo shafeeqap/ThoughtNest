@@ -25,6 +25,7 @@ export interface User {
   email: string;
   role: UserRole;
   status: string;
+  providers?: { id: string; name: string; _id: string }[];
 }
 
 export interface LoginResponse {

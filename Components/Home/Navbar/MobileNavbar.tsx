@@ -37,7 +37,6 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({ showNav, toggleOpenNav }) =
     return () => clearInterval(interval);
   }, [pathname])
 
-  console.log(authStatus, 'Auth Status Mobile menu...');
 
 
   const handleLogout = async () => {

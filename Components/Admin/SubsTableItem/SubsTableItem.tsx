@@ -2,7 +2,7 @@ import { ConfirmModal } from '@/Components/Modal';
 import { formatDate } from '@/lib/utils/helpers/formatDate';
 import { SubscriptionType } from '@/types/subscription';
 import React, { useState } from 'react'
-import { IoTrashBinOutline } from 'react-icons/io5'
+import { IoTrashBinOutline, IoWarningOutline } from 'react-icons/io5'
 
 interface IProps extends SubscriptionType {
     counter: number;
@@ -35,6 +35,8 @@ const SubsTableItem: React.FC<IProps> = ({ _id, email, date, counter, onDelete }
                                 await onDelete(_id)
                                 setShowModal(false)
                             }}
+                            icon={<IoWarningOutline
+                                 size={80} color='#ffa500' />}
                         />
                     )}
                 </td>

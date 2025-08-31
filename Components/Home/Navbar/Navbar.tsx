@@ -68,8 +68,6 @@ const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
         return () => clearInterval(interval);
     }, [pathname])
 
-    console.log(authStatus, 'Auth Status...');
-
 
     const handleLogout = async () => {
         try {
