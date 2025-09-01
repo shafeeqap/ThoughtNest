@@ -1,4 +1,3 @@
-
 export type Category = "All" | "Technology" | "Startup" | "Lifestyle";
 
 export interface BlogItemType {
@@ -7,7 +6,9 @@ export interface BlogItemType {
   category: Category;
   image: string;
   description: string;
-  date: number ;
   author: string;
   authorImg: string;
+  status: string;
+  createdAt: string;
+  updatedAt?: string;
 }

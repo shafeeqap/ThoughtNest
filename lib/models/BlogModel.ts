@@ -9,6 +9,7 @@ export interface IBlog extends Document {
   author: string;
   image: string;
   authorImg: string;
+  status: "pending" | "approved" | "rejected";
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -40,6 +41,11 @@ const BlogSchema: Schema<IBlog> = new Schema(
     image: {
       type: String,
       required: true,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
     },
     authorImg: {
       type: String,

@@ -126,9 +126,9 @@ const Page = () => {
 
     return (
         <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
-            <div className='max-w-[800px] flex flex-col md:flex-row justify-between items-center gap-5'>
+            <div className='max-w-[850px] flex flex-col md:flex-row justify-between items-center gap-5'>
                 <h1 className='hidden sm:block text-sm sm:text-lg font-semibold w-[30%]'>All Category</h1>
-                <div className='flex-1 justify-around items-center'>
+                <div className='flex-1 justify-around items-center w-full'>
                     <Search
                         handleSearch={setSearchTerm}
                         searchTerm={searchTerm}
@@ -141,7 +141,7 @@ const Page = () => {
                     <FiPlus size={22} />Add category
                 </div>
             </div>
-            <div className='relative max-w-[800px] overflow-x-auto mt-4 scrollbar-hide'>
+            <div className='relative max-w-[850px] overflow-x-auto mt-4 scrollbar-hide'>
                 <table className='w-full text-sm text-gray-500'>
                     <thead className='text-xs text-left text-white uppercase bg-[#626a7a]'>
                         <tr>
@@ -215,7 +215,7 @@ const Page = () => {
             )}
 
             {/* Pagination */}
-            <div className='max-w-[800px]'>
+            <div className='max-w-[850px]'>
                 {!isLoading && numberOfPages > 1 && (
                     <Pagination
                         currentPage={currentPage}

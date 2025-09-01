@@ -1,10 +1,9 @@
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import { ConfirmModal, EditModal } from '@/Components/Modal';
-import { IoBanOutline, IoCheckmarkCircleOutline, IoTrashBinOutline } from 'react-icons/io5';
+import { IoBanOutline, IoCheckmarkCircleOutline, IoTrashBinOutline, IoCloseCircleOutline, IoWarningOutline } from 'react-icons/io5';
 import { CategoryType } from '@/types/category';
 import { CiEdit } from 'react-icons/ci';
 import { truncateText } from '@/lib/utils/helpers/truncateText';
-import { IoCloseCircleOutline, IoWarningOutline } from 'react-icons/io5'
 import { ErrorType } from '@/types/error';
 import { toast } from 'react-toastify';
 import { validateCategory } from '@/lib/validators/validateCategory';
@@ -18,7 +17,6 @@ interface IProps extends CategoryType {
     setCategoryName: Dispatch<SetStateAction<string>>;
     setDescription: Dispatch<SetStateAction<string>>;
     setCategory: Dispatch<SetStateAction<CategoryType[]>>;
-    // handleCategoryEdit: (id: string, categoryName: string, description: string) => void;
     error: ErrorType;
     setError: (value: React.SetStateAction<ErrorType>) => void;
 }
@@ -93,11 +91,11 @@ const CategoryTableItem: React.FC<IProps> = ({
                 <td className='px-6 py-4'>{counter}</td>
                 <td className='px-6 py-4'>{categoryName}</td>
                 <td className='px-6 py-4'>{truncatedText}</td>
-                <td className='px-6 py-4'>
+                <td className='px-6 py-4 text-white text-xs uppercase'>
                     {status === 'active' ? (
-                        <span className="text-green-600">Active</span>
+                        <span className="px-2 py-1 bg-green-600">Active</span>
                     ) : (
-                        <span className="text-red-600">Blocked</span>
+                        <span className="px-2 py-1 bg-red-600">Blocked</span>
                     )}
                 </td>
 

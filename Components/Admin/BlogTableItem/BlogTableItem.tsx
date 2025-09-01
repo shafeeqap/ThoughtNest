@@ -1,12 +1,15 @@
+'use client';
+
+import React, { useState } from 'react'
 import { ConfirmModal } from '@/Components/Modal';
 import { assets } from '@/data/assets'
 import { formatDate } from '@/lib/utils/helpers/formatDate';
 import { truncateText } from '@/lib/utils/helpers/truncateText';
 import { BlogItemType } from '@/types/blog';
 import Image from 'next/image'
-import React, { useState } from 'react'
-import { IoCloseCircleOutline, IoTrashBinOutline, IoWarningOutline } from 'react-icons/io5';
+import { IoCloseCircleOutline, IoTrashBinOutline, IoCheckmarkCircleOutline } from 'react-icons/io5';
 import { CiEdit } from "react-icons/ci";
+import { MdOutlinePending } from "react-icons/md";
 
 interface IProps extends BlogItemType {
     onDelete: (id: string) => void;
@@ -15,17 +18,19 @@ interface IProps extends BlogItemType {
 
 const BlogTableItem: React.FC<IProps> = ({
     _id,
+    counter,
     authorImg,
     title,
     author,
-    date,
+    createdAt,
     category,
     image,
     onDelete,
-    counter
+    status,
 }) => {
     const [showModal, setShowModal] = useState<boolean>(false);
-    const formattedDate = formatDate(date);
+
+    const formattedDate = formatDate(createdAt);
     const truncatedText = truncateText(title);
 
     // const Icon = actionType === "action" ? <IoWarningOutline size={80} color='#ffa500' /> : <IoCloseCircleOutline size={80} color='red' />;
@@ -49,7 +54,7 @@ const BlogTableItem: React.FC<IProps> = ({
                     {title ? truncatedText : 'No title'}
                 </td>
                 <td className='px-6 py-4'>
-                    {date ? formattedDate : 'N/A'}
+                    {formattedDate}
                 </td>
                 <td className='px-6 py-4'>
                     {category}
@@ -64,7 +69,7 @@ const BlogTableItem: React.FC<IProps> = ({
                     />
                 </td>
                 <td className='px-6 py-4'>
-                    Approved
+                    {status}
                 </td>
                 <td className='px-6 py-4'>
                     <CiEdit

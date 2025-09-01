@@ -6,7 +6,7 @@ const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
 const axiosInstance = axios.create({ baseURL });
 
 export const userService = {
-  getUsers: async (): Promise<User> => {
+  getUsers: async (): Promise<User[]> => {
     const response = await axiosInstance.get("/api/user");
     return response.data.user;
   },

@@ -18,4 +18,8 @@ export const subscribeService = {
     const response = await axiosInstance.delete(`/api/subscribe/${id}`);
     return response.data;
   },
+  toggleSubscribeStatus: async (id: string) => {
+    const response = await axiosInstance.patch(`/api/subscribe/${id}`);
+    return response.data;
+  },
 };

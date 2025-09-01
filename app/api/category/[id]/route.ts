@@ -32,7 +32,7 @@ export async function PATCH(
   } catch (error) {
     console.log(error);
     return NextResponse.json(
-      { msg: "Error user action by ID", error },
+      { msg: "Error category action by ID", error },
       { status: 500 }
     );
   }

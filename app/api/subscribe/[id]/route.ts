@@ -30,3 +30,42 @@ export async function DELETE(
     );
   }
 }
+
+export async function PATCH(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    await connectDB();
+
+    const { id } = await context.params;
+
+    const subscribe = await SubscribeModel.findById(id);
+
+    if (!subscribe) {
+      return NextResponse.json(
+        { msg: "Subscription not found" },
+        { status: 404 }
+      );
+    }
+
+    const newStatus = subscribe.status === "active" ? "blocked" : "active";
+
+    const updatedSubscribe = await SubscribeModel.findByIdAndUpdate(
+      id,
+      { status: newStatus },
+      { new: true }
+    );
+
+    return NextResponse.json(
+      { msg: "Subscribe status updated successfully", updatedSubscribe },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { msg: "Error subscribe action by ID", error },
+      { status: 500 }
+    );
+  }
+}

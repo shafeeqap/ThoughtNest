@@ -10,6 +10,7 @@ import { debounce } from 'lodash';
 import { formatDate } from '@/lib/utils/helpers/formatDate';
 import Search from '@/features/search/Search';
 import { FiPlus } from 'react-icons/fi';
+import Link from 'next/link';
 
 const Page = () => {
   const [allBlogs, setAllBlogs] = useState<BlogItemType[]>([]);
@@ -34,6 +35,9 @@ const Page = () => {
 
     fetchBlogs();
   }, [])
+
+  console.log(allBlogs);
+
 
   useEffect(() => {
     setCurrentPage(1);
@@ -83,7 +87,7 @@ const Page = () => {
 
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
-      <div className='flex max-w-[1100px] flex-col md:flex-row justify-between items-center gap-5'>
+      <div className='flex max-w-[1200px] flex-col md:flex-row justify-between items-center gap-5'>
         <h1 className='hidden sm:block font-semibold w-[30%]'>All blogs</h1>
         <div className='w-[40%] flex justify-around items-center'>
           <Search
@@ -91,14 +95,14 @@ const Page = () => {
             searchTerm={searchTerm}
           />
         </div>
-        <div
-          // onClick={() => setShowModal(true)}
+        <Link
+          href={'/admin/addBlog'}
           className='w-full md:w-fit gap-1 bg-gray-200 px-3 py-2 flex justify-center items-center cursor-pointer hover:bg-gray-300'
         >
           <FiPlus size={22} />Add blog
-        </div>
+        </Link>
       </div>
-      <div className='relative max-w-[1100px] overflow-x-auto mt-4 scrollbar-hide'>
+      <div className='relative max-w-[1200px] overflow-x-auto mt-4 scrollbar-hide'>
         <table className='w-full text-sm text-gray-500'>
           <thead className='text-sm text-white text-left uppercase bg-[#626a7a]'>
             <tr>
@@ -144,7 +148,7 @@ const Page = () => {
 
 
       {/* Pagination */}
-      <div className='max-w-[850px]'>
+      <div className='max-w-[1200px]'>
         {!isLoading && numberOfPages > 1 && (
           <Pagination
             currentPage={currentPage}

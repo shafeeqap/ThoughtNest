@@ -3,4 +3,5 @@ export interface CategoryType {
   categoryName: string;
   description: string;
   status: string;
+  date: number;
 }

@@ -2,20 +2,18 @@ import React, { useState } from 'react'
 import { ConfirmModal } from '@/Components/Modal';
 import { User } from '@/types/auth';
 import { IoBanOutline, IoCheckmarkCircleOutline, IoWarningOutline } from 'react-icons/io5'
+import { formatDate } from '@/lib/utils/helpers/formatDate';
+
 
 interface IProps extends User {
     counter: number;
     handleUserAction: (id: string) => Promise<void>
 }
 
-const UserTableItem: React.FC<IProps> = ({ counter, _id, username, email, role, status, providers, handleUserAction }) => {
+const UserTableItem: React.FC<IProps> = ({ counter, _id, username, email, role, createdAt, status, providers, handleUserAction }) => {
     const [showModal, setShowModal] = useState<boolean>(false);
-    // const formattedDate = formatDate(date);
-
-    // const Icon = actionType === "action" ? <IoWarningOutline size={80} color='#ffa500' /> : <IoCloseCircleOutline size={80} color='red' />;
-
-    console.log(providers);
-
+    const formattedDate = formatDate(createdAt);
+    console.log(formattedDate, 'Date...');
 
 
     return (
@@ -24,19 +22,31 @@ const UserTableItem: React.FC<IProps> = ({ counter, _id, username, email, role, 
                 <td className='px-6 py-4'>{counter}</td>
                 <td className='px-6 py-4'>{username}</td>
                 <td className='px-6 py-4'>{email}</td>
-                <td className='px-6 py-4'>{role}</td>
-                <td className='px-6 py-4'>
+                <td className={`px-6 py-4 bg-gray-200 uppercase ${role === "admin" && 'text-red-500'}`}>{role}</td>
+                <td className='px-6 py-4 '>{formattedDate}</td>
+                <td className='px-6 py-4 text-white uppercase text-xs'>
                     {status === 'active' ? (
-                        <span className="text-green-600">Active</span>
+                        <span className="bg-green-600 px-2 py-1">Active</span>
                     ) : (
-                        <span className="text-red-600">Blocked</span>
+                        <span className="bg-red-600 px-2 py-1">Blocked</span>
                     )}
                 </td>
-                <td className='px-6 py-4 capitalize font-semibold'>
+                <td className='px-6 py-4 uppercase text-xs'>
                     {providers && providers.length > 0 ? providers?.map((p, i) => (
-                        <p className={`${p.name==='google' ? 'text-red-500' : 'text-blue-500'}`} key={i}>{p.name}</p>
+                        <span
+                            key={i}
+                            className={`text-white px-2 py-1 ${p.name === 'google'
+                                ? 'bg-blue-500'
+                                : p.name === 'facebook'
+                                    ? 'bg-blue-800'
+                                    : 'bg-gray-500 '}`}
+                        >
+                            {p.name}
+                        </span>
                     )) : (
-                        <p className='text-yellow-500'>Traditional</p>
+                        <span className='text-white bg-gray-500 px-2 py-1'>
+                            Email/Pass
+                        </span>
                     )}
                 </td>
                 <td className='px-6 py-4 flex justify-center'>

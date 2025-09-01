@@ -28,6 +28,7 @@ const Page = () => {
     getSubscribeData();
   }, []);
 
+console.log(subscribe);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -38,7 +39,7 @@ const Page = () => {
 
       const dateString = formatDate(item.date);
 
-      return `${item.email} ${dateString}`
+      return `${item.email} ${dateString} ${item.status}`
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
     })
@@ -72,10 +73,32 @@ const Page = () => {
     }
   }
 
+  // =====================> HandleSubscribe Action <===================== //
+  const handleSubscribeAction = async (id: string) => {
+    try {
+      const res = await subscribeService.toggleSubscribeStatus(id);
+      setSubscribe(prev => {
+        return prev.map(subscribe => {
+          if (subscribe._id === id) {
+            return {
+              ...subscribe,
+              status: res.updatedSubscribe.status
+            }
+          }
+          return subscribe
+        })
+      })
+      toast.success(res.msg);
+    } catch (error) {
+      toast.error("Failed to update Subscription");
+      console.error(error);
+    }
+  }
+
 
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
-      <div className='max-w-[600px] flex gap-1'>
+      <div className='max-w-[650px] flex gap-1'>
         <h1 className='hidden sm:block text-sm sm:text-lg font-semibold w-full'>All Subscription</h1>
         <div className='w-full ml-1 flex justify-center items-center'>
           <Search
@@ -84,7 +107,7 @@ const Page = () => {
           />
         </div>
       </div>
-      <div className='relative max-w-[600px] overflow-x-auto mt-4 scrollbar-hide'>
+      <div className='relative max-w-[650px] overflow-x-auto mt-4 scrollbar-hide'>
         <table className='w-full text-sm text-gray-500'>
           <thead className='text-xs text-left text-white uppercase bg-[#626a7a]'>
             <tr>
@@ -96,6 +119,9 @@ const Page = () => {
               </th>
               <th scope='col' className='hidden sm:block px-6 py-3'>
                 Date
+              </th>
+              <th scope='col' className='px-6 py-3'>
+                Status
               </th>
               <th scope='col' className='px-6 py-3'>
                 Action
@@ -123,7 +149,8 @@ const Page = () => {
                   key={index}
                   {...item}
                   counter={(currentPage - 1) * recordsPerPage + index + 1}
-                  onDelete={handleDelete}
+                  handleDelete={handleDelete}
+                  handleSubscribeAction={handleSubscribeAction}
                 />
               ))
             )}
@@ -132,7 +159,7 @@ const Page = () => {
       </div>
 
       {/* Pagination */}
-      <div className='max-w-[600px]'>
+      <div className='max-w-[650px]'>
         {!isLoading && numberOfPages > 1 && (
           <Pagination
             currentPage={currentPage}
