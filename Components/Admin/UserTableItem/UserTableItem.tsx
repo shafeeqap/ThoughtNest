@@ -26,9 +26,26 @@ const UserTableItem: React.FC<IProps> = ({ counter, _id, username, email, role, 
                 <td className='px-6 py-4 '>{formattedDate}</td>
                 <td className='px-6 py-4 text-white uppercase text-xs'>
                     {status === 'active' ? (
-                        <span className="bg-green-600 px-2 py-1">Active</span>
+                        <button
+                            disabled={role === "admin"}
+                            onClick={() => setShowModal(true)}
+                            className={`${role === "admin" ? "cursor-not-allowed" : "cursor-pointer"} bg-green-600 px-1 py-1 hover:bg-green-700 flex items-center gap-1`}
+                        >
+                            <IoCheckmarkCircleOutline
+                                size={15}
+                            />
+                            Active
+                        </button>
                     ) : (
-                        <span className="bg-red-600 px-2 py-1">Blocked</span>
+                        <button
+                            onClick={() => setShowModal(true)}
+                            className="bg-red-600 px-1.5 py-1.5 cursor-pointer hover:bg-red-700 flex gap-1"
+                        >
+                            <IoBanOutline
+                                size={15}
+                            />
+                            Blocked
+                        </button>
                     )}
                 </td>
                 <td className='px-6 py-4 uppercase text-xs'>
@@ -49,46 +66,22 @@ const UserTableItem: React.FC<IProps> = ({ counter, _id, username, email, role, 
                         </span>
                     )}
                 </td>
-                <td className='px-6 py-4 flex justify-center'>
-                    {status === 'active' && role !== 'admin' ? (
-                        <button
-                            // disabled={role === 'admin'}
-                            onClick={() => setShowModal(true)}
-                        >
-                            <IoBanOutline
-                                size={20}
-                                className='text-black hover:text-red-500 cursor-pointer'
-                                title="Block User"
-                            />
-                        </button>
-                    ) : (
-                        <button
-                            disabled={role === 'admin'}
-                            onClick={() => setShowModal(true)}
-                        >
-                            <IoCheckmarkCircleOutline
-                                size={20}
-                                className="text-green-500 hover:text-green-700 cursor-pointer"
-                                title="Activate User"
-                            />
-                        </button>
-                    )}
 
-                    {showModal && (
-                        <ConfirmModal
-                            isOpen={showModal}
-                            onClose={() => setShowModal(false)}
-                            title={status === 'active' ? "Block User" : "Activate User"}
-                            message={`Are you sure you want to ${status === 'active' ? "blocke" : "activate"} this user?`}
-                            buttonText={status === 'active' ? "blocke" : "activate"}
-                            onConfirm={async () => {
-                                await handleUserAction(_id)
-                                setShowModal(false)
-                            }}
-                            icon={<IoWarningOutline size={80} color='#ffa500' />}
-                        />
-                    )}
-                </td>
+                {showModal && (
+                    <ConfirmModal
+                        isOpen={showModal}
+                        onClose={() => setShowModal(false)}
+                        title={status === 'active' ? "Block User" : "Activate User"}
+                        message={`Are you sure you want to ${status === 'active' ? "blocke" : "activate"} this user?`}
+                        buttonText={status === 'active' ? "blocke" : "activate"}
+                        onConfirm={async () => {
+                            await handleUserAction(_id)
+                            setShowModal(false)
+                        }}
+                        icon={<IoWarningOutline size={80} color='#ffa500' />}
+                    />
+                )}
+
             </tr>
         </>
     )

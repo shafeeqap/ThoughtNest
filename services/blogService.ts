@@ -26,4 +26,8 @@ export const blogService = {
     const response = await axiosInstance.get(`/api/blog?category=${category}`);
     return response.data.blogs;
   },
+  toggleBlogStatus: async (id: string) => {
+    const response = await axiosInstance.patch(`/api/blog/${id}`);
+    return response.data;
+  },
 };

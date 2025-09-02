@@ -127,7 +127,7 @@ const Page = () => {
     return (
         <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
             <div className='max-w-[850px] flex flex-col md:flex-row justify-between items-center gap-5'>
-                <h1 className='hidden sm:block text-sm sm:text-lg font-semibold w-[30%]'>All Category</h1>
+                <h1 className='hidden sm:block text-sm sm:text-lg font-semibold w-[30%]'>Manage Category</h1>
                 <div className='flex-1 justify-around items-center w-full'>
                     <Search
                         handleSearch={setSearchTerm}

@@ -9,6 +9,7 @@ export interface BlogItemType {
   author: string;
   authorImg: string;
   status: string;
+  action: string;
   createdAt: string;
   updatedAt?: string;
 }

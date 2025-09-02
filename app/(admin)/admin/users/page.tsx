@@ -76,7 +76,7 @@ const Page = () => {
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
       <div className='max-w-[1100px] flex gap-1'>
-        <h1 className='hidden sm:block text-sm sm:text-lg font-semibold w-full'>All Users</h1>
+        <h1 className='hidden sm:block text-sm sm:text-lg font-semibold w-full'>Manage Users</h1>
         <div className='w-full lg:w-[50%] ml-1 flex justify-center items-center'>
           <Search
             handleSearch={setSearchTerm}
@@ -108,9 +108,6 @@ const Page = () => {
               </th>
               <th scope='col' className='px-6 py-3'>
                 AuthMethod
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Action
               </th>
             </tr>
           </thead>

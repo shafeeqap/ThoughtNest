@@ -67,3 +67,40 @@ export async function DELETE(
     );
   }
 }
+
+// =====> API Endpoint to update blog action(active/blocked) <=====
+export async function PATCH(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    await connectDB();
+
+    const { id } = await context.params;
+
+    const blog = await BlogModel.findById(id);
+
+    if (!blog) {
+      return NextResponse.json({ msg: "Blog not found" }, { status: 404 });
+    }
+
+    const newAction = blog.action === "active" ? "blocked" : "active";
+
+    const updatedBlog = await BlogModel.findByIdAndUpdate(
+      id,
+      { action: newAction },
+      { new: true }
+    );
+
+    return NextResponse.json(
+      { msg: "Blog status updated successfully", updatedBlog },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { msg: "Error blog action by ID", error },
+      { status: 500 }
+    );
+  }
+}

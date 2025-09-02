@@ -36,8 +36,6 @@ const Page = () => {
     fetchBlogs();
   }, [])
 
-  console.log(allBlogs);
-
 
   useEffect(() => {
     setCurrentPage(1);
@@ -46,7 +44,7 @@ const Page = () => {
   const filteredBlogs = useMemo(() => {
     return allBlogs.filter((blog) => {
 
-      const dateString = formatDate(blog.date);
+      const dateString = formatDate(blog.createdAt);
 
       return `${blog.title} ${blog.category} ${blog.author} ${dateString}`
         .toLowerCase()
@@ -62,7 +60,31 @@ const Page = () => {
 
   const numberOfPages = Math.ceil(filteredBlogs.length / recordsPerPage);
 
+  // =====================> Handle Blog Action <===================== //
+  const handleBlogAction = async (id: string) => {
+    try {
+      const res = await blogService.toggleBlogStatus(id);
+      console.log(res, 'Res...');
 
+      setAllBlogs(prev => {
+        return prev.map(blog => {
+          if (blog._id === id) {
+            return {
+              ...blog,
+              action: res.updatedBlog.action
+            }
+          }
+          return blog
+        })
+      })
+      toast.success(res.msg);
+    } catch (error) {
+      toast.error("Failed to update category");
+      console.error(error);
+    }
+  }
+
+  // =====================> Handle Blog Delete <===================== //
   const handleDelete = async (id: string) => {
     try {
       const res = await blogService.deleteBlog(id);
@@ -87,8 +109,8 @@ const Page = () => {
 
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
-      <div className='flex max-w-[1200px] flex-col md:flex-row justify-between items-center gap-5'>
-        <h1 className='hidden sm:block font-semibold w-[30%]'>All blogs</h1>
+      <div className='flex max-w-[1250px] flex-col md:flex-row justify-between items-center gap-5'>
+        <h1 className='hidden sm:block font-semibold w-[30%]'>Manage Blogs</h1>
         <div className='w-[40%] flex justify-around items-center'>
           <Search
             handleSearch={handleSearch}
@@ -102,7 +124,7 @@ const Page = () => {
           <FiPlus size={22} />Add blog
         </Link>
       </div>
-      <div className='relative max-w-[1200px] overflow-x-auto mt-4 scrollbar-hide'>
+      <div className='relative max-w-[1250px] overflow-x-auto mt-4 scrollbar-hide'>
         <table className='w-full text-sm text-gray-500'>
           <thead className='text-sm text-white text-left uppercase bg-[#626a7a]'>
             <tr>
@@ -114,6 +136,7 @@ const Page = () => {
               <th scope='col' className='px-6 py-3'>Image</th>
               <th scope='col' className='px-6 py-3'>Status</th>
               <th scope='col' className='px-6 py-3'>Update</th>
+              <th scope='col' className='px-6 py-3'>Change</th>
               <th scope='col' className='px-6 py-3'>Action</th>
             </tr>
           </thead>
@@ -137,8 +160,9 @@ const Page = () => {
                 <BlogTableItem
                   key={item._id}
                   {...item}
-                  onDelete={handleDelete}
+                  handleDelete={handleDelete}
                   counter={(currentPage - 1) * recordsPerPage + index + 1}
+                  handleBlogAction={handleBlogAction}
                 />
               ))
             )}
@@ -148,7 +172,7 @@ const Page = () => {
 
 
       {/* Pagination */}
-      <div className='max-w-[1200px]'>
+      <div className='max-w-[1250px]'>
         {!isLoading && numberOfPages > 1 && (
           <Pagination
             currentPage={currentPage}

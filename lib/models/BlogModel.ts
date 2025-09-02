@@ -5,11 +5,12 @@ export interface IBlog extends Document {
   userId: mongoose.Types.ObjectId;
   title: string;
   description: string;
-  category: string;
+  category: mongoose.Types.ObjectId;
   author: string;
   image: string;
   authorImg: string;
   status: "pending" | "approved" | "rejected";
+  action: "active" | "blocked";
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -31,8 +32,8 @@ const BlogSchema: Schema<IBlog> = new Schema(
       required: true,
     },
     category: {
-      type: String,
-      required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref:"Category"
     },
     author: {
       type: String,
@@ -46,6 +47,11 @@ const BlogSchema: Schema<IBlog> = new Schema(
       type: String,
       enum: ["pending", "approved", "rejected"],
       default: "pending",
+    },
+    action: {
+      type: String,
+      enum: ["active", "blocked"],
+      default: "active",
     },
     authorImg: {
       type: String,

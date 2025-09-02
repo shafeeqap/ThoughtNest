@@ -99,7 +99,7 @@ console.log(subscribe);
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
       <div className='max-w-[650px] flex gap-1'>
-        <h1 className='hidden sm:block text-sm sm:text-lg font-semibold w-full'>All Subscription</h1>
+        <h1 className='hidden sm:block text-sm sm:text-lg font-semibold w-full'>Manage Subscription</h1>
         <div className='w-full ml-1 flex justify-center items-center'>
           <Search
             handleSearch={setSearchTerm}

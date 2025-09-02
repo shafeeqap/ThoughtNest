@@ -69,7 +69,7 @@ const CategoryTableItem: React.FC<IProps> = ({
             }
 
             const response = await categoryService.editCategory(id, categoryName, description);
-            
+
             setCategory(prev => prev.map(cat => cat._id === id ? response.updatedCategory : cat))
 
             toast.success(response.msg);
@@ -93,9 +93,32 @@ const CategoryTableItem: React.FC<IProps> = ({
                 <td className='px-6 py-4'>{truncatedText}</td>
                 <td className='px-6 py-4 text-white text-xs uppercase'>
                     {status === 'active' ? (
-                        <span className="px-2 py-1 bg-green-600">Active</span>
+                        <button
+                            onClick={() => {
+                                setActionType('action')
+                                setShowModal(true)
+                            }}
+                            className="px-1.5 py-1.5 bg-green-600 cursor-pointer flex gap-1 hover:bg-green-700"
+                        >
+                            <IoCheckmarkCircleOutline
+                                size={15}
+                                title="Activate Category"
+                            />
+                            Active
+                        </button>
                     ) : (
-                        <span className="px-2 py-1 bg-red-600">Blocked</span>
+                        <button onClick={() => {
+                            setActionType('action')
+                            setShowModal(true)
+                        }}
+                            className="px-1.5 py-1.5 bg-red-600 cursor-pointer flex gap-1 hover:bg-red-700"
+                        >
+                            <IoBanOutline
+                                size={15}
+                                title="Block Category"
+                            />
+                            Blocked
+                        </button>
                     )}
                 </td>
 
@@ -110,54 +133,25 @@ const CategoryTableItem: React.FC<IProps> = ({
                         <CiEdit
                             size={32}
                             title='Edit category'
-                            className='cursor-pointer'
+                            className='cursor-pointer hover:text-gray-400'
                         />
                     </button>
                 </td>
 
                 {/* Action category */}
                 <td className='px-6 py-4'>
-                    <div className='content-center flex gap-2'>
-                        {status === 'active' ? (
-                            <button
-                                onClick={() => {
-                                    setActionType('action')
-                                    setShowModal(true)
-                                }}
-                            >
-                                <IoBanOutline
-                                    size={20}
-                                    className='text-black hover:text-red-500 cursor-pointer'
-                                    title="Block Category"
-                                />
-                            </button>
-                        ) : (
-                            <button
-                                onClick={() => {
-                                    setActionType('action')
-                                    setShowModal(true)
-                                }}
-                            >
-                                <IoCheckmarkCircleOutline
-                                    size={20}
-                                    className="text-green-500 hover:text-green-700 cursor-pointer"
-                                    title="Activate Category"
-                                />
-                            </button>
-                        )} |
-                        <button
-                            onClick={() => {
-                                setActionType('delete')
-                                setShowModal(true)
-                            }}
-                        >
-                            <IoTrashBinOutline
-                                size={20}
-                                title='Delete category'
-                                className='cursor-pointer hover:text-red-500'
-                            />
-                        </button>
-                    </div>
+                    <button
+                        onClick={() => {
+                            setActionType('delete')
+                            setShowModal(true)
+                        }}
+                    >
+                        <IoTrashBinOutline
+                            size={20}
+                            title='Delete category'
+                            className='cursor-pointer hover:text-red-500'
+                        />
+                    </button>
 
                     {showModal && (
                         <ConfirmModal

@@ -53,50 +53,43 @@ const SubsTableItem: React.FC<IProps> = ({
                 <td className='px-6 py-4 hidden sm:block'>{date ? formattedDate : 'N/A'}</td>
                 <td className='px-6 py-4 text-white uppercase text-xs'>
                     {status === 'active' ? (
-                        <span className="px-2 py-1 bg-green-600">Active</span>
+                        <button
+                            onClick={() => {
+                                setActionType('action')
+                                setShowModal(true)
+                            }}
+                            className="px-1.5 py-1.5 bg-green-600 flex gap-1 cursor-pointer hover:bg-green-700"
+                        >
+                            <IoCheckmarkCircleOutline
+                                size={15}
+                            />
+                            Active
+                        </button>
                     ) : (
-                        <span className="px-2 py-1 bg-red-600">Blocked</span>
+                        <button
+                            onClick={() => {
+                                setActionType('action')
+                                setShowModal(true)
+                            }}
+                            className="px-1.5 py-1.5 bg-red-600 flex gap-1 cursor-pointer hover:bg-red-700"
+                        >
+                            <IoBanOutline
+                                size={15}
+                            />
+                            Blocked
+                        </button>
                     )}
                 </td>
                 <td className='px-6 py-4'>
-                    <div className='content-center flex gap-2'>
-                        {status === 'active' ? (
-                            <button
-                                onClick={() => {
-                                    setActionType('action')
-                                    setShowModal(true)
-                                }}
-                            >
-                                <IoBanOutline
-                                    size={20}
-                                    className='text-black hover:text-red-500 cursor-pointer'
-                                    title="Block subscription"
-                                />
-                            </button>
-                        ) : (
-                            <button
-                                onClick={() => {
-                                    setActionType('action')
-                                    setShowModal(true)
-                                }}
-                            >
-                                <IoCheckmarkCircleOutline
-                                    size={20}
-                                    className="text-green-500 hover:text-green-700 cursor-pointer"
-                                    title="Activate subscription"
-                                />
-                            </button>
-                        )} |
-                        <IoTrashBinOutline
-                            onClick={() => {
-                                setActionType('delete')
-                                setShowModal(true)
-                            }}
-                            size={20}
-                            title='Delete subscription'
-                            className='text-black hover:text-red-500 cursor-pointer'
-                        />
-                    </div>
+                    <IoTrashBinOutline
+                        onClick={() => {
+                            setActionType('delete')
+                            setShowModal(true)
+                        }}
+                        size={20}
+                        title='Delete subscription'
+                        className='text-black hover:text-red-500 cursor-pointer'
+                    />
 
                     {showModal && (
                         <ConfirmModal

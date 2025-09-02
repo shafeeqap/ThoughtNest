@@ -7,12 +7,13 @@ import { formatDate } from '@/lib/utils/helpers/formatDate';
 import { truncateText } from '@/lib/utils/helpers/truncateText';
 import { BlogItemType } from '@/types/blog';
 import Image from 'next/image'
-import { IoCloseCircleOutline, IoTrashBinOutline, IoCheckmarkCircleOutline } from 'react-icons/io5';
+import { IoCloseCircleOutline, IoTrashBinOutline, IoCheckmarkCircleOutline, IoBanOutline, IoWarningOutline } from 'react-icons/io5';
 import { CiEdit } from "react-icons/ci";
 import { MdOutlinePending } from "react-icons/md";
 
 interface IProps extends BlogItemType {
-    onDelete: (id: string) => void;
+    handleBlogAction: (id: string) => Promise<void>
+    handleDelete: (id: string) => Promise<void>;
     counter: number;
 }
 
@@ -25,15 +26,32 @@ const BlogTableItem: React.FC<IProps> = ({
     createdAt,
     category,
     image,
-    onDelete,
+    handleDelete,
+    handleBlogAction,
     status,
+    action,
 }) => {
     const [showModal, setShowModal] = useState<boolean>(false);
-
+    const [actionType, setActionType] = useState<"action" | "delete" | null>(null);
     const formattedDate = formatDate(createdAt);
     const truncatedText = truncateText(title);
 
-    // const Icon = actionType === "action" ? <IoWarningOutline size={80} color='#ffa500' /> : <IoCloseCircleOutline size={80} color='red' />;
+    const Title = actionType === "action" ? action === 'active' ? "Block Category" : "Activate Category" : "Delete Category";
+    const Msg = actionType === "action" ? `Are you sure you want to ${action === 'active' ? "blocke" : "activate"} this category?`
+        : 'Are you sure you want to delete this category?';
+    const Btn = actionType === "action" ? action === 'active' ? "blocke" : "activate" : 'delete';
+    const Icon = actionType === "action" ? <IoWarningOutline size={80} color='#ffa500' /> : <IoCloseCircleOutline size={80} color='red' />;
+
+    const handleConfirmModal = async (id: string) => {
+        if (actionType === "action") {
+            await handleBlogAction(id)
+        } else if (actionType === "delete") {
+            await handleDelete(id)
+        }
+        setShowModal(false);
+        setActionType(null);
+    }
+
 
     return (
         <>
@@ -68,6 +86,8 @@ const BlogTableItem: React.FC<IProps> = ({
                         className='w-14 h-12 object-cover border border-black'
                     />
                 </td>
+
+                {/* Update Status */}
                 <td className='px-6 py-4'>
                     {status}
                 </td>
@@ -75,12 +95,47 @@ const BlogTableItem: React.FC<IProps> = ({
                     <CiEdit
                         size={32}
                         title='Edit blog'
-                        className='cursor-pointer'
+                        className='cursor-pointer hover:text-gray-400'
                     />
+                </td>
+
+                {/* Update Action */}
+                <td className='px-6 py-4 text-white'>
+                    {action === 'active' ? (
+                        <button
+                            onClick={() => {
+                                setActionType('action')
+                                setShowModal(true)
+                            }}
+                            className="px-1.5 py-1.5 bg-green-600 cursor-pointer flex items-center gap-1 hover:bg-green-700"
+                        >
+                            <IoCheckmarkCircleOutline
+                                size={15}
+                                title="Activate Blog"
+                            />
+                            Active
+                        </button>
+                    ) : (
+                        <button onClick={() => {
+                            setActionType('action')
+                            setShowModal(true)
+                        }}
+                            className="px-1.5 py-1.5 bg-red-600 cursor-pointer flex items-center gap-1 hover:bg-red-700"
+                        >
+                            <IoBanOutline
+                                size={15}
+                                title="Block Blog"
+                            />
+                            Blocked
+                        </button>
+                    )}
                 </td>
                 <td className='px-6 py-4 sm:flex justify-around items-center '>
                     <IoTrashBinOutline
-                        onClick={() => setShowModal(true)}
+                        onClick={() => {
+                            setActionType('delete')
+                            setShowModal(true)
+                        }}
                         size={20}
                         title='Delete blog'
                         className='text-black hover:text-red-500 cursor-pointer'
@@ -89,8 +144,11 @@ const BlogTableItem: React.FC<IProps> = ({
                         <ConfirmModal
                             isOpen={showModal}
                             onClose={() => setShowModal(false)}
-                            onConfirm={() => onDelete(_id)}
-                            icon={<IoCloseCircleOutline size={80} color='red' />}
+                            onConfirm={() => handleConfirmModal(_id)}
+                            icon={Icon}
+                            title={Title}
+                            message={Msg}
+                            buttonText={Btn}
                         />
                     )}
                 </td>
