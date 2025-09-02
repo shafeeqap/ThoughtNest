@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react'
-import { ConfirmModal } from '@/Components/Modal';
+import { ConfirmModal, UpdateStatusModal } from '@/Components/Modal';
 import { assets } from '@/data/assets'
 import { formatDate } from '@/lib/utils/helpers/formatDate';
 import { truncateText } from '@/lib/utils/helpers/truncateText';
@@ -10,6 +10,7 @@ import Image from 'next/image'
 import { IoCloseCircleOutline, IoTrashBinOutline, IoCheckmarkCircleOutline, IoBanOutline, IoWarningOutline } from 'react-icons/io5';
 import { CiEdit } from "react-icons/ci";
 import { MdOutlinePending } from "react-icons/md";
+
 
 interface IProps extends BlogItemType {
     handleBlogAction: (id: string) => Promise<void>
@@ -32,6 +33,7 @@ const BlogTableItem: React.FC<IProps> = ({
     action,
 }) => {
     const [showModal, setShowModal] = useState<boolean>(false);
+    const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
     const [actionType, setActionType] = useState<"action" | "delete" | null>(null);
     const formattedDate = formatDate(createdAt);
     const truncatedText = truncateText(title);
@@ -89,8 +91,19 @@ const BlogTableItem: React.FC<IProps> = ({
 
                 {/* Update Status */}
                 <td className='px-6 py-4'>
-                    {status}
+                    {status && (
+                        <button
+                            onClick={() => setShowUpdateModal(true)}
+                            className={`text-black px-1.5 py-1.5 cursor-pointer uppercase ${status === "pending" ? "bg-yellow-500 hover:bg-yellow-400"
+                                : status === "approved" ? "bg-green-500" : "bg-red-500"
+                                }`}
+                        >
+                            <span>{status}</span>
+                        </button>
+                    )}
                 </td>
+
+                {/* Edit Blog */}
                 <td className='px-6 py-4'>
                     <CiEdit
                         size={32}
@@ -130,7 +143,9 @@ const BlogTableItem: React.FC<IProps> = ({
                         </button>
                     )}
                 </td>
-                <td className='px-6 py-4 sm:flex justify-around items-center '>
+
+                {/* Delete Blog */}
+                <td className='px-6 py-4 sm:flex justify-around items-center'>
                     <IoTrashBinOutline
                         onClick={() => {
                             setActionType('delete')
@@ -152,6 +167,14 @@ const BlogTableItem: React.FC<IProps> = ({
                         />
                     )}
                 </td>
+
+                {showUpdateModal && (
+                    <UpdateStatusModal
+                        isOpen={showUpdateModal}
+                        onClose={() => setShowUpdateModal(false)}
+                        onConfirm={()=>''}
+                    />
+                )}
             </tr>
         </>
     )

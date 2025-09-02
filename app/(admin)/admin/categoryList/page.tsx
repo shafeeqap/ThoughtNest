@@ -11,7 +11,8 @@ import { CategoryType } from '@/types/category';
 import Pagination from '@/Components/Pagination/Pagination';
 import { validateCategory } from '@/lib/validators/validateCategory';
 import { ErrorType } from '@/types/error';
-import AddModalItems from '@/Components/ModalItems/AddModalItems';
+import { AddModalItems } from '@/Components/Modal';
+
 
 
 const Page = () => {

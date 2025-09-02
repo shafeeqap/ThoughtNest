@@ -139,7 +139,7 @@ const CategoryTableItem: React.FC<IProps> = ({
                 </td>
 
                 {/* Action category */}
-                <td className='px-6 py-4'>
+                <td className='px-6 py-4 sm:flex justify-around items-center'>
                     <button
                         onClick={() => {
                             setActionType('delete')
