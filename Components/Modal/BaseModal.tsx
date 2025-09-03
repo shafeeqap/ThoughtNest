@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 
 interface ModalProps {
     isOpen: boolean;
@@ -5,10 +6,10 @@ interface ModalProps {
     children: React.ReactNode;
 }
 
-const BaseModal: React.FC<ModalProps> = ({isOpen, onClose, children }) => {
+const BaseModal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
     if (!isOpen) return;
- 
-    return (
+
+    return createPortal(
         <div className='fixed inset-0 flex justify-center items-center'>
             {/* Overlay */}
             <div
@@ -28,7 +29,8 @@ const BaseModal: React.FC<ModalProps> = ({isOpen, onClose, children }) => {
                     {children}
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     )
 }
 

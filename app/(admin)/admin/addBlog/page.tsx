@@ -3,22 +3,56 @@ import TiptapEditor from '@/Components/Tiptap/Editor';
 import { assets } from '@/data/assets';
 import { validateBlog } from '@/lib/validators/validateBlog';
 import { blogService } from '@/services/blogService';
+import { categoryService } from '@/services/categoryService';
+import { sessionService } from '@/services/sessionService';
+import { CategoryType } from '@/types/category';
 import Image from 'next/image';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 
 
 
 const Page = () => {
   const [image, setImage] = useState<File | null>(null);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
   const [data, setData] = useState({
     title: '',
     description: '',
-    category: 'Startup',
+    category: '',
     author: 'Alex Bennett',
     authorImg: '/author_img.png'
   });
+  const [authStatus, setAuthStatus] = useState({ userId: '' });
 
+  useEffect(() => {
+    async function fetchCategories() {
+      const response = await categoryService.fetchCategory();
+      console.log(response, 'Res cat...');
+      setCategories(response)
+    }
+    fetchCategories();
+  }, []);
+
+  console.log(categories, 'Categories...');
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const data = await sessionService.session();
+        setAuthStatus(data);
+      } catch (error) {
+        console.error('Failed to fetch session status:', error);
+      }
+    }
+
+    checkAuthStatus();
+    const interval = setInterval(checkAuthStatus, 5 * 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, [])
+
+  console.log(authStatus, 'Auth add blog...');
+  
 
   const onChangHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -60,7 +94,7 @@ const Page = () => {
         setData({
           title: '',
           description: '',
-          category: 'Startup',
+          category: '',
           author: 'Alex Bennett',
           authorImg: '/author_img.png',
         });
@@ -121,9 +155,13 @@ const Page = () => {
           value={data.category}
           className='w-40 mt-4 px-4 py-3 border text-gray-500'
         >
-          <option value="Startup">Startup</option>
-          <option value="Technology">Technology</option>
-          <option value="Lifestyle">Lifestyle</option>
+          {categories.map((cat) => (
+            <option
+              key={cat._id}
+              value={cat._id}>
+              {cat.categoryName}
+            </option>
+          ))}
         </select>
         <br />
         <button

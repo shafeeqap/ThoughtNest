@@ -1,20 +1,26 @@
 import { connectDB } from "@/lib/config/db";
+import { verifyAccessToken } from "@/lib/jwt/jwt";
 import BlogModel from "@/lib/models/BlogModel";
+import "@/lib/models/CategoryModel";
 import { decodeEntities } from "@/lib/utils/helpers/decodeEntities";
 import { sanitizeHtml } from "@/lib/utils/sanitize/sanitizeHtmlServer";
 import { writeFile } from "fs/promises";
-import { NextResponse } from "next/server";
+import mongoose from "mongoose";
+import { NextRequest, NextResponse } from "next/server";
 
 // =====> API Endpoint to get all blogs <=====
 export async function GET(req: Request) {
   try {
-    const category = new URL(req.url).searchParams.get("category");
-
     await connectDB();
+    const category = new URL(req.url).searchParams.get("category");
+    console.log(category, "Category...");
 
     const query = category && category !== "All" ? { category } : {};
 
-    const blogs = await BlogModel.find(query);
+    const blogs = await BlogModel.find(query).populate(
+      "category",
+      "categoryName"
+    );
 
     return NextResponse.json({ blogs });
   } catch (error) {
@@ -24,12 +30,19 @@ export async function GET(req: Request) {
 }
 
 // =====> API Endpoint for uploading blogs <=====
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     await connectDB();
 
-    const formData = await req.formData();
+    const accessToken = req.cookies.get("accessToken")?.value;
+    let decoded: any;
 
+    if (accessToken) {
+      decoded = await verifyAccessToken(accessToken);
+      console.log(decoded, "decoded...");
+    }
+
+    const formData = await req.formData();
     const image = formData.get("image") as File;
 
     let fileName = "";
@@ -55,13 +68,16 @@ export async function POST(req: Request) {
     }
 
     const blogData = {
+      userId: decoded.userId,
       title: formData.get("title") as string,
       description: safeDescription,
-      category: formData.get("category") as string,
+      category: new mongoose.Types.ObjectId(formData.get("category") as string),
       author: formData.get("author") as string,
       image: `/${fileName}`,
       authorImg: formData.get("authorImg") as string,
     };
+
+    console.log(blogData, "Blog Data...");
 
     await BlogModel.create(blogData);
 

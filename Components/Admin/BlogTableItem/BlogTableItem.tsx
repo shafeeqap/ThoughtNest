@@ -7,16 +7,15 @@ import { formatDate } from '@/lib/utils/helpers/formatDate';
 import { truncateText } from '@/lib/utils/helpers/truncateText';
 import { BlogItemType } from '@/types/blog';
 import Image from 'next/image'
-import { IoCloseCircleOutline, IoTrashBinOutline, IoCheckmarkCircleOutline, IoBanOutline, IoWarningOutline } from 'react-icons/io5';
+import { IoCloseCircleOutline, IoTrashBinOutline, IoWarningOutline } from 'react-icons/io5';
 import { CiEdit } from "react-icons/ci";
-import { MdOutlinePending } from "react-icons/md";
-import { blogService } from '@/services/blogService';
-
+import { blogStatusConfig } from '@/lib/config/ui/blogStatusConfig';
+import { blogActionConfig } from '@/lib/config/ui/blogActionConfig';
 
 interface IProps extends BlogItemType {
     handleBlogAction: (id: string, type: "action", value: string) => Promise<void>;
+    handleUpdateStatus: (id: string, type: "status", value: string) => Promise<void>;
     handleDelete: (id: string) => Promise<void>;
-    handleUpdateStatus: (id: string, type: "status", value: string) => void;
     counter: number;
 }
 
@@ -41,11 +40,13 @@ const BlogTableItem: React.FC<IProps> = ({
     const formattedDate = formatDate(createdAt);
     const truncatedText = truncateText(title);
 
+    // ====================================================================================== //
     const Title = actionType === "action" ? action === 'active' ? "Block Blog" : "Activate Blog." : "Delete Blog.";
     const Msg = actionType === "action" ? `Are you sure you want to ${action === 'active' ? "blocke" : "activate"} this Blog?`
         : 'Are you sure you want to delete this blog?';
     const Btn = actionType === "action" ? action === 'active' ? "blocke" : "activate" : 'delete';
     const Icon = actionType === "action" ? <IoWarningOutline size={80} color='#ffa500' /> : <IoCloseCircleOutline size={80} color='red' />;
+
 
     const handleConfirmModal = async (id: string) => {
         if (actionType === "action") {
@@ -79,7 +80,7 @@ const BlogTableItem: React.FC<IProps> = ({
                     {formattedDate}
                 </td>
                 <td className='px-6 py-4'>
-                    {category}
+                    { category?.categoryName || "No Category"}
                 </td>
                 <td className='px-6 py-4'>
                     <Image
@@ -96,11 +97,10 @@ const BlogTableItem: React.FC<IProps> = ({
                     {status && (
                         <button
                             onClick={() => setShowUpdateModal(true)}
-                            className={`text-black px-1.5 py-1.5 cursor-pointer uppercase ${status === "pending" ? "bg-yellow-500 hover:bg-yellow-400"
-                                : status === "approved" ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"
-                                }`}
+                            className={`px-1.5 py-1.5 cursor-pointer uppercase flex justify-around min-w-[110px] ${blogStatusConfig[status].className}`}
                         >
-                            <span>{status}</span>
+                            {blogStatusConfig[status].icon}
+                            <p>{status}</p>
                         </button>
                     )}
                 </td>
@@ -116,32 +116,16 @@ const BlogTableItem: React.FC<IProps> = ({
 
                 {/* Update Action */}
                 <td className='px-6 py-4 text-white'>
-                    {action === 'active' ? (
+                    {action && (
                         <button
                             onClick={() => {
                                 setActionType('action')
                                 setShowModal(true)
                             }}
-                            className="px-1.5 py-1.5 bg-green-600 cursor-pointer flex items-center gap-1 hover:bg-green-700"
+                            className={`px-1.5 py-1.5 min-w-[100px] cursor-pointer flex justify-around items-center uppercase ${blogActionConfig[action].className}`}
                         >
-                            <IoCheckmarkCircleOutline
-                                size={15}
-                                title="Activate Blog"
-                            />
-                            Active
-                        </button>
-                    ) : (
-                        <button onClick={() => {
-                            setActionType('action')
-                            setShowModal(true)
-                        }}
-                            className="px-1.5 py-1.5 bg-red-600 cursor-pointer flex items-center gap-1 hover:bg-red-700"
-                        >
-                            <IoBanOutline
-                                size={15}
-                                title="Block Blog"
-                            />
-                            Blocked
+                            {blogActionConfig[action].icon}
+                            {blogActionConfig[action].btnName}
                         </button>
                     )}
                 </td>
@@ -157,30 +141,31 @@ const BlogTableItem: React.FC<IProps> = ({
                         title='Delete blog'
                         className='text-black hover:text-red-500 cursor-pointer'
                     />
-                    {showModal && (
-                        <ConfirmModal
-                            isOpen={showModal}
-                            onClose={() => setShowModal(false)}
-                            onConfirm={() => handleConfirmModal(_id)}
-                            icon={Icon}
-                            title={Title}
-                            message={Msg}
-                            buttonText={Btn}
-                        />
-                    )}
                 </td>
-
-                {showUpdateModal && (
-                    <UpdateStatusModal
-                        id={_id}
-                        isOpen={showUpdateModal}
-                        onClose={() => setShowUpdateModal(false)}
-                        handleUpdateStatus={handleUpdateStatus}
-                        setShowUpdateModal={setShowUpdateModal}
-                        updatedStatus={status}
-                    />
-                )}
             </tr>
+
+            {showModal && (
+                <ConfirmModal
+                    isOpen={showModal}
+                    onClose={() => setShowModal(false)}
+                    onConfirm={() => handleConfirmModal(_id)}
+                    icon={Icon}
+                    title={Title}
+                    message={Msg}
+                    buttonText={Btn}
+                />
+            )}
+
+            {showUpdateModal && (
+                <UpdateStatusModal
+                    id={_id}
+                    isOpen={showUpdateModal}
+                    onClose={() => setShowUpdateModal(false)}
+                    handleUpdateStatus={handleUpdateStatus}
+                    setShowUpdateModal={setShowUpdateModal}
+                    updatedStatus={status}
+                />
+            )}
         </>
     )
 }

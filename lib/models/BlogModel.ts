@@ -33,7 +33,8 @@ const BlogSchema: Schema<IBlog> = new Schema(
     },
     category: {
       type: mongoose.Schema.Types.ObjectId,
-      ref:"Category"
+      ref: "Category",
+      required: true,
     },
     author: {
       type: String,

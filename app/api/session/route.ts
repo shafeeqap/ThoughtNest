@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
     //   secret: process.env.AUTH_SECRET,
     // });
 
+    
     const session = await auth();
 
     console.log(session, 'Session...');
