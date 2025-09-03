@@ -68,7 +68,7 @@ export async function DELETE(
   }
 }
 
-// =====> API Endpoint to update blog action(active/blocked) <=====
+// =====> API Endpoint to update blog action(active/blocked) and status(pending/approved/rejected) <=====
 export async function PATCH(
   req: Request,
   context: { params: Promise<{ id: string }> }
@@ -77,6 +77,7 @@ export async function PATCH(
     await connectDB();
 
     const { id } = await context.params;
+    const { status, action } = await req.json();
 
     const blog = await BlogModel.findById(id);
 
@@ -84,22 +85,23 @@ export async function PATCH(
       return NextResponse.json({ msg: "Blog not found" }, { status: 404 });
     }
 
-    const newAction = blog.action === "active" ? "blocked" : "active";
+    const updateData: Record<string, string> = {};
 
-    const updatedBlog = await BlogModel.findByIdAndUpdate(
-      id,
-      { action: newAction },
-      { new: true }
-    );
+    if (status) updateData.status = status;
+    if (action) updateData.action = action;
+
+    const updatedBlog = await BlogModel.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
 
     return NextResponse.json(
-      { msg: "Blog status updated successfully", updatedBlog },
+      { msg: "Blog updated successfully", updatedBlog },
       { status: 200 }
     );
   } catch (error) {
     console.log(error);
     return NextResponse.json(
-      { msg: "Error blog action by ID", error },
+      { msg: "Error blog updating by ID", error },
       { status: 500 }
     );
   }

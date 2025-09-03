@@ -10,11 +10,13 @@ import Image from 'next/image'
 import { IoCloseCircleOutline, IoTrashBinOutline, IoCheckmarkCircleOutline, IoBanOutline, IoWarningOutline } from 'react-icons/io5';
 import { CiEdit } from "react-icons/ci";
 import { MdOutlinePending } from "react-icons/md";
+import { blogService } from '@/services/blogService';
 
 
 interface IProps extends BlogItemType {
-    handleBlogAction: (id: string) => Promise<void>
+    handleBlogAction: (id: string, type: "action", value: string) => Promise<void>;
     handleDelete: (id: string) => Promise<void>;
+    handleUpdateStatus: (id: string, type: "status", value: string) => void;
     counter: number;
 }
 
@@ -29,6 +31,7 @@ const BlogTableItem: React.FC<IProps> = ({
     image,
     handleDelete,
     handleBlogAction,
+    handleUpdateStatus,
     status,
     action,
 }) => {
@@ -38,22 +41,21 @@ const BlogTableItem: React.FC<IProps> = ({
     const formattedDate = formatDate(createdAt);
     const truncatedText = truncateText(title);
 
-    const Title = actionType === "action" ? action === 'active' ? "Block Category" : "Activate Category" : "Delete Category";
-    const Msg = actionType === "action" ? `Are you sure you want to ${action === 'active' ? "blocke" : "activate"} this category?`
-        : 'Are you sure you want to delete this category?';
+    const Title = actionType === "action" ? action === 'active' ? "Block Blog" : "Activate Blog." : "Delete Blog.";
+    const Msg = actionType === "action" ? `Are you sure you want to ${action === 'active' ? "blocke" : "activate"} this Blog?`
+        : 'Are you sure you want to delete this blog?';
     const Btn = actionType === "action" ? action === 'active' ? "blocke" : "activate" : 'delete';
     const Icon = actionType === "action" ? <IoWarningOutline size={80} color='#ffa500' /> : <IoCloseCircleOutline size={80} color='red' />;
 
     const handleConfirmModal = async (id: string) => {
         if (actionType === "action") {
-            await handleBlogAction(id)
+            await handleBlogAction(id, "action", action === 'active' ? "blocked" : "active")
         } else if (actionType === "delete") {
             await handleDelete(id)
         }
         setShowModal(false);
         setActionType(null);
     }
-
 
     return (
         <>
@@ -95,7 +97,7 @@ const BlogTableItem: React.FC<IProps> = ({
                         <button
                             onClick={() => setShowUpdateModal(true)}
                             className={`text-black px-1.5 py-1.5 cursor-pointer uppercase ${status === "pending" ? "bg-yellow-500 hover:bg-yellow-400"
-                                : status === "approved" ? "bg-green-500" : "bg-red-500"
+                                : status === "approved" ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"
                                 }`}
                         >
                             <span>{status}</span>
@@ -170,9 +172,12 @@ const BlogTableItem: React.FC<IProps> = ({
 
                 {showUpdateModal && (
                     <UpdateStatusModal
+                        id={_id}
                         isOpen={showUpdateModal}
                         onClose={() => setShowUpdateModal(false)}
-                        onConfirm={()=>''}
+                        handleUpdateStatus={handleUpdateStatus}
+                        setShowUpdateModal={setShowUpdateModal}
+                        updatedStatus={status}
                     />
                 )}
             </tr>

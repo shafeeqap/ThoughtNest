@@ -60,10 +60,10 @@ const Page = () => {
 
   const numberOfPages = Math.ceil(filteredBlogs.length / recordsPerPage);
 
-  // =====================> Handle Blog Action <===================== //
-  const handleBlogAction = async (id: string) => {
+  // =====================> Handle Blog Action (active/blocked) <===================== //
+  const handleBlogAction = async (id: string, type: "action", value: string) => {
     try {
-      const res = await blogService.toggleBlogStatus(id);
+      const res = await blogService.updateBlog(id, { [type]: value });
       console.log(res, 'Res...');
 
       setAllBlogs(prev => {
@@ -106,6 +106,22 @@ const Page = () => {
       console.error(error);
     }
   }
+
+  // =====================> Handle Update Blog Status(Pending/Approved/Rejected) <===================== //
+  const handleUpdateStatus = async (id: string, type: "status", value: string) => {
+    const res = await blogService.updateBlog(id, { [type]: value });
+    console.log(res, 'Response...');
+    setAllBlogs(prev => prev.map(blog => {
+      if (blog._id === id) {
+        return {
+          ...blog,
+          status: res.updatedBlog.status,
+        }
+      }
+      return blog;
+    }))
+  }
+
 
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
@@ -163,6 +179,7 @@ const Page = () => {
                   handleDelete={handleDelete}
                   counter={(currentPage - 1) * recordsPerPage + index + 1}
                   handleBlogAction={handleBlogAction}
+                  handleUpdateStatus={handleUpdateStatus}
                 />
               ))
             )}
