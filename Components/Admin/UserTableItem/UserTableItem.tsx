@@ -24,30 +24,34 @@ const UserTableItem: React.FC<IProps> = ({ counter, _id, username, email, role, 
                 <td className='px-6 py-4'>{email}</td>
                 <td className={`px-6 py-4 bg-gray-200 uppercase ${role === "admin" && 'text-red-500'}`}>{role}</td>
                 <td className='px-6 py-4 '>{formattedDate}</td>
+                
+                {/* Update status */}
                 <td className='px-6 py-4 text-white uppercase text-xs'>
                     {status === 'active' ? (
                         <button
                             disabled={role === "admin"}
                             onClick={() => setShowModal(true)}
-                            className={`${role === "admin" ? "cursor-not-allowed" : "cursor-pointer"} bg-green-600 px-1 py-1 hover:bg-green-700 flex items-center gap-1`}
+                            className={`${role === "admin" ? "cursor-not-allowed" : "cursor-pointer"} bg-green-600 px-1 py-1.5 hover:bg-green-700 flex justify-around items-center min-w-[100px]`}
                         >
                             <IoCheckmarkCircleOutline
-                                size={15}
+                                size={18}
                             />
                             Active
                         </button>
                     ) : (
                         <button
                             onClick={() => setShowModal(true)}
-                            className="bg-red-600 px-1.5 py-1.5 cursor-pointer hover:bg-red-700 flex gap-1"
+                            className="bg-red-600 px-1.5 py-1.5 cursor-pointer hover:bg-red-700 flex justify-around items-center min-w-[100px]"
                         >
                             <IoBanOutline
-                                size={15}
+                                size={18}
                             />
                             Blocked
                         </button>
                     )}
                 </td>
+
+                {/* Auth Method */}
                 <td className='px-6 py-4 uppercase text-xs'>
                     {providers && providers.length > 0 ? providers?.map((p, i) => (
                         <span

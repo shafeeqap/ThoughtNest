@@ -7,10 +7,12 @@ import { formatDate } from '@/lib/utils/helpers/formatDate';
 import { truncateText } from '@/lib/utils/helpers/truncateText';
 import { BlogItemType } from '@/types/blog';
 import Image from 'next/image'
-import { IoCloseCircleOutline, IoTrashBinOutline, IoWarningOutline } from 'react-icons/io5';
+import { IoCloseCircleOutline, IoTrashBinOutline, IoWarningOutline, IoEyeOutline } from 'react-icons/io5';
 import { CiEdit } from "react-icons/ci";
 import { blogStatusConfig } from '@/lib/config/ui/blogStatusConfig';
 import { blogActionConfig } from '@/lib/config/ui/blogActionConfig';
+import EditBlogModal from '@/Components/Modal/ModalItem/EditBlogModal';
+
 
 interface IProps extends BlogItemType {
     handleBlogAction: (id: string, type: "action", value: string) => Promise<void>;
@@ -35,10 +37,17 @@ const BlogTableItem: React.FC<IProps> = ({
     action,
 }) => {
     const [showModal, setShowModal] = useState<boolean>(false);
+    const [shwoEditModal, setShowEditModal] = useState<boolean>(false);
     const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
     const [actionType, setActionType] = useState<"action" | "delete" | null>(null);
     const formattedDate = formatDate(createdAt);
     const truncatedText = truncateText(title);
+
+    const [editCategoryName, setEditCategoryName] = useState();
+    const [editDescription, setEditDescription] = useState();
+    const [editTitle, setEditTitle] = useState();
+    const [editImage, setEditImage] = useState();
+
 
     // ====================================================================================== //
     const Title = actionType === "action" ? action === 'active' ? "Block Blog" : "Activate Blog." : "Delete Blog.";
@@ -64,7 +73,7 @@ const BlogTableItem: React.FC<IProps> = ({
                 <td className='px-6 py-4'>
                     {counter}
                 </td>
-                <th scope='row' className='items-center gap-3 hidden sm:flex px-6 py-4 font-medium text-gray-900 whitespace-nowrap'>
+                <th scope='row' className='items-center gap-3 hidden sm:flex px-6 py-4 text-gray-900 whitespace-nowrap'>
                     <Image
                         width={40}
                         height={40}
@@ -74,13 +83,13 @@ const BlogTableItem: React.FC<IProps> = ({
                     <p>{author ? author : "No author"}</p>
                 </th>
                 <td className='px-6 py-4'>
-                    {title ? truncatedText : 'No title'}
+                    <p className='font-medium text-black'>{title ? truncatedText : 'No title'}</p>
                 </td>
                 <td className='px-6 py-4'>
                     {formattedDate}
                 </td>
                 <td className='px-6 py-4'>
-                    { category?.categoryName || "No Category"}
+                    {category?.categoryName || "No Category"}
                 </td>
                 <td className='px-6 py-4'>
                     <Image
@@ -97,7 +106,7 @@ const BlogTableItem: React.FC<IProps> = ({
                     {status && (
                         <button
                             onClick={() => setShowUpdateModal(true)}
-                            className={`px-1.5 py-1.5 cursor-pointer uppercase flex justify-around min-w-[110px] ${blogStatusConfig[status].className}`}
+                            className={`px-1.5 py-1.5 cursor-pointer uppercase flex justify-around gap-1 min-w-[100px] ${blogStatusConfig[status].className}`}
                         >
                             {blogStatusConfig[status].icon}
                             <p>{status}</p>
@@ -108,6 +117,7 @@ const BlogTableItem: React.FC<IProps> = ({
                 {/* Edit Blog */}
                 <td className='px-6 py-4'>
                     <CiEdit
+                        onClick={() => setShowEditModal(true)}
                         size={32}
                         title='Edit blog'
                         className='cursor-pointer hover:text-gray-400'
@@ -128,6 +138,14 @@ const BlogTableItem: React.FC<IProps> = ({
                             {blogActionConfig[action].btnName}
                         </button>
                     )}
+                </td>
+                {/* Preview Blog */}
+                <td className='px-6 py-4'>
+                    <IoEyeOutline
+                        size={22}
+                        title='Preview'
+                        className='cursor-pointer hover:text-gray-400'
+                    />
                 </td>
 
                 {/* Delete Blog */}
@@ -164,6 +182,19 @@ const BlogTableItem: React.FC<IProps> = ({
                     handleUpdateStatus={handleUpdateStatus}
                     setShowUpdateModal={setShowUpdateModal}
                     updatedStatus={status}
+                />
+            )}
+
+            {shwoEditModal && (
+                <EditBlogModal
+                    isOpen={shwoEditModal}
+                    onClose={() => setShowEditModal(false)}
+                    title='Edit Blog Items.'
+                    message='Edit your blog content.'
+                    buttonText='save changes'
+                    blogTitle={title}
+                    categoryName={category.categoryName}
+                    image={image}
                 />
             )}
         </>

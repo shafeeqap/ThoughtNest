@@ -20,7 +20,6 @@ const AddModal: React.FC<AddModalProps> = ({
     children,
 }) => {
     
-    console.log("Children inside AddModal:", children);
     
     return (
         <>

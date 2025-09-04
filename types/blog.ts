@@ -1,10 +1,10 @@
 export interface Category {
   _id: string;
   categoryName: string;
-  // description?: string;
-  // status?: string;
-  // createdAt?: string;
-  // updatedAt?: string;
+  description?: string;
+  status?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface BlogItemType {

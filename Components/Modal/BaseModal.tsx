@@ -16,7 +16,7 @@ const BaseModal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
                 onClick={onClose}
                 className='absolute inset-0 bg-black opacity-70'></div>
 
-            <div className='flex flex-col gap-5 ml-20 sm:m-0 sm:w-1/2 max-w-md'>
+            <div className='flex flex-col gap-5 ml-20 sm:m-0 '>
 
                 {/* Close Button */}
                 <button

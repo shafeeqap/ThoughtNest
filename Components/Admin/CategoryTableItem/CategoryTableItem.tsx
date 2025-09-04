@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from 'react'
-import { ConfirmModal, EditModal } from '@/Components/Modal';
+import { ConfirmModal } from '@/Components/Modal';
 import { IoBanOutline, IoCheckmarkCircleOutline, IoTrashBinOutline, IoCloseCircleOutline, IoWarningOutline } from 'react-icons/io5';
 import { CategoryType } from '@/types/category';
 import { CiEdit } from 'react-icons/ci';
@@ -8,6 +8,7 @@ import { ErrorType } from '@/types/error';
 import { toast } from 'react-toastify';
 import { validateCategory } from '@/lib/validators/validateCategory';
 import { categoryService } from '@/services/categoryService';
+import EditCategoryModal from '@/Components/Modal/ModalItem/EditCategoryModal';
 
 
 interface IProps extends CategoryType {
@@ -91,17 +92,19 @@ const CategoryTableItem: React.FC<IProps> = ({
                 <td className='px-6 py-4'>{counter}</td>
                 <td className='px-6 py-4'>{categoryName}</td>
                 <td className='px-6 py-4'>{truncatedText}</td>
-                <td className='px-6 py-4 text-white text-xs uppercase'>
+                
+                {/* Update Status */}
+                <td className='px-6 py-4 text-white text-xs'>
                     {status === 'active' ? (
                         <button
                             onClick={() => {
                                 setActionType('action')
                                 setShowModal(true)
                             }}
-                            className="px-1.5 py-1.5 bg-green-600 cursor-pointer flex gap-1 hover:bg-green-700"
+                            className="px-1.5 py-1.5 bg-green-600 cursor-pointer flex justify-around items-center uppercase hover:bg-green-700 min-w-[100px]"
                         >
                             <IoCheckmarkCircleOutline
-                                size={15}
+                                size={18}
                                 title="Activate Category"
                             />
                             Active
@@ -111,10 +114,10 @@ const CategoryTableItem: React.FC<IProps> = ({
                             setActionType('action')
                             setShowModal(true)
                         }}
-                            className="px-1.5 py-1.5 bg-red-600 cursor-pointer flex gap-1 hover:bg-red-700"
+                            className="px-1.5 py-1.5 bg-red-600 cursor-pointer flex justify-around items-center uppercase min-w-[100px] hover:bg-red-700"
                         >
                             <IoBanOutline
-                                size={15}
+                                size={18}
                                 title="Block Category"
                             />
                             Blocked
@@ -168,7 +171,7 @@ const CategoryTableItem: React.FC<IProps> = ({
                 </td>
 
                 {shwoEditModal && (
-                    <EditModal
+                    <EditCategoryModal
                         isOpen={shwoEditModal}
                         onClose={() => setShowEditModal(false)}
                         title='Edit category.'

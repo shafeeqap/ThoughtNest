@@ -98,8 +98,8 @@ console.log(subscribe);
 
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
-      <div className='max-w-[650px] flex gap-1'>
-        <h1 className='hidden sm:block text-sm sm:text-lg font-semibold w-full'>Manage Subscription</h1>
+      <div className='max-w-[700px] flex gap-1'>
+        <h1 className='hidden sm:block text-sm sm:text-2xl font-semibold w-full'>Manage Subscription</h1>
         <div className='w-full ml-1 flex justify-center items-center'>
           <Search
             handleSearch={setSearchTerm}
@@ -107,7 +107,7 @@ console.log(subscribe);
           />
         </div>
       </div>
-      <div className='relative max-w-[650px] overflow-x-auto mt-4 scrollbar-hide'>
+      <div className='relative max-w-[700px] overflow-x-auto mt-4 scrollbar-hide'>
         <table className='w-full text-sm text-gray-500'>
           <thead className='text-xs text-left text-white uppercase bg-[#626a7a]'>
             <tr>
@@ -159,7 +159,7 @@ console.log(subscribe);
       </div>
 
       {/* Pagination */}
-      <div className='max-w-[650px]'>
+      <div className='max-w-[700px]'>
         {!isLoading && numberOfPages > 1 && (
           <Pagination
             currentPage={currentPage}

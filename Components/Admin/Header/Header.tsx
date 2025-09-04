@@ -81,10 +81,17 @@ const Header: React.FC = () => {
                 </div>
 
                 <div className='flex justify-between py-2 gap-2'>
-                    <div><FaUserCircle className='w-6 h-6 cursor-pointer hover:text-gray-300' /></div>
-                    <div><FaBell className='w-6 h-6 cursor-pointer hover:text-gray-300' /></div>
+                    <FaUserCircle title='Profile' className='w-6 h-6 cursor-pointer hover:text-gray-300' />
+                    <FaBell title='Notification' className='w-6 h-6 cursor-pointer hover:text-gray-300' />
                     {authStatus && (
-                        <button onClick={handleLogout}><MdLogout className='w-6 h-6 cursor-pointer hover:text-gray-300' /></button>
+                        <button
+                            onClick={handleLogout}
+                        >
+                            <MdLogout
+                                title='Logout'
+                                className='w-6 h-6 cursor-pointer hover:text-gray-300'
+                            />
+                        </button>
                     )}
                 </div>
             </div>

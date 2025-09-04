@@ -138,7 +138,7 @@ const Page = () => {
           name='title'
           value={data.title}
           type="text"
-          placeholder='Type here'
+          placeholder='Enter blog title'
           className='w-full  mt-4 px-4 py-2 border'
         />
 

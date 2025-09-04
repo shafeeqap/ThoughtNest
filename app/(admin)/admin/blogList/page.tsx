@@ -127,8 +127,8 @@ const Page = () => {
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
       <div className='flex max-w-full flex-col md:flex-row justify-between items-center gap-5'>
-        <h1 className='hidden sm:block font-semibold w-[30%]'>Manage Blogs</h1>
-        <div className='w-[40%] flex justify-around items-center'>
+        <h1 className='hidden sm:block font-semibold text-2xl w-[30%]'>Manage Blogs</h1>
+        <div className='w-[30%] flex justify-around items-center'>
           <Search
             handleSearch={handleSearch}
             searchTerm={searchTerm}
@@ -153,8 +153,9 @@ const Page = () => {
               <th scope='col' className='px-6 py-3'>Image</th>
               <th scope='col' className='px-6 py-3'>Status</th>
               <th scope='col' className='px-6 py-3'>Update</th>
-              <th scope='col' className='px-6 py-3'>Change</th>
               <th scope='col' className='px-6 py-3'>Action</th>
+              <th scope='col' className='px-6 py-3'>Details</th>
+              <th scope='col' className='px-6 py-3'>Delete</th>
             </tr>
           </thead>
           <tbody>

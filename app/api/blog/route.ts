@@ -13,7 +13,6 @@ export async function GET(req: Request) {
   try {
     await connectDB();
     const category = new URL(req.url).searchParams.get("category");
-    console.log(category, "Category...");
 
     const query = category && category !== "All" ? { category } : {};
 
@@ -39,7 +38,6 @@ export async function POST(req: NextRequest) {
 
     if (accessToken) {
       decoded = await verifyAccessToken(accessToken);
-      console.log(decoded, "decoded...");
     }
 
     const formData = await req.formData();
@@ -76,8 +74,6 @@ export async function POST(req: NextRequest) {
       image: `/${fileName}`,
       authorImg: formData.get("authorImg") as string,
     };
-
-    console.log(blogData, "Blog Data...");
 
     await BlogModel.create(blogData);
 

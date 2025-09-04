@@ -51,6 +51,8 @@ const SubsTableItem: React.FC<IProps> = ({
                     {email || "No Email"}
                 </th>
                 <td className='px-6 py-4 hidden sm:block'>{date ? formattedDate : 'N/A'}</td>
+                
+                {/* Update status */}
                 <td className='px-6 py-4 text-white uppercase text-xs'>
                     {status === 'active' ? (
                         <button
@@ -58,10 +60,10 @@ const SubsTableItem: React.FC<IProps> = ({
                                 setActionType('action')
                                 setShowModal(true)
                             }}
-                            className="px-1.5 py-1.5 bg-green-600 flex gap-1 cursor-pointer hover:bg-green-700"
+                            className="px-1.5 py-1.5 bg-green-600 flex justify-around items-center min-w-[100px] uppercase cursor-pointer hover:bg-green-700"
                         >
                             <IoCheckmarkCircleOutline
-                                size={15}
+                                size={18}
                             />
                             Active
                         </button>
@@ -71,10 +73,10 @@ const SubsTableItem: React.FC<IProps> = ({
                                 setActionType('action')
                                 setShowModal(true)
                             }}
-                            className="px-1.5 py-1.5 bg-red-600 flex gap-1 cursor-pointer hover:bg-red-700"
+                            className="px-1.5 py-1.5 bg-red-600 flex justify-around items-center min-w-[100px] uppercase cursor-pointer hover:bg-red-700"
                         >
                             <IoBanOutline
-                                size={15}
+                                size={18}
                             />
                             Blocked
                         </button>
