@@ -25,7 +25,7 @@ const EditModal: React.FC<EditeModalProps> = ({
     return (
         <>
             <BaseModal isOpen={isOpen} onClose={onClose} >
-                <div className='w-full flex flex-col items-start py-3 border-b border-gray-300'>
+                <div className='w-full flex flex-col items-start py-3 border-b border-gray-300 '>
                     <h1 className='text-2xl font-semibold'>{title}</h1>
                     <p className='text-center'>{message}</p>
                 </div>

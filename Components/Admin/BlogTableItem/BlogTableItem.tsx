@@ -27,6 +27,7 @@ const BlogTableItem: React.FC<IProps> = ({
     counter,
     authorImg,
     title,
+    description,
     author,
     createdAt,
     category,
@@ -45,8 +46,8 @@ const BlogTableItem: React.FC<IProps> = ({
     const truncatedText = truncateText(title);
 
     const [editCategoryName, setEditCategoryName] = useState(category);
-    const [editDescription, setEditDescription] = useState();
-    const [editTitle, setEditTitle] = useState();
+    const [editDescription, setEditDescription] = useState(description);
+    const [editTitle, setEditTitle] = useState(title);
     const [editImage, setEditImage] = useState();
 
 
@@ -193,8 +194,12 @@ const BlogTableItem: React.FC<IProps> = ({
                     title='Edit Blog Items.'
                     buttonText='save changes'
                     blogTitle={title}
+                    description={editDescription}
                     categoryName={editCategoryName}
                     image={image}
+                    setCategoryName={setEditCategoryName}
+                    setDescription={setEditDescription}
+                    setTitle={setEditTitle}
                 />
             )}
         </>

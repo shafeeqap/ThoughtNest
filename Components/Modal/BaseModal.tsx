@@ -25,7 +25,7 @@ const BaseModal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
                 >
                     X
                 </button>
-                <div className='bg-white text-black flex flex-col justify-center items-center gap-5 max-w-[95%] md:max-w-full py-5 px-5 rounded-md z-10'>
+                <div className='bg-white text-black flex flex-col justify-center items-center gap-5 max-w-[95%] md:max-w-full py-5 px-5 rounded-md z-10 '>
                     {children}
                 </div>
             </div>

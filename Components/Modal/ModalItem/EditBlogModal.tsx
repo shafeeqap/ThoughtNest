@@ -1,10 +1,11 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import EditModal from '../EditModal'
 import { ErrorType } from '@/types/error';
 import { CategoryType } from '@/types/category';
 import { categoryService } from '@/services/categoryService';
 import Image from 'next/image';
-import { IoCloudUploadOutline, IoCloudUploadSharp } from "react-icons/io5";
+import { IoCloudUploadSharp } from "react-icons/io5";
+import TiptapEditor from '@/Components/Tiptap/Editor';
 
 interface EditBlogModalProps {
     id: string;
@@ -14,7 +15,7 @@ interface EditBlogModalProps {
     title?: string;
     message?: string;
     buttonText?: string;
-    categoryName: string;
+    categoryName: CategoryType | string;
     blogTitle: string;
     description: string;
     image: string;
@@ -22,9 +23,11 @@ interface EditBlogModalProps {
     authorImg: string;
     setCategoryName: Dispatch<SetStateAction<string>>;
     setDescription: Dispatch<SetStateAction<string>>;
+    setTitle:Dispatch<SetStateAction<string>>;
     setError: (value: React.SetStateAction<ErrorType>) => void;
     error: ErrorType;
 }
+
 
 const EditBlogModal: React.FC<EditBlogModalProps> = ({
     isOpen,
@@ -35,18 +38,25 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
     description,
     categoryName,
     setCategoryName,
+    setDescription,
+    setTitle,
     image,
 }) => {
+    const initialCategoryId = typeof categoryName === "string" ? "" : categoryName._id
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    
     const [previewImage, setPreviewImage] = useState<string | File | null>(image);
-    const [currentCategories, setCurrentCategories] = useState(categoryName);
     const [categories, setCategories] = useState<CategoryType[]>([]);
+    const [currentCategories, setCurrentCategories] = useState<string>(initialCategoryId);
 
     console.log(categoryName, 'categoryName...');
     console.log(currentCategories, 'CurrentCategories...');
+    console.log(description, 'Description...');
+    
 
     useEffect(() => {
         async function fetchCategories() {
-            const response = await categoryService.fetchCategory();
+            const response: CategoryType[] = await categoryService.fetchCategory();
             console.log(response, 'Res cat...');
             setCategories(response)
         }
@@ -58,9 +68,18 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setPreviewImage(e.target.files[0]);
-            e.target.value = "";
+        }
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
         }
     };
+
+    const handleClearImage = () => {
+        setPreviewImage(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    }
 
 
     return (
@@ -70,7 +89,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
             title={title}
             buttonText={buttonText}
         >
-            <div className='sm:w-full'>
+            <div className='sm:w-full max-h-64 overflow-y-auto'>
                 <form action=""
                     className='sm:w-full flex flex-col overflow-y-auto'>
                     <div className='flex flex-col lg:flex-row justify-between w-full'>
@@ -86,7 +105,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
                                             className='object-cover w-28 lg:w-40 lg:h-36'
                                         />
                                         <button
-                                            onClick={() => setPreviewImage(null)}
+                                            onClick={handleClearImage}
                                             className='absolute top-2 right-2 w-6 h-6 text-red-500 cursor-pointer rounded-full hover:bg-gray-300 flex justify-center items-center text-lg'
                                         >
                                             X
@@ -102,6 +121,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
                             <label htmlFor="image"
                                 className='flex justify-center bg-blue-500 hover:bg-blue-600 text-white w-[50%] py-2 px-10 cursor-pointer my-2'>
                                 <input
+                                    ref={fileInputRef}
                                     onChange={handleImageChange}
                                     type="file"
                                     id='image'
@@ -122,11 +142,12 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
                                 />
                             </div>
                             <div className='w-full sm:py-5'>
-                                <textarea
+                                {/* <textarea
                                     value={description}
                                     id='blogTitle'
                                     className='p-2 border border-gray-300 w-full'
-                                />
+                                /> */}
+                                <TiptapEditor content={description} onChange={()=>''} />
                             </div>
                         </div>
                     </div>
@@ -140,7 +161,9 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
                             value={currentCategories}
                             className='w-full lg:w-60 mt-4 px-4 py-3 border text-gray-500'
                         >
-                            {categories.map((cat) => (
+                            {categories.length === 0 ? (
+                                <option value={currentCategories}>Loading...</option>
+                            ) : categories.map((cat) => (
                                 <option
                                     key={cat._id}
                                     value={cat._id}>
