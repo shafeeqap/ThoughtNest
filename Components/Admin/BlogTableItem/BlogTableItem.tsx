@@ -12,6 +12,7 @@ import { CiEdit } from "react-icons/ci";
 import { blogStatusConfig } from '@/lib/config/ui/blogStatusConfig';
 import { blogActionConfig } from '@/lib/config/ui/blogActionConfig';
 import EditBlogModal from '@/Components/Modal/ModalItem/EditBlogModal';
+import { CategoryType } from '@/types/category';
 
 
 interface IProps extends BlogItemType {
@@ -43,7 +44,7 @@ const BlogTableItem: React.FC<IProps> = ({
     const formattedDate = formatDate(createdAt);
     const truncatedText = truncateText(title);
 
-    const [editCategoryName, setEditCategoryName] = useState();
+    const [editCategoryName, setEditCategoryName] = useState(category);
     const [editDescription, setEditDescription] = useState();
     const [editTitle, setEditTitle] = useState();
     const [editImage, setEditImage] = useState();
@@ -190,10 +191,9 @@ const BlogTableItem: React.FC<IProps> = ({
                     isOpen={shwoEditModal}
                     onClose={() => setShowEditModal(false)}
                     title='Edit Blog Items.'
-                    message='Edit your blog content.'
                     buttonText='save changes'
                     blogTitle={title}
-                    categoryName={category.categoryName}
+                    categoryName={editCategoryName}
                     image={image}
                 />
             )}
