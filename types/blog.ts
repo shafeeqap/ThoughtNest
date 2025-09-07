@@ -9,9 +9,10 @@ interface Category {
 
 export interface BlogItemType {
   _id: string;
+  userId: string;
   title: string;
   category: Category;
-  image: string;
+  image: File | null;
   description: string;
   author: string;
   authorImg: string;

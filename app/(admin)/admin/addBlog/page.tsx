@@ -63,6 +63,8 @@ const Page = () => {
     })
   }
 
+  console.log(image, 'Image...');
+  
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 

@@ -33,14 +33,17 @@ export const blogSchema = z.object({
     message: "Content must contain at least 10 meaningful characters",
   }),
 
-  image: z
-    .custom<File>((file) => file instanceof File, {
-      message: "Image is required",
-    })
-    .refine((file) => file && file.size <= MAX_FILE_SIZE, {
-      message: "Image size must be less than 2MB",
-    })
-    .refine((file) => file && ACCEPTED_IMAGE_TYPES.includes(file.type), {
-      message: "Only .jpg, .jpeg, .png, and .webp formats are supported",
-    }),
+  image: z.union([
+    z.string().min(1, "Image is required"),
+    z
+      .custom<File>((file) => file instanceof File, {
+        message: "Image is required",
+      })
+      .refine((file) => file && file.size <= MAX_FILE_SIZE, {
+        message: "Image size must be less than 2MB",
+      })
+      .refine((file) => file && ACCEPTED_IMAGE_TYPES.includes(file.type), {
+        message: "Only .jpg, .jpeg, .png, and .webp formats are supported",
+      }),
+  ]),
 });

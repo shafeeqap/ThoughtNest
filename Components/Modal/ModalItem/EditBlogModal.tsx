@@ -1,31 +1,33 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
+import React, { Dispatch, SetStateAction, useRef } from 'react'
 import EditModal from '../EditModal'
-import { ErrorType } from '@/types/error';
-import { CategoryType } from '@/types/category';
-import { categoryService } from '@/services/categoryService';
 import Image from 'next/image';
+import { CategoryType } from '@/types/category';
 import { IoCloudUploadSharp } from "react-icons/io5";
 import TiptapEditor from '@/Components/Tiptap/Editor';
+
 
 interface EditBlogModalProps {
     id: string;
     isOpen: boolean;
     onClose: () => void;
-    handleCategoryEdit: (id: string, categoryName: string, description: string) => void;
+    handleBlogEdit: (id: string, categoryName: string, description: string, previewImage: File | null| string) => void;
     title?: string;
-    message?: string;
     buttonText?: string;
-    categoryName: CategoryType | string;
+    message?: string;
+    categories: CategoryType[];
     blogTitle: string;
     description: string;
-    image: string;
-    author: string;
-    authorImg: string;
-    setCategoryName: Dispatch<SetStateAction<string>>;
+    previewImage: File | null | string;
+    editCategoryName: string;
+    // author: string;
+    // authorImg: string;
+    // setCategories: Dispatch<SetStateAction<string>>;
     setDescription: Dispatch<SetStateAction<string>>;
-    setTitle:Dispatch<SetStateAction<string>>;
-    setError: (value: React.SetStateAction<ErrorType>) => void;
-    error: ErrorType;
+    setTitle: Dispatch<SetStateAction<string>>;
+    setPreviewImage: Dispatch<SetStateAction<File | null | string>>;
+    setEditCategoryName: Dispatch<SetStateAction<string>>;
+    // setError: (value: React.SetStateAction<ErrorType>) => void;
+    // error: ErrorType;
 }
 
 
@@ -36,34 +38,23 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
     buttonText,
     blogTitle,
     description,
-    categoryName,
-    setCategoryName,
     setDescription,
     setTitle,
-    image,
+    setPreviewImage,
+    handleBlogEdit,
+    categories,
+    editCategoryName,
+    previewImage,
+    setEditCategoryName,
+    id,
 }) => {
-    const initialCategoryId = typeof categoryName === "string" ? "" : categoryName._id
     const fileInputRef = useRef<HTMLInputElement | null>(null);
-    
-    const [previewImage, setPreviewImage] = useState<string | File | null>(image);
-    const [categories, setCategories] = useState<CategoryType[]>([]);
-    const [currentCategories, setCurrentCategories] = useState<string>(initialCategoryId);
 
-    console.log(categoryName, 'categoryName...');
-    console.log(currentCategories, 'CurrentCategories...');
+    console.log(editCategoryName, 'CurrentCategories...');
     console.log(description, 'Description...');
+    console.log(previewImage, 'Preview Image...');
     
 
-    useEffect(() => {
-        async function fetchCategories() {
-            const response: CategoryType[] = await categoryService.fetchCategory();
-            console.log(response, 'Res cat...');
-            setCategories(response)
-        }
-        fetchCategories();
-    }, []);
-
-    console.log(categories, 'Categories...');
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -81,6 +72,11 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
         }
     }
 
+    const onSubmitHandler = async (e: React.FormEvent) => {
+        e.preventDefault();
+        handleBlogEdit(id, editCategoryName, blogTitle, previewImage)
+    }
+
 
     return (
         <EditModal
@@ -88,13 +84,16 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
             onClose={onClose}
             title={title}
             buttonText={buttonText}
+            onSubmit={onSubmitHandler}
         >
             <div className='sm:w-full max-h-64 overflow-y-auto'>
-                <form action=""
+                <form onSubmit={onSubmitHandler}
                     className='sm:w-full flex flex-col overflow-y-auto'>
-                    <div className='flex flex-col lg:flex-row justify-between w-full'>
-                        <div className='flex flex-col sm:flex-row lg:flex-col w-full lg:w-[280px] justify-around items-center'>
-                            <div className='relative'>
+                    <div className='flex flex-col lg:flex-row w-full'>
+
+                        {/* Update Image */}
+                        <div className='flex flex-col w-full lg:w-[280px] items-center px-2'>
+                            <div className='w-full relative'>
                                 {previewImage ? (
                                     <>
                                         <Image
@@ -102,7 +101,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
                                             width={250}
                                             height={250}
                                             alt='blog-img'
-                                            className='object-cover w-28 lg:w-40 lg:h-36'
+                                            className='object-cover border border-gray-300 w-full h-56'
                                         />
                                         <button
                                             onClick={handleClearImage}
@@ -112,65 +111,65 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
                                         </button>
                                     </>
                                 ) : (
-                                    <div className="w-28 lg:w-40 h-28 lg:h-36 flex items-center justify-center border border-gray-300 rounded-md text-gray-400">
+                                    <div className="w-full h-48 flex items-center justify-center border border-gray-300 rounded-md text-gray-400">
                                         No image
                                     </div>
                                 )}
+                                <label htmlFor="image"
+                                    className='flex justify-center bg-blue-500 hover:bg-blue-600 text-white w-full py-2 px-10 cursor-pointer my-2'>
+                                    <input
+                                        ref={fileInputRef}
+                                        onChange={handleImageChange}
+                                        type="file"
+                                        id='image'
+                                        hidden
+                                    />
+                                    <IoCloudUploadSharp size={28} title='Upload file' />
+                                </label>
                             </div>
 
-                            <label htmlFor="image"
-                                className='flex justify-center bg-blue-500 hover:bg-blue-600 text-white w-[50%] py-2 px-10 cursor-pointer my-2'>
-                                <input
-                                    ref={fileInputRef}
-                                    onChange={handleImageChange}
-                                    type="file"
-                                    id='image'
-                                    hidden
-                                />
-                                <IoCloudUploadSharp size={28} title='Upload file' />
-                            </label>
+                            {/* Update category */}
+                            <div className='w-full pb-5 flex flex-col justify-start'>
+                                <label htmlFor="categoryName" className='relative top-3'>Category name</label>
+                                <select
+                                    onChange={(e) => setEditCategoryName(e.target.value)}
+                                    name="categoryName"
+                                    id='categoryName'
+                                    value={editCategoryName}
+                                    className='w-full lg:w-60 mt-4 px-4 py-3 border text-gray-500'
+                                >
+                                    {categories.length === 0 ? (
+                                        <option value={editCategoryName}>Loading...</option>
+                                    ) : categories.map((cat) => (
+                                        <option
+                                            key={cat._id}
+                                            value={cat._id}>
+                                            {cat?.categoryName}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
 
+                        {/* Update Blog Details */}
                         <div className='flex flex-col md:min-w-xl lg:min-w-5xl'>
                             <label htmlFor="blogTitle" className='hidden lg:block'>Blog title</label>
                             <div className='w-full py-3'>
                                 <input
+                                    onChange={(e) => setTitle(e.target.value)}
                                     type="text"
+                                    name='blogTitle'
                                     value={blogTitle}
                                     id='blogTitle'
                                     className='p-2 border border-gray-300 w-full'
                                 />
                             </div>
                             <div className='w-full sm:py-5'>
-                                {/* <textarea
-                                    value={description}
-                                    id='blogTitle'
-                                    className='p-2 border border-gray-300 w-full'
-                                /> */}
-                                <TiptapEditor content={description} onChange={()=>''} />
+                                <TiptapEditor content={description}
+                                    onChange={(value) => setDescription(value)}
+                                />
                             </div>
                         </div>
-                    </div>
-
-                    <div className='w-full pb-5 flex flex-col justify-start'>
-                        <label htmlFor="categoryName" className='relative top-3'>Category name</label>
-                        <select
-                            onChange={(e) => setCurrentCategories(e.target.value)}
-                            name="categoryName"
-                            id='categoryName'
-                            value={currentCategories}
-                            className='w-full lg:w-60 mt-4 px-4 py-3 border text-gray-500'
-                        >
-                            {categories.length === 0 ? (
-                                <option value={currentCategories}>Loading...</option>
-                            ) : categories.map((cat) => (
-                                <option
-                                    key={cat._id}
-                                    value={cat._id}>
-                                    {cat.categoryName}
-                                </option>
-                            ))}
-                        </select>
                     </div>
                 </form>
             </div>

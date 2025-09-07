@@ -3,10 +3,12 @@ import { blogSchema } from "@/lib/schema/zodSchema";
 export const validateBlog = (
   title: string,
   description: string,
-  image: File | null
+  image: File | null | string,
 ) => {
   const result = blogSchema.safeParse({ title, description, image });
 
+  console.log(image, 'Image...');
+  
   if (!result.success) {
     const errors: { title?: string; description?: string; image?: string[] } = {};
 
