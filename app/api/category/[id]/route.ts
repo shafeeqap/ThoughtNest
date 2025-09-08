@@ -78,15 +78,13 @@ export async function PUT(
     await connectDB();
 
     const { id } = await context.params;
-    console.log(id);
     const { categoryName, description } = await req.json();
-    console.log("CategoryName:", categoryName, "Description:", description);
+    
+    const categoryExist = await categoryModel.findOne({categoryName})
+    
 
-    const category = await categoryModel.findById(id);
-    console.log(category, "Category...");
-
-    if (!category) {
-      return NextResponse.json({ msg: "Category not found" }, { status: 404 });
+    if (categoryExist) {
+      return NextResponse.json({ msg: "Category already exists" }, { status: 409 });
     }
 
     const updatedCategory = await categoryModel.findByIdAndUpdate(

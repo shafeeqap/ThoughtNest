@@ -10,6 +10,7 @@ interface EditeModalProps {
     message?: string;
     buttonText?: string;
     children: React.ReactNode;
+    isChanged: boolean;
 }
 
 const EditModal: React.FC<EditeModalProps> = ({
@@ -20,12 +21,13 @@ const EditModal: React.FC<EditeModalProps> = ({
     message,
     buttonText,
     children,
+    isChanged,
 }) => {
 
     return (
         <>
             <BaseModal isOpen={isOpen} onClose={onClose} >
-                <div className='w-full flex flex-col items-start py-3 border-b border-gray-300 '>
+                <div className='w-full flex flex-col items-start py-3 border-b border-gray-300'>
                     <h1 className='text-2xl font-semibold'>{title}</h1>
                     <p className='text-center'>{message}</p>
                 </div>
@@ -42,7 +44,10 @@ const EditModal: React.FC<EditeModalProps> = ({
                         </button>
                         <button
                             type='submit'
-                            className='bg-red-500 text-xs sm:text-base text-white px-7 py-2 rounded cursor-pointer uppercase hover:bg-red-600'
+                            disabled={!isChanged}
+                            className={`text-xs sm:text-base text-white px-7 py-2 rounded uppercase 
+                                ${isChanged ? "bg-red-500 hover:bg-red-600 cursor-pointer"
+                                    : "bg-gray-400 cursor-not-allowed"} `}
                         >
                             {buttonText}
                         </button>

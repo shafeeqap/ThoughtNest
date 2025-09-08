@@ -14,8 +14,9 @@ interface EditCategoryModalProps {
   description: string;
   setCategoryName: Dispatch<SetStateAction<string>>;
   setDescription: Dispatch<SetStateAction<string>>;
-  error: ErrorType;
   setError: (value: React.SetStateAction<ErrorType>) => void;
+  error: ErrorType;
+  isChanged: boolean;
 }
 
 const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
@@ -32,6 +33,7 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
   error,
   setError,
   id,
+  isChanged,
 }) => {
   const onFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +49,7 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
       title={title}
       message={message}
       buttonText={buttonText}
+      isChanged={isChanged}
     >
       <div className='w-full pb-5'>
         <label htmlFor="categoryName">Category name</label>

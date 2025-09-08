@@ -138,7 +138,6 @@ export async function PUT(
       return NextResponse.json({ error: "User not found" }, { status: 404 });
 
     const blog = await BlogModel.findById(id);
-
     if (!blog) {
       return NextResponse.json({ msg: "Blog not found" }, { status: 404 });
     }
@@ -177,13 +176,11 @@ export async function PUT(
       title: blogTitle,
       description: safeDescription,
       category: new mongoose.Types.ObjectId(categoryId),
-      author: formData.get("author") as string,
       image: fileName
         ? fileName.startsWith("/")
           ? fileName
           : `/${fileName}`
         : blog.image,
-      authorImg: formData.get("authorImg") as string,
     };
 
     const updatedBlog = await BlogModel.findByIdAndUpdate(id, blogData, {

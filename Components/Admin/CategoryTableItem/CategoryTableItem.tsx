@@ -43,12 +43,15 @@ const CategoryTableItem: React.FC<IProps> = ({
     const [actionType, setActionType] = useState<"action" | "delete" | null>(null);
     const truncatedText = truncateText(description);
 
+    // ====================================================================================== //
     const Title = actionType === "action" ? status === 'active' ? "Block Category" : "Activate Category" : "Delete Category";
     const Msg = actionType === "action" ? `Are you sure you want to ${status === 'active' ? "blocke" : "activate"} this category?`
         : 'Are you sure you want to delete this category?';
     const Btn = actionType === "action" ? status === 'active' ? "blocke" : "activate" : 'delete';
     const Icon = actionType === "action" ? <IoWarningOutline size={80} color='#ffa500' /> : <IoCloseCircleOutline size={80} color='red' />;
+    // ====================================================================================== //
 
+    const isChanged = editCategoryName !== categoryName || editDescription !== description;
 
     const handleConfirmModal = async (id: string) => {
         if (actionType === "action") {
@@ -79,9 +82,14 @@ const CategoryTableItem: React.FC<IProps> = ({
             setShowEditModal(false);
             setError({})
 
-        } catch (error) {
-            toast.error("Failed to delete category");
-            console.error(error);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                toast.warning(error.message)
+                console.log(error.message, 'Error...');
+            } else {
+                toast.warning('An unexpected error occurred.');
+                console.log(error, 'Unknown error...');
+            }
         }
     }
 
@@ -92,7 +100,7 @@ const CategoryTableItem: React.FC<IProps> = ({
                 <td className='px-6 py-4'>{counter}</td>
                 <td className='px-6 py-4'>{categoryName}</td>
                 <td className='px-6 py-4'>{truncatedText}</td>
-                
+
                 {/* Update Status */}
                 <td className='px-6 py-4 text-white text-xs'>
                     {status === 'active' ? (
@@ -185,6 +193,7 @@ const CategoryTableItem: React.FC<IProps> = ({
                         error={error}
                         setError={setError}
                         id={_id}
+                        isChanged={isChanged}
                     />
                 )}
             </tr>

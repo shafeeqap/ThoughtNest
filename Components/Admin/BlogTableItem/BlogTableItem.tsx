@@ -49,18 +49,16 @@ const BlogTableItem: React.FC<IProps> = ({
     const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
     const [actionType, setActionType] = useState<"action" | "delete" | null>(null);
     const [categories, setCategories] = useState<CategoryType[]>([]);
-    
-    console.log(image, 'Image...');
-    
-    
+
     const [editTitle, setEditTitle] = useState(title);
-    const [editCategoryName, setEditCategoryName] = useState(category._id); 
+    const [editCategoryName, setEditCategoryName] = useState(category._id);
     const [editDescription, setEditDescription] = useState(description);
-    const [previewImage, setPreviewImage] = useState<File | null | string>(image);
-    
-    console.log(previewImage, 'previewImage...');
+    const [editImage, setEditImage] = useState<File | null | string>(image);
+
     const formattedDate = formatDate(createdAt);
     const truncatedText = truncateText(title);
+
+    const isChanged = editTitle !== title || editCategoryName !== category._id || editDescription !== description || editImage !== image;
 
 
     // ====================================================================================== //
@@ -69,7 +67,7 @@ const BlogTableItem: React.FC<IProps> = ({
         : 'Are you sure you want to delete this blog?';
     const Btn = actionType === "action" ? action === 'active' ? "blocke" : "activate" : 'delete';
     const Icon = actionType === "action" ? <IoWarningOutline size={80} color='#ffa500' /> : <IoCloseCircleOutline size={80} color='red' />;
-
+    // ====================================================================================== //
 
     const handleConfirmModal = async (id: string) => {
         if (actionType === "action") {
@@ -86,11 +84,12 @@ const BlogTableItem: React.FC<IProps> = ({
             const response = await categoryService.fetchCategory();
             setCategories(response)
         }
+
         fetchCategories();
     }, []);
 
     const handleBlogEdit = async (id: string,) => {
-        const validationError = validateBlog(editTitle, editDescription, previewImage);
+        const validationError = validateBlog(editTitle, editDescription, editImage);
 
         if (validationError) {
             if (validationError.title) toast.warning(validationError.title);
@@ -106,27 +105,25 @@ const BlogTableItem: React.FC<IProps> = ({
         formData.append('blogTitle', editTitle);
         formData.append('category', editCategoryName);
         formData.append('description', editDescription);
-        formData.append('authorImg', authorImg);
-        formData.append('author', author);
 
-        if (previewImage) {
-            formData.append('image', previewImage);
+        if (editImage) {
+            formData.append('image', editImage);
         }
         try {
             const res = await blogService.editBlog(id, formData);
-            console.log(res);
             setAllBlogs(prev => prev.map(blog => blog._id === id ? res.updatedBlog : blog));
             toast.success(res.msg);
 
-            setEditTitle('');
-            setEditCategoryName('');
-            setEditDescription('');
-            setPreviewImage('');
             setShowEditModal(false);
 
-        } catch (error) {
-            toast.error((error as Error).message);
-            console.log(error);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                toast.warning(error.message)
+                console.log(error.message, 'Error...');
+            } else {
+                toast.warning('An unexpected error occurred.');
+                console.log(error, 'Unknown error...');
+            }
         }
     }
 
@@ -169,7 +166,7 @@ const BlogTableItem: React.FC<IProps> = ({
                     {status && (
                         <button
                             onClick={() => setShowUpdateModal(true)}
-                            className={`px-1.5 py-1.5 cursor-pointer uppercase flex justify-around gap-1 min-w-[100px] ${blogStatusConfig[status].className}`}
+                            className={`px-1.5 py-1.5 cursor-pointer uppercase flex justify-around gap-1 min-w-[110px] ${blogStatusConfig[status].className}`}
                         >
                             {blogStatusConfig[status].icon}
                             <p>{status}</p>
@@ -256,15 +253,16 @@ const BlogTableItem: React.FC<IProps> = ({
                     title='Edit Blog Items.'
                     buttonText='save changes'
                     blogTitle={editTitle}
-                    description={editDescription}
-                    setDescription={setEditDescription}
+                    editDescription={editDescription}
+                    setEditDescription={setEditDescription}
                     setTitle={setEditTitle}
                     editCategoryName={editCategoryName}
-                    previewImage={previewImage}
-                    handleBlogEdit={handleBlogEdit}
+                    editImage={editImage}
                     setEditCategoryName={setEditCategoryName}
-                    setPreviewImage={setPreviewImage}
+                    setEditImage={setEditImage}
                     categories={categories}
+                    handleBlogEdit={handleBlogEdit}
+                    isChanged={isChanged}
                 />
             )}
         </>

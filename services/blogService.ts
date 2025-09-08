@@ -37,7 +37,18 @@ export const blogService = {
     id: string,
     formData: FormData
   ): Promise<{ updatedBlog: BlogItemType; msg: string }> => {
-    const response = await axiosInstance.put(`/api/blog/${id}`, formData);
-    return response.data;
+    try {
+      const response = await axiosInstance.put(`/api/blog/${id}`, formData);
+      return response.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const message = error.response?.data?.msg || "Failed to update blog";
+        throw new Error(message);
+      } else if (error instanceof Error) {
+        throw error;
+      } else {
+        throw new Error("An unexpected error occurred during blog update.");
+      }
+    }
   },
 };

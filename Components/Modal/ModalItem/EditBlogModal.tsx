@@ -10,55 +10,45 @@ interface EditBlogModalProps {
     id: string;
     isOpen: boolean;
     onClose: () => void;
-    handleBlogEdit: (id: string, categoryName: string, description: string, previewImage: File | null| string) => void;
+    handleBlogEdit: (id: string, title: string, description: string, categoryName: string, image: File | null | string) => void;
     title?: string;
     buttonText?: string;
-    message?: string;
     categories: CategoryType[];
     blogTitle: string;
-    description: string;
-    previewImage: File | null | string;
+    editDescription: string;
+    editImage: File | null | string;
     editCategoryName: string;
-    // author: string;
-    // authorImg: string;
-    // setCategories: Dispatch<SetStateAction<string>>;
-    setDescription: Dispatch<SetStateAction<string>>;
+    setEditDescription: Dispatch<SetStateAction<string>>;
     setTitle: Dispatch<SetStateAction<string>>;
-    setPreviewImage: Dispatch<SetStateAction<File | null | string>>;
+    setEditImage: Dispatch<SetStateAction<File | null | string>>;
     setEditCategoryName: Dispatch<SetStateAction<string>>;
-    // setError: (value: React.SetStateAction<ErrorType>) => void;
-    // error: ErrorType;
+    isChanged: boolean;
 }
 
 
 const EditBlogModal: React.FC<EditBlogModalProps> = ({
+    id,
     isOpen,
     onClose,
     title,
     buttonText,
     blogTitle,
-    description,
-    setDescription,
+    editDescription,
+    setEditDescription,
     setTitle,
-    setPreviewImage,
+    setEditImage,
     handleBlogEdit,
     categories,
     editCategoryName,
-    previewImage,
+    editImage,
     setEditCategoryName,
-    id,
+    isChanged,
 }) => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    console.log(editCategoryName, 'CurrentCategories...');
-    console.log(description, 'Description...');
-    console.log(previewImage, 'Preview Image...');
-    
-
-
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-            setPreviewImage(e.target.files[0]);
+            setEditImage(e.target.files[0]);
         }
         if (fileInputRef.current) {
             fileInputRef.current.value = "";
@@ -66,7 +56,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
     };
 
     const handleClearImage = () => {
-        setPreviewImage(null);
+        setEditImage(null);
         if (fileInputRef.current) {
             fileInputRef.current.value = "";
         }
@@ -74,7 +64,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
 
     const onSubmitHandler = async (e: React.FormEvent) => {
         e.preventDefault();
-        handleBlogEdit(id, editCategoryName, blogTitle, previewImage)
+        handleBlogEdit(id, blogTitle, editDescription, editCategoryName, editImage)
     }
 
 
@@ -85,19 +75,19 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
             title={title}
             buttonText={buttonText}
             onSubmit={onSubmitHandler}
+            isChanged={isChanged}
         >
-            <div className='sm:w-full max-h-64 overflow-y-auto'>
-                <form onSubmit={onSubmitHandler}
-                    className='sm:w-full flex flex-col overflow-y-auto'>
+            <div className='sm:w-full max-h-64 overflow-y-auto '>
+                <div className='sm:w-full flex flex-col'>
                     <div className='flex flex-col lg:flex-row w-full'>
 
                         {/* Update Image */}
                         <div className='flex flex-col w-full lg:w-[280px] items-center px-2'>
                             <div className='w-full relative'>
-                                {previewImage ? (
+                                {editImage ? (
                                     <>
                                         <Image
-                                            src={typeof previewImage === "string" ? previewImage : URL.createObjectURL(previewImage)}
+                                            src={typeof editImage === "string" ? editImage : URL.createObjectURL(editImage)}
                                             width={250}
                                             height={250}
                                             alt='blog-img'
@@ -152,7 +142,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
                         </div>
 
                         {/* Update Blog Details */}
-                        <div className='flex flex-col md:min-w-xl lg:min-w-5xl'>
+                        <div className='flex flex-col md:min-w-xl lg:min-w-5xl max-w-[500px]'>
                             <label htmlFor="blogTitle" className='hidden lg:block'>Blog title</label>
                             <div className='w-full py-3'>
                                 <input
@@ -165,13 +155,13 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
                                 />
                             </div>
                             <div className='w-full sm:py-5'>
-                                <TiptapEditor content={description}
-                                    onChange={(value) => setDescription(value)}
+                                <TiptapEditor content={editDescription}
+                                    onChange={(value) => setEditDescription(value)}
                                 />
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </EditModal>
     )

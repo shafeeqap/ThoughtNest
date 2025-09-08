@@ -36,8 +36,6 @@ const Page = () => {
     fetchBlogs();
   }, [])
 
-  console.log(allBlogs, 'All Blog...');
-
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm])
@@ -65,7 +63,6 @@ const Page = () => {
   const handleBlogAction = async (id: string, type: "action", value: string) => {
     try {
       const res = await blogService.updateBlog(id, { [type]: value });
-      console.log(res, 'Res...');
 
       setAllBlogs(prev => {
         return prev.map(blog => {
@@ -111,7 +108,7 @@ const Page = () => {
   // =====================> Handle Update Blog Status(Pending/Approved/Rejected) <===================== //
   const handleUpdateStatus = async (id: string, type: "status", value: string) => {
     const res = await blogService.updateBlog(id, { [type]: value });
-    console.log(res, 'Response...');
+  
     setAllBlogs(prev => prev.map(blog => {
       if (blog._id === id) {
         return {
@@ -189,7 +186,6 @@ const Page = () => {
           </tbody>
         </table>
       </div>
-
 
       {/* Pagination */}
       <div className='max-w-full'>

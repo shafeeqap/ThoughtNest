@@ -33,10 +33,22 @@ export const categoryService = {
     categoryName: string,
     description: string
   ): Promise<{ updatedCategory: CategoryType; msg: string }> => {
-    const response = await axiosInstance.put(`/api/category/${id}`, {
-      categoryName,
-      description,
-    });
-    return response.data;
+    try {
+      const response = await axiosInstance.put(`/api/category/${id}`, {
+        categoryName,
+        description,
+      });
+      return response.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const serverMsg =
+          error.response?.data?.msg || "Failed to update category";
+        throw new Error(serverMsg);
+      } else if (error instanceof Error) {
+        throw error;
+      } else {
+        throw new Error("An unexpected error occurred during category update.");
+      }
+    }
   },
 };
