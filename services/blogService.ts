@@ -33,7 +33,10 @@ export const blogService = {
     const response = await axiosInstance.patch(`/api/blog/${id}`, updates);
     return response.data;
   },
-  editBlog: async (id: string, formData: FormData) => {
+  editBlog: async (
+    id: string,
+    formData: FormData
+  ): Promise<{ updatedBlog: BlogItemType; msg: string }> => {
     const response = await axiosInstance.put(`/api/blog/${id}`, formData);
     return response.data;
   },

@@ -182,6 +182,7 @@ const Page = () => {
                   counter={(currentPage - 1) * recordsPerPage + index + 1}
                   handleBlogAction={handleBlogAction}
                   handleUpdateStatus={handleUpdateStatus}
+                  setAllBlogs={setAllBlogs}
                 />
               ))
             )}

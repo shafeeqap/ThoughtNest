@@ -41,7 +41,10 @@ export async function POST(req: NextRequest) {
     }
 
     const formData = await req.formData();
-    const image = formData.get("image") as File;
+    const image = formData.get("image") as File | null;
+    if (!image) {
+      return NextResponse.json({ error: "Image is required" }, { status: 400 });
+    }
 
     let fileName = "";
     const timestamp = Date.now();
@@ -79,7 +82,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, msg: "Blog Added" });
   } catch (error) {
-    console.error("Error uploading blog:", (error as Error).message);
+    console.error("Error uploading blog:", error);
     return NextResponse.json(
       { error: "Failed to upload blog" },
       { status: 500 }

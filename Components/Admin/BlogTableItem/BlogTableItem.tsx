@@ -22,6 +22,7 @@ import { blogService } from '@/services/blogService';
 interface IProps extends BlogItemType {
     handleBlogAction: (id: string, type: "action", value: string) => Promise<void>;
     handleUpdateStatus: (id: string, type: "status", value: string) => Promise<void>;
+    setAllBlogs: React.Dispatch<React.SetStateAction<BlogItemType[]>>
     handleDelete: (id: string) => Promise<void>;
     counter: number;
 }
@@ -39,29 +40,27 @@ const BlogTableItem: React.FC<IProps> = ({
     handleDelete,
     handleBlogAction,
     handleUpdateStatus,
+    setAllBlogs,
     status,
     action,
-    userId,
 }) => {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [shwoEditModal, setShowEditModal] = useState<boolean>(false);
     const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
     const [actionType, setActionType] = useState<"action" | "delete" | null>(null);
+    const [categories, setCategories] = useState<CategoryType[]>([]);
+    
+    console.log(image, 'Image...');
+    
+    
+    const [editTitle, setEditTitle] = useState(title);
+    const [editCategoryName, setEditCategoryName] = useState(category._id); 
+    const [editDescription, setEditDescription] = useState(description);
+    const [previewImage, setPreviewImage] = useState<File | null | string>(image);
+    
+    console.log(previewImage, 'previewImage...');
     const formattedDate = formatDate(createdAt);
     const truncatedText = truncateText(title);
-
-    const [editCategoryName, setEditCategoryName] = useState(category._id);
-    const [editDescription, setEditDescription] = useState(description);
-    const [editTitle, setEditTitle] = useState(title);
-
-    const [previewImage, setPreviewImage] = useState<File | null | string>(image);
-    const [categories, setCategories] = useState<CategoryType[]>([]);
-
-    console.log(category, 'category');
-    console.log(previewImage, 'Preview Image...');
-    console.log(image, 'Image...');
-
-
 
 
     // ====================================================================================== //
@@ -91,12 +90,7 @@ const BlogTableItem: React.FC<IProps> = ({
     }, []);
 
     const handleBlogEdit = async (id: string,) => {
-        console.log(editCategoryName, 'EditCategoryName...');
-        console.log(editTitle, 'EditTitle...');
-        console.log(previewImage, 'PreviewImage...');
-
         const validationError = validateBlog(editTitle, editDescription, previewImage);
-        console.log(validationError, 'Validation Error...');
 
         if (validationError) {
             if (validationError.title) toast.warning(validationError.title);
@@ -110,27 +104,29 @@ const BlogTableItem: React.FC<IProps> = ({
 
         const formData = new FormData();
         formData.append('blogTitle', editTitle);
-        formData.append('categoryName', editCategoryName);
+        formData.append('category', editCategoryName);
         formData.append('description', editDescription);
         formData.append('authorImg', authorImg);
         formData.append('author', author);
-
 
         if (previewImage) {
             formData.append('image', previewImage);
         }
         try {
             const res = await blogService.editBlog(id, formData);
-            // if (!res) throw new Error("Failed to update blog");
             console.log(res);
+            setAllBlogs(prev => prev.map(blog => blog._id === id ? res.updatedBlog : blog));
+            toast.success(res.msg);
 
-            toast.success("Blog updated successfully");
-            // onClose();
+            setEditTitle('');
+            setEditCategoryName('');
+            setEditDescription('');
+            setPreviewImage('');
+            setShowEditModal(false);
 
         } catch (error) {
             toast.error((error as Error).message);
             console.log(error);
-
         }
     }
 

@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import { decodeEntities } from "@/lib/utils/helpers/decodeEntities";
 import { sanitizeHtml } from "@/lib/utils/sanitize/sanitizeHtmlServer";
 import { verifyAccessToken } from "@/lib/jwt/jwt";
+import UserModal from "@/lib/models/UserModel";
 
 // =====> API Endpoint to get blogs by id <=====
 export async function GET(
@@ -116,23 +117,27 @@ export async function PUT(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
+  const accessToken = req.cookies.get("accessToken")?.value;
+  if (!accessToken) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     await connectDB();
-
-    const accessToken = req.cookies.get("accessToken")?.value;
-    let decoded: any;
-
-    if (accessToken) {
-      decoded = await verifyAccessToken(accessToken);
-    }
-
-    console.log(decoded.userId, "User id...");
 
     const formData = await req.formData();
     const { id } = await context.params;
 
+    const decoded = await verifyAccessToken(accessToken);
+    if (!decoded) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const user = await UserModal.findById(decoded.userId);
+    if (!user)
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+
     const blog = await BlogModel.findById(id);
-    console.log(blog, "Blog");
 
     if (!blog) {
       return NextResponse.json({ msg: "Blog not found" }, { status: 404 });
@@ -140,6 +145,7 @@ export async function PUT(
 
     const blogTitle = formData.get("blogTitle") as string;
     const description = formData.get("description") as string;
+    const categoryId = formData.get("category") as string;
 
     const decodedDescription = decodeEntities(description);
     const safeDescription = sanitizeHtml(decodedDescription);
@@ -152,7 +158,6 @@ export async function PUT(
     }
 
     const image = formData.get("image") as File | null;
-    console.log(image, "Image");
 
     let fileName: string | null = null;
     const timestamp = Date.now();
@@ -168,24 +173,22 @@ export async function PUT(
     }
 
     const blogData = {
-      userId: decoded.userId,
+      userId: user._id,
       title: blogTitle,
       description: safeDescription,
-      category: new mongoose.Types.ObjectId(formData.get("category") as string),
+      category: new mongoose.Types.ObjectId(categoryId),
       author: formData.get("author") as string,
       image: fileName
         ? fileName.startsWith("/")
           ? fileName
           : `/${fileName}`
-        : null,
+        : blog.image,
       authorImg: formData.get("authorImg") as string,
     };
 
-    console.log(blogData, "Blog Data...");
-
     const updatedBlog = await BlogModel.findByIdAndUpdate(id, blogData, {
       new: true,
-    });
+    }).populate("category", "categoryName");
 
     return NextResponse.json(
       { msg: "Blog updated successfully", updatedBlog },

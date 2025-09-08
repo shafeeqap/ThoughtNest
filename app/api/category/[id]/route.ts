@@ -2,6 +2,7 @@ import { connectDB } from "@/lib/config/db";
 import categoryModel from "@/lib/models/CategoryModel";
 import { NextResponse } from "next/server";
 
+// =====> API Endpoint to update category status <=====
 export async function PATCH(
   req: Request,
   context: { params: Promise<{ id: string }> }
@@ -38,6 +39,7 @@ export async function PATCH(
   }
 }
 
+// =====> API Endpoint to delete category <=====
 export async function DELETE(
   req: Request,
   context: { params: Promise<{ id: string }> }
@@ -67,6 +69,7 @@ export async function DELETE(
   }
 }
 
+// =====> API Endpoint to edit category <=====
 export async function PUT(
   req: Request,
   context: { params: Promise<{ id: string }> }
