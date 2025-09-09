@@ -45,7 +45,7 @@ const Page = () => {
 
       const dateString = formatDate(blog.createdAt);
 
-      return `${blog.title} ${blog.category} ${blog.author} ${dateString}`
+      return `${blog.title} ${blog.category} ${blog.author} ${dateString} ${blog.action} ${blog.status}`
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
     })
@@ -149,7 +149,7 @@ const Page = () => {
               <th scope='col' className='px-6 py-3'>Category</th>
               <th scope='col' className='px-6 py-3'>Image</th>
               <th scope='col' className='px-6 py-3'>Status</th>
-              <th scope='col' className='px-6 py-3'>Update</th>
+              <th scope='col' className='px-6 py-3'>Edit</th>
               <th scope='col' className='px-6 py-3'>Action</th>
               <th scope='col' className='px-6 py-3'>Details</th>
               <th scope='col' className='px-6 py-3'>Delete</th>

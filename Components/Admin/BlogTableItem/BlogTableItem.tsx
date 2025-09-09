@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react'
-import { ConfirmModal, UpdateStatusModal } from '@/Components/Modal';
+import { ConfirmModal, PreviewModal, UpdateStatusModal } from '@/Components/Modal';
 import { assets } from '@/data/assets'
 import { formatDate } from '@/lib/utils/helpers/formatDate';
 import { truncateText } from '@/lib/utils/helpers/truncateText';
@@ -47,6 +47,7 @@ const BlogTableItem: React.FC<IProps> = ({
     const [showModal, setShowModal] = useState<boolean>(false);
     const [shwoEditModal, setShowEditModal] = useState<boolean>(false);
     const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
+    const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false);
     const [actionType, setActionType] = useState<"action" | "delete" | null>(null);
     const [categories, setCategories] = useState<CategoryType[]>([]);
 
@@ -54,6 +55,7 @@ const BlogTableItem: React.FC<IProps> = ({
     const [editCategoryName, setEditCategoryName] = useState(category._id);
     const [editDescription, setEditDescription] = useState(description);
     const [editImage, setEditImage] = useState<File | null | string>(image);
+   
 
     const formattedDate = formatDate(createdAt);
     const truncatedText = truncateText(title);
@@ -199,9 +201,11 @@ const BlogTableItem: React.FC<IProps> = ({
                         </button>
                     )}
                 </td>
+
                 {/* Preview Blog */}
                 <td className='px-6 py-4'>
                     <IoEyeOutline
+                        onClick={() => setShowPreviewModal(true)}
                         size={22}
                         title='Preview'
                         className='cursor-pointer hover:text-gray-400'
@@ -263,6 +267,20 @@ const BlogTableItem: React.FC<IProps> = ({
                     categories={categories}
                     handleBlogEdit={handleBlogEdit}
                     isChanged={isChanged}
+                />
+            )}
+
+            {showPreviewModal && (
+                <PreviewModal
+                    isOpen={showPreviewModal}
+                    onClose={() => setShowPreviewModal(false)}
+                    authorImg={authorImg}
+                    author={author}
+                    category={category}
+                    image={image}
+                    title={title}
+                    description={description}
+                    createdAt={createdAt}
                 />
             )}
         </>

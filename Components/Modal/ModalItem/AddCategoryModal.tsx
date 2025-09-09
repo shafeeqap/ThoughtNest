@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction } from 'react';
-import AddModal from '../Modal/AddModal';
+import AddModal from '../AddModal';
 import { ErrorType } from '@/types/error';
 
 interface AddModalItemProps {
