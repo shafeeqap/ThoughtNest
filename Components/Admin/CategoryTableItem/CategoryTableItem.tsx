@@ -8,7 +8,7 @@ import { ErrorType } from '@/types/error';
 import { toast } from 'react-toastify';
 import { validateCategory } from '@/lib/validators/validateCategory';
 import { categoryService } from '@/services/categoryService';
-import EditCategoryModal from '@/Components/Modal/ModalItem/EditCategoryModal';
+import { EditCategoryModal } from '@/Components/Modal/ModalItem';
 
 
 interface IProps extends CategoryType {

@@ -91,7 +91,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
                                             width={250}
                                             height={250}
                                             alt='blog-img'
-                                            className='object-cover border border-gray-300 w-full h-56'
+                                            className='object-contain border border-gray-300 w-full h-56'
                                         />
                                         <button
                                             onClick={handleClearImage}

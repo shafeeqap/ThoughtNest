@@ -11,12 +11,12 @@ import { IoCloseCircleOutline, IoTrashBinOutline, IoWarningOutline, IoEyeOutline
 import { CiEdit } from "react-icons/ci";
 import { blogStatusConfig } from '@/lib/config/ui/blogStatusConfig';
 import { blogActionConfig } from '@/lib/config/ui/blogActionConfig';
-import EditBlogModal from '@/Components/Modal/ModalItem/EditBlogModal';
 import { CategoryType } from '@/types/category';
 import { categoryService } from '@/services/categoryService';
 import { validateBlog } from '@/lib/validators/validateBlog';
 import { toast } from 'react-toastify';
 import { blogService } from '@/services/blogService';
+import { EditBlogModal } from '@/Components/Modal/ModalItem';
 
 
 interface IProps extends BlogItemType {
@@ -55,7 +55,7 @@ const BlogTableItem: React.FC<IProps> = ({
     const [editCategoryName, setEditCategoryName] = useState(category._id);
     const [editDescription, setEditDescription] = useState(description);
     const [editImage, setEditImage] = useState<File | null | string>(image);
-   
+
 
     const formattedDate = formatDate(createdAt);
     const truncatedText = truncateText(title);

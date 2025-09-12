@@ -15,7 +15,7 @@ interface AddModalItemProps {
 }
 
 
-const AddModalItems: React.FC<AddModalItemProps> = ({
+const AddCategoryModal: React.FC<AddModalItemProps> = ({
     isOpen,
     onClose,
     categoryName,
@@ -74,4 +74,4 @@ const AddModalItems: React.FC<AddModalItemProps> = ({
     )
 }
 
-export default AddModalItems;
+export default AddCategoryModal;

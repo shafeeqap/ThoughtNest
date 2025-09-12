@@ -47,4 +47,4 @@ Tools & Packages Used:
 7. auth.js :- For helping simplify authentication and authorization with using socieal media account.
 8. jose :- Providing support for JSON Web Tokens (JWT).
 9. axios :- Handle HTTP request.
-10. 
+10. recharts

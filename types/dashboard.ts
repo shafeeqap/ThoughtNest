@@ -1,0 +1,16 @@
+import { IconType } from "react-icons";
+
+export interface dashboardCardType {
+  id: number;
+  title: string;
+  icon: IconType;
+  backgroundColor: string;
+  value: number;
+  trend: string;
+  trendType: string;
+  period: string;
+  url: string;
+  mostViewedBlog?: string;
+  status: string;
+  action: string;
+}

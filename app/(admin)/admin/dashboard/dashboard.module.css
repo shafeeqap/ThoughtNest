@@ -1,0 +1,130 @@
+.container {
+    margin: 30px 20px 0 90px;
+    overflow-y: auto;
+}
+
+.title {
+    font-size: 25px;
+    font-weight: 550;
+    margin-bottom: 10px;
+    background-color: rgba(180, 174, 174, 0.35);
+    padding: 5px 5px 5px 20px;
+}
+
+.cardTitle {
+    font-size: 20px;
+    font-weight: 550;
+    text-transform: uppercase;
+}
+
+.mainCard {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: 1fr;
+    grid-template-areas: "card1 card1 card1"
+        "card2 card2 card2"
+        "card3 card3 card3"
+        "card4 card4 card4";
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 8px 15px;
+    border-radius: 5px;
+    color: white;
+    min-height: 150px;
+    /* cursor: pointer; */
+}
+
+.cardItems{
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.cardItems h1{
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.card1 {
+    grid-area: card1;
+    background-color: #0088FE;
+}
+
+.card2 {
+    grid-area: card2;
+    background-color: #00C49F;
+}
+
+.card3 {
+    grid-area: card3;
+    background-color: #d99605;
+}
+
+.card4 {
+    grid-area: card4;
+    background-color: #FF8042;
+}
+
+.charts {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 50px;
+    margin: 60px 0 60px 0;
+    padding: 15px;
+    background-color: oklch(96.7% 0.003 264.542);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    grid-template-areas: "chart1 chart1"
+        "chart2 chart2";
+}
+
+.cardInner{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chart1 {
+    grid-area: chart1;
+}
+
+.chart2 {
+    grid-area: chart2;
+}
+
+
+/* Tablet */
+@media (min-width: 577px) and (max-width: 768px) {
+    .mainCard {
+        grid-template-columns: 1fr;
+        grid-template-areas: "card1 card1 card1"
+            "card2 card2 card2"
+            "card3 card3 card3"
+            "card4 card4 card4";
+    }
+
+    .charts {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        grid-template-areas: "chart1 chart1"
+            "chart2 chart2";
+    }
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+    .mainCard {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-areas: "card1 card2 card3 card4";
+    }
+
+    .charts {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+        grid-template-areas: "chart1 chart2";
+    }
+}

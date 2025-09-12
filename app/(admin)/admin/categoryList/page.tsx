@@ -11,7 +11,7 @@ import { CategoryType } from '@/types/category';
 import Pagination from '@/Components/Pagination/Pagination';
 import { validateCategory } from '@/lib/validators/validateCategory';
 import { ErrorType } from '@/types/error';
-import { AddModalItems } from '@/Components/Modal';
+import { AddCategoryModal } from '@/Components/Modal/ModalItem';
 
 
 
@@ -202,7 +202,7 @@ const Page = () => {
             </div>
 
             {showModal && (
-                <AddModalItems
+                <AddCategoryModal
                     isOpen={showModal}
                     onClose={() => setShowModal(false)}
                     handleSubmit={handleSubmit}
