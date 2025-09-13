@@ -35,18 +35,28 @@
     border-radius: 5px;
     color: white;
     min-height: 150px;
-    /* cursor: pointer; */
 }
 
-.cardItems{
+.cardItems {
     display: flex;
     justify-content: space-between;
     align-items: end;
 }
 
-.cardItems h1{
+.cardItems h1 {
     font-size: 40px;
     font-weight: bold;
+}
+
+.cardStatus {
+    display: flex;
+    flex-direction: column;
+    width: 6rem;
+}
+
+.cardStatus .cardStatusItems {
+    display: flex;
+    justify-content: space-between;
 }
 
 .card1 {
@@ -82,7 +92,7 @@
         "chart2 chart2";
 }
 
-.cardInner{
+.cardInner {
     display: flex;
     align-items: center;
     justify-content: space-between;

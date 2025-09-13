@@ -16,7 +16,7 @@ export const categoryService = {
     });
     return response.data;
   },
-  fetchCategory: async () => {
+  fetchCategory: async ():Promise <CategoryType[]> => {
     const response = await axiosInstance.get("/api/category");
     return response.data.category;
   },
