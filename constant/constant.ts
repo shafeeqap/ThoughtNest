@@ -7,13 +7,12 @@ import {
   MdPermContactCalendar,
 } from "react-icons/md";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { FaUserCircle, FaHome, FaUsers } from "react-icons/fa";
+import { FaUserCircle, FaHome, FaUsers, FaFileSignature } from "react-icons/fa";
 import { NavLinksType } from "@/types/nav";
 import { CgProfile } from "react-icons/cg";
 import { SiMicrodotblog } from "react-icons/si";
 import { BsPeopleFill } from "react-icons/bs";
 import { dashboardCardType } from "@/types/dashboard";
-
 
 export const adminNavLinks: NavLinksType[] = [
   {
@@ -48,7 +47,10 @@ export const navLink: NavLinksType[] = [
   { id: 6, url: "#", label: "Logout", icon: MdLogout },
 ];
 
-export const dashboardCards: Omit<dashboardCardType, "status" | "action" | "value">[] = [
+export const dashboardCards: Omit<
+  dashboardCardType,
+  "status" | "action" | "value"
+>[] = [
   {
     id: 1,
     title: "blogs",
@@ -84,5 +86,17 @@ export const dashboardCards: Omit<dashboardCardType, "status" | "action" | "valu
     trendType: "positive",
     period: "This Week",
     url: "/admin/subscriptions",
+  },
+  {
+    id: 5,
+    title: "authors",
+    icon: FaFileSignature,
+    trend: "+20%",
+    trendType: "positive",
+    period: "This Week",
+    url: "/admin/subscriptions",
+    mostViewedBlog: "",
+    totalBlogs: 5,
+    totalViews: 20,
   },
 ];

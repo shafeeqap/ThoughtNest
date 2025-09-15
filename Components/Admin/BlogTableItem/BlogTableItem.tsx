@@ -132,10 +132,10 @@ const BlogTableItem: React.FC<IProps> = ({
     return (
         <>
             <tr className='bg-gray-100 border-b'>
-                <td className='px-6 py-4'>
+                <td className='px-3 py-4'>
                     {counter}
                 </td>
-                <th scope='row' className='items-center gap-3 hidden sm:flex px-6 py-4 text-gray-900 whitespace-nowrap'>
+                <th scope='row' className='items-center gap-3 hidden sm:flex px-3 py-4 text-gray-900 whitespace-nowrap'>
                     <Image
                         width={40}
                         height={40}
@@ -147,10 +147,10 @@ const BlogTableItem: React.FC<IProps> = ({
                 <td className='px-6 py-4'>
                     <p className='font-medium text-black'>{title ? truncatedText : 'No title'}</p>
                 </td>
-                <td className='px-6 py-4'>
+                <td className='px-3 py-4'>
                     {formattedDate}
                 </td>
-                <td className='px-6 py-4'>
+                <td className='px-3 py-4'>
                     {category?.categoryName || "No Category"}
                 </td>
                 <td className='px-6 py-4'>
@@ -164,11 +164,11 @@ const BlogTableItem: React.FC<IProps> = ({
                 </td>
 
                 {/* Update Status */}
-                <td className='px-6 py-4'>
+                <td className='px-3 py-4'>
                     {status && (
                         <button
                             onClick={() => setShowUpdateModal(true)}
-                            className={`px-1.5 py-1.5 cursor-pointer uppercase flex justify-around gap-1 min-w-[110px] ${blogStatusConfig[status].className}`}
+                            className={`px-1.5 py-1.5 cursor-pointer uppercase flex justify-around gap-0.5 min-w-[100px] ${blogStatusConfig[status].className}`}
                         >
                             {blogStatusConfig[status].icon}
                             <p>{status}</p>
@@ -177,7 +177,7 @@ const BlogTableItem: React.FC<IProps> = ({
                 </td>
 
                 {/* Edit Blog */}
-                <td className='px-6 py-4'>
+                <td className='px-3 py-4'>
                     <CiEdit
                         onClick={() => setShowEditModal(true)}
                         size={32}
@@ -187,14 +187,14 @@ const BlogTableItem: React.FC<IProps> = ({
                 </td>
 
                 {/* Update Action */}
-                <td className='px-6 py-4 text-white'>
+                <td className='px-3 py-4 text-white'>
                     {action && (
                         <button
                             onClick={() => {
                                 setActionType('action')
                                 setShowModal(true)
                             }}
-                            className={`px-1.5 py-1.5 min-w-[100px] cursor-pointer flex justify-around items-center uppercase ${blogActionConfig[action].className}`}
+                            className={`px-1.5 py-1.5 min-w-[95px] cursor-pointer flex justify-around items-center uppercase ${blogActionConfig[action].className}`}
                         >
                             {blogActionConfig[action].icon}
                             {blogActionConfig[action].btnName}

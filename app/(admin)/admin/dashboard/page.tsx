@@ -20,7 +20,7 @@ const AdminDashboard = () => {
         users: 0,
         categories: 0,
         subscribers: 0,
-
+        // authors: 0,
         blogStatus: { pending: 0 },
         blogAction: { active: 0, blocked: 0 },
         userStatus: { active: 0, blocked: 0 },
@@ -117,7 +117,7 @@ const AdminDashboard = () => {
                                     <Spinner size="small" />
                                 ) : (
                                     <div>
-                                        <h1>{data[card.title as keyof typeof data]}</h1>
+                                        <h1>{data[card.title as "blogs" | "users" | "categories" | "subscribers" ]}</h1>
                                     </div>
                                 )}
                                 <div className={styles.cardStatus}>
@@ -151,7 +151,6 @@ const AdminDashboard = () => {
                                         </>
                                     )}
 
-
                                     {card.title === "categories" && (
                                         <>
                                             <div className={styles.cardStatusItems}>
@@ -165,8 +164,20 @@ const AdminDashboard = () => {
                                         </>
                                     )}
 
-
                                     {card.title === "subscribers" && (
+                                        <>
+                                            <div className={styles.cardStatusItems}>
+                                                <p>Active:</p>
+                                                <span>{data.subStatus.active}</span>
+                                            </div>
+                                            <div className={styles.cardStatusItems}>
+                                                <p>Blocked:</p>
+                                                <span>{data.subStatus.blocked}</span>
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {card.title === "authors" && (
                                         <>
                                             <div className={styles.cardStatusItems}>
                                                 <p>Active:</p>

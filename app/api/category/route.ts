@@ -2,6 +2,7 @@ import { connectDB } from "@/lib/config/db";
 import categoryModel from "@/lib/models/CategoryModel";
 import { NextResponse } from "next/server";
 
+// =====> API Endpoint to add category <=====
 export async function POST(req: Request) {
   try {
     await connectDB();
@@ -31,6 +32,7 @@ export async function POST(req: Request) {
   }
 }
 
+// =====> API Endpoint to get all category <=====
 export async function GET() {
   try {
     await connectDB();

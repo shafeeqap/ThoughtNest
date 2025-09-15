@@ -24,7 +24,8 @@
     grid-template-areas: "card1 card1 card1"
         "card2 card2 card2"
         "card3 card3 card3"
-        "card4 card4 card4";
+        "card4 card4 card4"
+        "card5 card5 card5";
 }
 
 .card {
@@ -71,12 +72,17 @@
 
 .card3 {
     grid-area: card3;
-    background-color: #d99605;
+    background-color: #d8176e;
 }
 
 .card4 {
     grid-area: card4;
     background-color: #FF8042;
+}
+
+.card5 {
+    grid-area: card5;
+    background-color: #bf63a2;
 }
 
 .charts {
@@ -114,7 +120,8 @@
         grid-template-areas: "card1 card1 card1"
             "card2 card2 card2"
             "card3 card3 card3"
-            "card4 card4 card4";
+            "card4 card4 card4"
+            "card5 card5 card5";
     }
 
     .charts {
@@ -128,8 +135,8 @@
 /* Desktop */
 @media (min-width: 769px) {
     .mainCard {
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        grid-template-areas: "card1 card2 card3 card4";
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-template-areas: "card1 card2 card3 card4 card5";
     }
 
     .charts {

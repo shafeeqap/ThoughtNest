@@ -10,6 +10,8 @@ export interface dashboardCardType {
   period: string;
   url: string;
   mostViewedBlog?: string;
+  totalViews?:number,
+  totalBlogs?:number,
   status: string;
   action: string;
 }

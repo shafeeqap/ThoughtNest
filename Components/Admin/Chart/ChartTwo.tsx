@@ -1,6 +1,6 @@
 import React from 'react'
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = ['#0088FE', '#00C49F', '#d8176e', '#FF8042', '#bf63a2'];
 
 const ChartTwo = () => {
     const data = [
@@ -8,6 +8,7 @@ const ChartTwo = () => {
         { name: 'Group B', value: 300 },
         { name: 'Group C', value: 300 },
         { name: 'Group D', value: 200 },
+        { name: 'Group E', value: 360 },
     ];
 
     return (

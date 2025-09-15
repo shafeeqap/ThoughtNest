@@ -40,12 +40,13 @@ const Page = () => {
     setCurrentPage(1);
   }, [searchTerm])
 
+
   const filteredBlogs = useMemo(() => {
     return allBlogs.filter((blog) => {
 
       const dateString = formatDate(blog.createdAt);
 
-      return `${blog.title} ${blog.category} ${blog.author} ${dateString} ${blog.action} ${blog.status}`
+      return `${blog.title} ${blog.category.categoryName} ${blog.author} ${dateString} ${blog.action} ${blog.status}`
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
     })
@@ -108,7 +109,7 @@ const Page = () => {
   // =====================> Handle Update Blog Status(Pending/Approved/Rejected) <===================== //
   const handleUpdateStatus = async (id: string, type: "status", value: string) => {
     const res = await blogService.updateBlog(id, { [type]: value });
-  
+
     setAllBlogs(prev => prev.map(blog => {
       if (blog._id === id) {
         return {
@@ -124,8 +125,8 @@ const Page = () => {
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
       <div className='flex max-w-full flex-col md:flex-row justify-between items-center gap-5'>
-        <h1 className='hidden sm:block font-semibold text-2xl w-[30%]'>Manage Blogs</h1>
-        <div className='w-[30%] flex justify-around items-center'>
+        <h1 className='hidden sm:block font-semibold text-2xl w-full md:w-[30%]'>Manage Blogs</h1>
+        <div className='w-full md:w-[30%] flex justify-around items-center'>
           <Search
             handleSearch={handleSearch}
             searchTerm={searchTerm}
@@ -142,17 +143,17 @@ const Page = () => {
         <table className='w-full text-sm text-gray-500'>
           <thead className='text-sm text-white text-left uppercase bg-[#626a7a]'>
             <tr>
-              <th scope='col' className='px-6 py-3'>No</th>
-              <th scope='col' className='hidden sm:table-cell px-6 py-3'>Author name</th>
+              <th scope='col' className='px-3 py-3'>No</th>
+              <th scope='col' className='hidden sm:table-cell px-3 py-3'>Author name</th>
               <th scope='col' className='px-6 py-3'>Blog Title</th>
-              <th scope='col' className='px-6 py-3'>Date</th>
-              <th scope='col' className='px-6 py-3'>Category</th>
+              <th scope='col' className='px-3 py-3'>Date</th>
+              <th scope='col' className='px-3 py-3'>Category</th>
               <th scope='col' className='px-6 py-3'>Image</th>
-              <th scope='col' className='px-6 py-3'>Status</th>
-              <th scope='col' className='px-6 py-3'>Edit</th>
-              <th scope='col' className='px-6 py-3'>Action</th>
-              <th scope='col' className='px-6 py-3'>Details</th>
-              <th scope='col' className='px-6 py-3'>Delete</th>
+              <th scope='col' className='px-3 py-3'>Status</th>
+              <th scope='col' className='px-3 py-3'>Edit</th>
+              <th scope='col' className='px-3 py-3'>Action</th>
+              <th scope='col' className='px-3 py-3'>Details</th>
+              <th scope='col' className='px-3 py-3'>Delete</th>
             </tr>
           </thead>
           <tbody>
