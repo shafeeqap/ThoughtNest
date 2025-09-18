@@ -1,4 +1,4 @@
-import SubscribeForm from '@/features/subscribe/SubscribeForm';
+import SubscribeForm from '@/Components/ui/subscribe/SubscribeForm';
 import { validateEmail } from '@/lib/validators/validateEmail';
 import { sessionService } from '@/services/sessionService';
 import { subscribeService } from '@/services/subscribeService';

@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import CategoryTableItem from '@/Components/Admin/CategoryTableItem/CategoryTableItem';
 import Spinner from '@/Components/Spinner/Spinner';
-import Search from '@/features/search/Search';
+import Search from '@/Components/ui/search/Search';
 import { toast } from 'react-toastify';
 import { FiPlus } from "react-icons/fi";
 import { categoryService } from '@/services/categoryService';

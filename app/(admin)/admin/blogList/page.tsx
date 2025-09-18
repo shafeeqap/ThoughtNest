@@ -8,7 +8,7 @@ import { BlogItemType } from '@/types/blog';
 import { toast } from 'react-toastify';
 import { debounce } from 'lodash';
 import { formatDate } from '@/lib/utils/helpers/formatDate';
-import Search from '@/features/search/Search';
+import Search from '@/Components/ui/search/Search';
 import { FiPlus } from 'react-icons/fi';
 import Link from 'next/link';
 

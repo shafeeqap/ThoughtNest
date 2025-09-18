@@ -3,7 +3,7 @@
 import UserTableItem from '@/Components/Admin/UserTableItem/UserTableItem';
 import Pagination from '@/Components/Pagination/Pagination';
 import Spinner from '@/Components/Spinner/Spinner';
-import Search from '@/features/search/Search';
+import Search from '@/Components/ui/search/Search';
 import { userService } from '@/services/userService';
 import { User } from '@/types/auth';
 import React, { useEffect, useMemo, useState } from 'react'

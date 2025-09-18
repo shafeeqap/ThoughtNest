@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import SubsTableItem from '@/Components/Admin/SubsTableItem/SubsTableItem';
 import Pagination from '@/Components/Pagination/Pagination';
 import Spinner from '@/Components/Spinner/Spinner';
-import Search from '@/features/search/Search';
+import Search from '@/Components/ui/search/Search';
 import { formatDate } from '@/lib/utils/helpers/formatDate';
 import { subscribeService } from '@/services/subscribeService';
 import { SubscriptionType } from '@/types/subscription';

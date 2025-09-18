@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import GlobalLoader from "@/Components/GlobalLoader/GlobalLoader";
+import StoreProvider from "@/providers/StoreProvider";
 
 
 const poppins = Poppins({
@@ -30,7 +31,9 @@ export default function RootLayout({
         <ToastContainer theme="dark" position="top-right" autoClose={3000} />
         <SessionProvider>
           <GlobalLoader />
-          {children}
+          <StoreProvider>
+            {children}
+          </StoreProvider>
         </SessionProvider>
       </body>
     </html>

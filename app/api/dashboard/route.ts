@@ -10,17 +10,13 @@ export async function GET() {
   try {
     await connectDB();
 
-    const blogsCount = await BlogModel.countDocuments();
-    const usersCount = await UserModal.countDocuments();
-    const categoriesCount = await categoryModel.countDocuments();
-    const subscribersCount = await SubscribeModel.countDocuments();
     const authorCount = await UserModal.aggregate([
       { $match: { role: "author" } },
       { $group: { _id: "$role", count: { $sum: 1 } } },
       { $project: { _id: 0, role: "$_id", count: 1 } },
     ]);
 
-    const blogData = await BlogModel.aggregate([
+    const blogResult = await BlogModel.aggregate([
       {
         $facet: {
           totalBlogs: [{ $count: "total" }],
@@ -29,58 +25,101 @@ export async function GET() {
             { $project: { _id: 0, status: "$_id", count: 1 } },
             { $sort: { count: -1 } },
           ],
+          blogAction: [
+            { $group: { _id: "$action", count: { $sum: 1 } } },
+            { $project: { _id: 0, action: "$_id", count: 1 } },
+            { $sort: { count: -1 } },
+          ],
+          blogByCategory: [
+            {
+              $lookup: {
+                from: "categories",
+                localField: "category",
+                foreignField: "_id",
+                as: "categoryDetails",
+              },
+            },
+            { $unwind: "$categoryDetails" },
+            {
+              $group: {
+                _id: "$categoryDetails.categoryName",
+                count: { $sum: 1 },
+              },
+            },
+            { $project: { _id: 0, category: "$_id", count: 1 } },
+            { $sort: { Count: -1 } },
+          ],
         },
       },
     ]);
 
-    console.log(JSON.stringify(blogData, null, 2));
-
-    
-    const usersStatuses = await UserModal.aggregate([
-      { $group: { _id: "$status", count: { $sum: 1 } } },
-      { $project: { _id: 0, status: "$_id", count: 1 } },
-      { $sort: { count: -1 } },
-    ]);
-
-    const categoryStatus = await categoryModel.aggregate([
-      { $group: { _id: "$status", count: { $sum: 1 } } },
-      { $project: { _id: 0, status: "$_id", count: 1 } },
-      { $sort: { count: -1 } },
-    ]);
-
-    const subscriberStatus = await SubscribeModel.aggregate([
-      { $group: { _id: "$status", count: { $sum: 1 } } },
-      { $project: { _id: 0, status: "$_id", count: 1 } },
-      { $sort: { count: -1 } },
-    ]);
-
-    const blogByCategory = await BlogModel.aggregate([
+    const userResult = await UserModal.aggregate([
       {
-        $lookup: {
-          from: "categories",
-          localField: "category",
-          foreignField: "_id",
-          as: "categoryDetails",
+        $facet: {
+          totalUser: [{ $count: "total" }],
+          userByStatus: [
+            { $group: { _id: "$status", count: { $sum: 1 } } },
+            { $project: { _id: 0, status: "$_id", count: 1 } },
+            { $sort: { count: -1 } },
+          ],
         },
       },
-      { $unwind: "$categoryDetails" },
-      { $group: { _id: "$categoryDetails.categoryName", count: { $sum: 1 } } },
-      { $project: { _id: 0, category: "$_id", count: 1 } },
-      { $sort: { count: -1 } },
     ]);
 
-    console.log(blogByCategory);
+    const catResult = await categoryModel.aggregate([
+      {
+        $facet: {
+          totalCategory: [{ $count: "total" }],
+          categoryStatus: [
+            { $group: { _id: "$status", count: { $sum: 1 } } },
+            { $project: { _id: 0, status: "$_id", count: 1 } },
+            { $sort: { count: -1 } },
+          ],
+        },
+      },
+    ]);
+
+    const subResult = await SubscribeModel.aggregate([
+      {
+        $facet: {
+          totalSubscribers: [{ $count: "total" }],
+          subscriberStatus: [
+            { $group: { _id: "$status", count: { $sum: 1 } } },
+            { $project: { _id: 0, status: "$_id", count: 1 } },
+            { $sort: { count: -1 } },
+          ],
+        },
+      },
+    ]);
+
+    const blogData = {
+      totalBlogs: blogResult[0].totalBlogs[0]?.total || 0,
+      blogByStatus: blogResult[0].blogByStatus,
+      blogAction: blogResult[0].blogAction,
+      blogByCategory: blogResult[0].blogByCategory,
+    };
+    
+    const userData = {
+      totalUser: userResult[0].totalUser[0]?.total || 0,
+      userBystatus: userResult[0].userByStatus,
+    };
+
+    const catData = {
+      totalCategory: catResult[0].totalCategory[0]?.total || 0,
+      catStatus: catResult[0].categoryStatus,
+    };
+
+    const subData = {
+      totalSub: subResult[0].totalSubscribers[0]?.total || 0,
+      subscriberStatus: subResult[0].subscriberStatus,
+    };
 
     return NextResponse.json(
       {
-        blogsCount,
-        usersCount,
-        categoriesCount,
-        subscribersCount,
-        // blogStatuses,
-        usersStatuses,
-        categoryStatus,
-        subscriberStatus,
+        blogData,
+        userData,
+        catData,
+        subData,
         authorCount,
       },
       { status: 200 }

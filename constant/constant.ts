@@ -12,7 +12,7 @@ import { NavLinksType } from "@/types/nav";
 import { CgProfile } from "react-icons/cg";
 import { SiMicrodotblog } from "react-icons/si";
 import { BsPeopleFill } from "react-icons/bs";
-import { dashboardCardType } from "@/types/dashboard";
+import { dashboardCardType, DashboardResponse } from "@/types/dashboard";
 
 export const adminNavLinks: NavLinksType[] = [
   {
@@ -47,56 +47,72 @@ export const navLink: NavLinksType[] = [
   { id: 6, url: "#", label: "Logout", icon: MdLogout },
 ];
 
-export const dashboardCards: Omit<
-  dashboardCardType,
-  "status" | "action" | "value"
->[] = [
-  {
-    id: 1,
-    title: "blogs",
-    icon: TbReportSearch,
-    trend: "+20%",
-    trendType: "positive",
-    period: "This Week",
-    url: "/admin/blogList",
-  },
-  {
-    id: 2,
-    title: "users",
-    icon: BsPeopleFill,
-    trend: "+20%",
-    trendType: "positive",
-    period: "This Month",
-    url: "/admin/users",
-  },
-  {
-    id: 3,
-    title: "categories",
-    icon: IoLogoBuffer,
-    trend: "+20%",
-    trendType: "positive",
-    period: "Today",
-    url: "/admin/categoryList",
-  },
-  {
-    id: 4,
-    title: "subscribers",
-    icon: MdUnsubscribe,
-    trend: "+20%",
-    trendType: "positive",
-    period: "This Week",
-    url: "/admin/subscriptions",
-  },
-  {
-    id: 5,
-    title: "authors",
-    icon: FaFileSignature,
-    trend: "+20%",
-    trendType: "positive",
-    period: "This Week",
-    url: "/admin/subscriptions",
-    mostViewedBlog: "",
-    totalBlogs: 5,
-    totalViews: 20,
-  },
-];
+export function dashboardCards(
+  data: DashboardResponse | undefined
+): dashboardCardType[] {
+  return [
+    {
+      id: 1,
+      title: "blogs",
+      icon: TbReportSearch,
+      trend: "+20%",
+      trendType: "positive",
+      period: "This Week",
+      url: "/admin/blogList",
+      value: data?.blogData.totalBlogs || 0,
+      status: "",
+      action: "",
+    },
+    {
+      id: 2,
+      title: "users",
+      icon: BsPeopleFill,
+      trend: "+20%",
+      trendType: "positive",
+      period: "This Month",
+      url: "/admin/users",
+      value: data?.userData.totalUser || 0,
+      status: "",
+      action: "",
+    },
+    {
+      id: 3,
+      title: "categories",
+      icon: IoLogoBuffer,
+      trend: "+20%",
+      trendType: "positive",
+      period: "Today",
+      url: "/admin/categoryList",
+      value: data?.catData.totalCategory || 0,
+      status: "",
+      action: "",
+    },
+    {
+      id: 4,
+      title: "subscribers",
+      icon: MdUnsubscribe,
+      trend: "+20%",
+      trendType: "positive",
+      period: "This Week",
+      url: "/admin/subscriptions",
+      value: data?.subData.totalSub || 0,
+      status: "",
+      action: "",
+    },
+    {
+      id: 5,
+      title: "authors",
+      icon: FaFileSignature,
+      trend: "+20%",
+      trendType: "positive",
+      period: "This Week",
+      url: "/admin/subscriptions",
+      mostViewedBlog: "",
+      totalBlogs: 5,
+      totalViews: 20,
+      value: data?.authorCount.find((a) => a.role === "author")?.count || 0,
+      status: "",
+      action: "",
+    },
+  ];
+}

@@ -10,87 +10,89 @@ import { userService } from '@/services/userService';
 import { categoryService } from '@/services/categoryService';
 import { subscribeService } from '@/services/subscribeService';
 import Spinner from '@/Components/Spinner/Spinner';
+import { useGetDashboardDataQuery } from '@/redux/features/dashboardApiSlice';
 
 
 
 const AdminDashboard = () => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [data, setData] = useState({
-        blogs: 0,
-        users: 0,
-        categories: 0,
-        subscribers: 0,
-        // authors: 0,
-        blogStatus: { pending: 0 },
-        blogAction: { active: 0, blocked: 0 },
-        userStatus: { active: 0, blocked: 0 },
-        catStatus: { active: 0, blocked: 0 },
-        subStatus: { active: 0, blocked: 0 },
+    const {data, isLoading}=useGetDashboardDataQuery();
+    const cards = dashboardCards(data);
+    // const [isLoading, setIsLoading] = useState(false);
+    // const [data, setData] = useState({
+    //     blogs: 0,
+    //     users: 0,
+    //     categories: 0,
+    //     subscribers: 0,
+    //     // authors: 0,
+    //     blogStatus: { pending: 0 },
+    //     blogAction: { active: 0, blocked: 0 },
+    //     userStatus: { active: 0, blocked: 0 },
+    //     catStatus: { active: 0, blocked: 0 },
+    //     subStatus: { active: 0, blocked: 0 },
 
-    });
+    // });
 
 
-    useEffect(() => {
-        setIsLoading(true);
+    // useEffect(() => {
 
-        const fetchData = async () => {
-            try {
-                const [blogs, users, categories, subscribers] = await Promise.all([
-                    blogService.fetchAllBlog(),
-                    userService.getUsers(),
-                    categoryService.fetchCategory(),
-                    subscribeService.fetchAllSubscribe(),
-                ]);
+    //     const fetchData = async () => {
+    //         try {
+    //             const [blogs, users, categories, subscribers] = await Promise.all([
+    //                 blogService.fetchAllBlog(),
+    //                 userService.getUsers(),
+    //                 categoryService.fetchCategory(),
+    //                 subscribeService.fetchAllSubscribe(),
+    //             ]);
 
-                let pendingCount = 0, blogsActiveCount = 0, blogsBlockedCount = 0;
+    //             let pendingCount = 0, blogsActiveCount = 0, blogsBlockedCount = 0;
 
-                blogs.forEach((blog) => {
-                    if (blog.status === "pending") pendingCount++;
-                    if (blog.action === "active") blogsActiveCount++;
-                    if (blog.action === "blocked") blogsBlockedCount++;
-                })
+    //             blogs.forEach((blog) => {
+    //                 if (blog.status === "pending") pendingCount++;
+    //                 if (blog.action === "active") blogsActiveCount++;
+    //                 if (blog.action === "blocked") blogsBlockedCount++;
+    //             })
 
-                const usersActiveCount = users.filter(user => user.status === "active").length;
-                const usersBlockedCount = users.filter(user => user.status === "blocked").length;
+    //             const usersActiveCount = users.filter(user => user.status === "active").length;
+    //             const usersBlockedCount = users.filter(user => user.status === "blocked").length;
 
-                const catActiveCount = categories.filter(cat => cat.status === "active").length;
-                const catBlockedCount = categories.filter(cat => cat.status === "blocked").length;
+    //             const catActiveCount = categories.filter(cat => cat.status === "active").length;
+    //             const catBlockedCount = categories.filter(cat => cat.status === "blocked").length;
 
-                const subsActiveCount = subscribers.filter(sub => sub.status === "active").length;
-                const subBlockedCount = subscribers.filter(sub => sub.status === "blocked").length;
+    //             const subsActiveCount = subscribers.filter(sub => sub.status === "active").length;
+    //             const subBlockedCount = subscribers.filter(sub => sub.status === "blocked").length;
 
-                setData({
-                    blogs: blogs.length,
-                    users: users.length,
-                    categories: categories.length,
-                    subscribers: subscribers.length,
-                    blogStatus: { pending: pendingCount },
-                    blogAction: {
-                        active: blogsActiveCount,
-                        blocked: blogsBlockedCount,
-                    },
-                    userStatus: {
-                        active: usersActiveCount,
-                        blocked: usersBlockedCount,
-                    },
-                    catStatus: {
-                        active: catActiveCount,
-                        blocked: catBlockedCount,
-                    },
-                    subStatus: {
-                        active: subsActiveCount,
-                        blocked: subBlockedCount,
-                    }
-                })
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setIsLoading(false);
-            }
-        }
+    //             setData({
+    //                 blogs: blogs.length,
+    //                 users: users.length,
+    //                 categories: categories.length,
+    //                 subscribers: subscribers.length,
+    //                 blogStatus: { pending: pendingCount },
+    //                 blogAction: {
+    //                     active: blogsActiveCount,
+    //                     blocked: blogsBlockedCount,
+    //                 },
+    //                 userStatus: {
+    //                     active: usersActiveCount,
+    //                     blocked: usersBlockedCount,
+    //                 },
+    //                 catStatus: {
+    //                     active: catActiveCount,
+    //                     blocked: catBlockedCount,
+    //                 },
+    //                 subStatus: {
+    //                     active: subsActiveCount,
+    //                     blocked: subBlockedCount,
+    //                 }
+    //             })
+    //         } catch (error) {
+    //             console.log(error);
+    //         } finally {
+    //             setIsLoading(false);
+    //         }
+    //     }
 
-        fetchData();
-    }, [])
+    //     fetchData();
+    // }, [])
 
     console.log(data, 'Data...');
 
@@ -101,7 +103,7 @@ const AdminDashboard = () => {
                 <h1>Dashboard</h1>
             </div>
             <div className={styles.mainCard}>
-                {dashboardCards.map((card) => {
+                {cards.map((card) => {
                     const Icon = card.icon
                     return (
                         <div
@@ -117,7 +119,7 @@ const AdminDashboard = () => {
                                     <Spinner size="small" />
                                 ) : (
                                     <div>
-                                        <h1>{data[card.title as "blogs" | "users" | "categories" | "subscribers" ]}</h1>
+                                        <h1>{card.value}</h1>
                                     </div>
                                 )}
                                 <div className={styles.cardStatus}>
@@ -125,15 +127,15 @@ const AdminDashboard = () => {
                                         <>
                                             <div className={styles.cardStatusItems}>
                                                 <p>Pending:</p>
-                                                <span>{data.blogStatus.pending}</span>
+                                                {/* <span>{data.blogStatus.pending}</span> */}
                                             </div>
                                             <div className={styles.cardStatusItems}>
                                                 <p>Active:</p>
-                                                <span> {data.blogAction.active}</span>
+                                                {/* <span> {data.blogAction.active}</span> */}
                                             </div>
                                             <div className={styles.cardStatusItems}>
                                                 <p>Blocked:</p>
-                                                <span>{data.blogAction.blocked}</span>
+                                                {/* <span>{data.blogAction.blocked}</span> */}
                                             </div>
                                         </>
                                     )}
@@ -142,11 +144,11 @@ const AdminDashboard = () => {
                                         <>
                                             <div className={styles.cardStatusItems}>
                                                 <p>Active:</p>
-                                                <span>{data.userStatus.active}</span>
+                                                {/* <span>{data.userStatus.active}</span> */}
                                             </div>
                                             <div className={styles.cardStatusItems}>
                                                 <p>Blocked:</p>
-                                                <span>{data.userStatus.blocked}</span>
+                                                {/* <span>{data.userStatus.blocked}</span> */}
                                             </div>
                                         </>
                                     )}
@@ -155,11 +157,11 @@ const AdminDashboard = () => {
                                         <>
                                             <div className={styles.cardStatusItems}>
                                                 <p>Active:</p>
-                                                <span>{data.catStatus.active}</span>
+                                                {/* <span>{data.catStatus.active}</span> */}
                                             </div>
                                             <div className={styles.cardStatusItems}>
                                                 <p>Blocked:</p>
-                                                <span> {data.catStatus.blocked}</span>
+                                                {/* <span> {data.catStatus.blocked}</span> */}
                                             </div>
                                         </>
                                     )}
@@ -168,11 +170,11 @@ const AdminDashboard = () => {
                                         <>
                                             <div className={styles.cardStatusItems}>
                                                 <p>Active:</p>
-                                                <span>{data.subStatus.active}</span>
+                                                {/* <span>{data.subStatus.active}</span> */}
                                             </div>
                                             <div className={styles.cardStatusItems}>
                                                 <p>Blocked:</p>
-                                                <span>{data.subStatus.blocked}</span>
+                                                {/* <span>{data.subStatus.blocked}</span> */}
                                             </div>
                                         </>
                                     )}
@@ -181,11 +183,11 @@ const AdminDashboard = () => {
                                         <>
                                             <div className={styles.cardStatusItems}>
                                                 <p>Active:</p>
-                                                <span>{data.subStatus.active}</span>
+                                                {/* <span>{data.subStatus.active}</span> */}
                                             </div>
                                             <div className={styles.cardStatusItems}>
                                                 <p>Blocked:</p>
-                                                <span>{data.subStatus.blocked}</span>
+                                                {/* <span>{data.subStatus.blocked}</span> */}
                                             </div>
                                         </>
                                     )}
