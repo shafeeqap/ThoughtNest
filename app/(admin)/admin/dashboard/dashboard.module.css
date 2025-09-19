@@ -58,6 +58,7 @@
 .cardStatus .cardStatusItems {
     display: flex;
     justify-content: space-between;
+    cursor: pointer;
 }
 
 .card1 {

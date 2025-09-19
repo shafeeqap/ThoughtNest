@@ -12,8 +12,8 @@ export interface dashboardCardType {
   mostViewedBlog?: string;
   totalViews?: number;
   totalBlogs?: number;
-  status: string;
-  action: string;
+  status?: number;
+  action?: { active: number; blocked: number };
 }
 
 export type DashboardResponse = {

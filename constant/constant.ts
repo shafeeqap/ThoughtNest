@@ -60,8 +60,17 @@ export function dashboardCards(
       period: "This Week",
       url: "/admin/blogList",
       value: data?.blogData.totalBlogs || 0,
-      status: "",
-      action: "",
+      status:
+        data?.blogData.blogByStatus.find((item) => item.status === "pending")
+          ?.count || 0,
+      action: {
+        active:
+          data?.blogData.blogAction.find((item) => item.action === "active")
+            ?.count || 0,
+        blocked:
+          data?.blogData.blogAction.find((item) => item.action === "blocked")
+            ?.count || 0,
+      },
     },
     {
       id: 2,
@@ -72,8 +81,15 @@ export function dashboardCards(
       period: "This Month",
       url: "/admin/users",
       value: data?.userData.totalUser || 0,
-      status: "",
-      action: "",
+      status: 0,
+      action: {
+        active:
+          data?.userData.userBystatus.find((item) => item.status === "active")
+            ?.count || 0,
+        blocked:
+          data?.userData.userBystatus.find((item) => item.status === "blocked")
+            ?.count || 0,
+      },
     },
     {
       id: 3,
@@ -84,8 +100,15 @@ export function dashboardCards(
       period: "Today",
       url: "/admin/categoryList",
       value: data?.catData.totalCategory || 0,
-      status: "",
-      action: "",
+      status: 0,
+      action: {
+        active:
+          data?.catData.catStatus.find((item) => item.status === "active")
+            ?.count || 0,
+        blocked:
+          data?.catData.catStatus.find((item) => item.status === "blocked")
+            ?.count || 0,
+      },
     },
     {
       id: 4,
@@ -96,8 +119,17 @@ export function dashboardCards(
       period: "This Week",
       url: "/admin/subscriptions",
       value: data?.subData.totalSub || 0,
-      status: "",
-      action: "",
+      status: 0,
+      action: {
+        active:
+          data?.subData.subscriberStatus.find(
+            (item) => item.status === "active"
+          )?.count || 0,
+        blocked:
+          data?.subData.subscriberStatus.find(
+            (item) => item.status === "blocked"
+          )?.count || 0,
+      },
     },
     {
       id: 5,
@@ -106,13 +138,13 @@ export function dashboardCards(
       trend: "+20%",
       trendType: "positive",
       period: "This Week",
-      url: "/admin/subscriptions",
+      url: "/admin/users",
       mostViewedBlog: "",
       totalBlogs: 5,
       totalViews: 20,
       value: data?.authorCount.find((a) => a.role === "author")?.count || 0,
-      status: "",
-      action: "",
+      status: 0,
+      action: { active: 0, blocked: 0 },
     },
   ];
 }
