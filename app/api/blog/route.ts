@@ -34,13 +34,19 @@ export async function POST(req: NextRequest) {
     await connectDB();
 
     const accessToken = req.cookies.get("accessToken")?.value;
-    let decoded: any;
+    if (!accessToken) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-    if (accessToken) {
-      decoded = await verifyAccessToken(accessToken);
+    const decoded = await verifyAccessToken(accessToken);
+
+    if (!decoded?.userId) {
+      return NextResponse.json({ error: "Invalid token" }, { status: 403 });
     }
 
     const formData = await req.formData();
+    console.log(formData, "Form Data...");
+
     const image = formData.get("image") as File | null;
     if (!image) {
       return NextResponse.json({ error: "Image is required" }, { status: 400 });

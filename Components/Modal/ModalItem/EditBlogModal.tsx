@@ -77,7 +77,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
             onSubmit={onSubmitHandler}
             isChanged={isChanged}
         >
-            <div className='sm:w-full max-h-64 overflow-y-auto '>
+            <div className='sm:w-full max-w-[1100px] max-h-64 overflow-y-auto '>
                 <div className='sm:w-full flex flex-col'>
                     <div className='flex flex-col lg:flex-row w-full'>
 

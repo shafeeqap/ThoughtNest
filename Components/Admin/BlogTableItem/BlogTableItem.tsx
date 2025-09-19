@@ -15,14 +15,13 @@ import { CategoryType } from '@/types/category';
 import { categoryService } from '@/services/categoryService';
 import { validateBlog } from '@/lib/validators/validateBlog';
 import { toast } from 'react-toastify';
-import { blogService } from '@/services/blogService';
 import { EditBlogModal } from '@/Components/Modal/ModalItem';
+import { useEditBlogMutation } from '@/redux/features/blogApiSlice';
 
 
 interface IProps extends BlogItemType {
     handleBlogAction: (id: string, type: "action", value: string) => Promise<void>;
     handleUpdateStatus: (id: string, type: "status", value: string) => Promise<void>;
-    setAllBlogs: React.Dispatch<React.SetStateAction<BlogItemType[]>>
     handleDelete: (id: string) => Promise<void>;
     counter: number;
 }
@@ -40,7 +39,6 @@ const BlogTableItem: React.FC<IProps> = ({
     handleDelete,
     handleBlogAction,
     handleUpdateStatus,
-    setAllBlogs,
     status,
     action,
 }) => {
@@ -56,6 +54,7 @@ const BlogTableItem: React.FC<IProps> = ({
     const [editDescription, setEditDescription] = useState(description);
     const [editImage, setEditImage] = useState<File | null | string>(image);
 
+    const [editBlog] = useEditBlogMutation()
 
     const formattedDate = formatDate(createdAt);
     const truncatedText = truncateText(title);
@@ -112,8 +111,8 @@ const BlogTableItem: React.FC<IProps> = ({
             formData.append('image', editImage);
         }
         try {
-            const res = await blogService.editBlog(id, formData);
-            setAllBlogs(prev => prev.map(blog => blog._id === id ? res.updatedBlog : blog));
+            const res = await editBlog({ id, formData }).unwrap();
+            // setAllBlogs(prev => prev.map(blog => blog._id === id ? res.updatedBlog : blog));
             toast.success(res.msg);
 
             setShowEditModal(false);

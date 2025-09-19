@@ -23,7 +23,7 @@ const AdminDashboard = () => {
                 <h1>Dashboard</h1>
             </div>
             <div className={styles.mainCard}>
-                {cards.map((card) => {
+                {!isLoading && cards.map((card) => {
                     const Icon = card.icon
                     return (
                         <div

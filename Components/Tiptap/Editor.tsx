@@ -227,8 +227,7 @@ const TiptapEditor = ({ content, onChange }: Props) => {
             )}
             <div className='border p-4 my-5 max-h-[400px] overflow-y-auto'>
                 {/* Toolbar */}
-
-                <div className="prose min-h-[150px] max-w-none prose-h2:text-blue-600 prose-h3:text-green-600 prose-p:text-base">
+                <div className="prose max-h-[200px] max-w-none prose-h2:text-blue-600 prose-h3:text-green-600 prose-p:text-base">
                     <EditorContent editor={editor} />
                 </div>
             </div>

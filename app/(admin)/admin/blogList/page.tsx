@@ -1,46 +1,41 @@
 'use client';
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+
+import React, { useCallback, useMemo, useState } from 'react'
 import BlogTableItem from '@/Components/Admin/BlogTableItem/BlogTableItem';
 import Pagination from '@/Components/Pagination/Pagination';
 import Spinner from '@/Components/Spinner/Spinner';
-import { blogService } from '@/services/blogService';
-import { BlogItemType } from '@/types/blog';
 import { toast } from 'react-toastify';
 import { debounce } from 'lodash';
 import { formatDate } from '@/lib/utils/helpers/formatDate';
 import Search from '@/Components/ui/search/Search';
 import { FiPlus } from 'react-icons/fi';
 import Link from 'next/link';
+import {
+  useDeleteBlogMutation,
+  useFetchAllBlogQuery,
+  useUpdateBlogMutation
+} from '@/redux/features/blogApiSlice';
 
 const Page = () => {
-  const [allBlogs, setAllBlogs] = useState<BlogItemType[]>([]);
+  const { data, isError, isLoading } = useFetchAllBlogQuery();
+  const [updateBlog] = useUpdateBlogMutation();
+  const [deleteBlog] = useDeleteBlogMutation();
+
+  const allBlogs = useMemo(() => data?.blogs ?? [], [data]);
+
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const recordsPerPage = 5;
   const pagesToShow = 5
 
   const handleSearch = useCallback(
     debounce((value: string) => {
       setSearchTerm(value);
+      setCurrentPage(1);
     }, 100), []);
 
 
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      const blogData = await blogService.fetchAllBlog();
-      setAllBlogs(blogData);
-      setIsLoading(false)
-    }
-
-    fetchBlogs();
-  }, [])
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm])
-
-
+  //  Filtering
   const filteredBlogs = useMemo(() => {
     return allBlogs.filter((blog) => {
 
@@ -53,30 +48,21 @@ const Page = () => {
 
   }, [allBlogs, searchTerm])
 
-  // Pagination logic
+  // Pagination
   const paginatedBlogData = useMemo(() => {
     return filteredBlogs.slice((currentPage - 1) * recordsPerPage, currentPage * recordsPerPage);
   }, [filteredBlogs, currentPage])
 
   const numberOfPages = Math.ceil(filteredBlogs.length / recordsPerPage);
 
+  if (isError) return <p>Error fetching blogs</p>;
+
   // =====================> Handle Blog Action (active/blocked) <===================== //
   const handleBlogAction = async (id: string, type: "action", value: string) => {
     try {
-      const res = await blogService.updateBlog(id, { [type]: value });
-
-      setAllBlogs(prev => {
-        return prev.map(blog => {
-          if (blog._id === id) {
-            return {
-              ...blog,
-              action: res.updatedBlog.action
-            }
-          }
-          return blog
-        })
-      })
+      const res = await updateBlog({ id, update: { [type]: value } }).unwrap();
       toast.success(res.msg);
+
     } catch (error) {
       toast.error("Failed to update category");
       console.error(error);
@@ -86,19 +72,14 @@ const Page = () => {
   // =====================> Handle Blog Delete <===================== //
   const handleDelete = async (id: string) => {
     try {
-      const res = await blogService.deleteBlog(id);
+      const res = await deleteBlog(id).unwrap();
       toast.success(res.msg);
 
-      setAllBlogs(prev => {
-        const updatedBlog = prev.filter(blog => blog._id !== id)
-        const newTotalPages = Math.ceil(updatedBlog.length / recordsPerPage)
+      const newTotalPages = Math.ceil(filteredBlogs.length - 1 / recordsPerPage)
 
-        if (currentPage > newTotalPages) {
-          setCurrentPage(prevPage => Math.max(1, prevPage - 1))
-        }
-
-        return updatedBlog
-      })
+      if (currentPage > newTotalPages) {
+        setCurrentPage(prevPage => Math.max(1, prevPage - 1))
+      }
 
     } catch (error) {
       toast.error("Failed to delete blog");
@@ -108,17 +89,15 @@ const Page = () => {
 
   // =====================> Handle Update Blog Status(Pending/Approved/Rejected) <===================== //
   const handleUpdateStatus = async (id: string, type: "status", value: string) => {
-    const res = await blogService.updateBlog(id, { [type]: value });
+    try {
+      const res = await updateBlog({ id, update: { [type]: value } }).unwrap();
+      toast.success(res.msg);
 
-    setAllBlogs(prev => prev.map(blog => {
-      if (blog._id === id) {
-        return {
-          ...blog,
-          status: res.updatedBlog.status,
-        }
-      }
-      return blog;
-    }))
+    } catch (error) {
+      toast.error("Failed to update status");
+      console.log(error);
+    }
+
   }
 
 
@@ -180,7 +159,6 @@ const Page = () => {
                   counter={(currentPage - 1) * recordsPerPage + index + 1}
                   handleBlogAction={handleBlogAction}
                   handleUpdateStatus={handleUpdateStatus}
-                  setAllBlogs={setAllBlogs}
                 />
               ))
             )}

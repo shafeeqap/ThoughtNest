@@ -2,6 +2,7 @@
 import TiptapEditor from '@/Components/Tiptap/Editor';
 import { assets } from '@/data/assets';
 import { validateBlog } from '@/lib/validators/validateBlog';
+import { useAddBlogMutation } from '@/redux/features/blogApiSlice';
 import { blogService } from '@/services/blogService';
 import { categoryService } from '@/services/categoryService';
 import { sessionService } from '@/services/sessionService';
@@ -23,6 +24,7 @@ const Page = () => {
     authorImg: '/author_img.png'
   });
   const [authStatus, setAuthStatus] = useState({ userId: '' });
+  const [addBlog] = useAddBlogMutation();
 
   useEffect(() => {
     async function fetchCategories() {
@@ -52,7 +54,7 @@ const Page = () => {
   }, [])
 
   console.log(authStatus, 'Auth add blog...');
-  
+
 
   const onChangHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -64,7 +66,7 @@ const Page = () => {
   }
 
   console.log(image, 'Image...');
-  
+
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -89,7 +91,7 @@ const Page = () => {
     }
 
     try {
-      const response = await blogService.addBlog(formData)
+      const response = await addBlog({formData}).unwrap();
       if (response.success) {
         toast.success('Your blog is added')
         console.log('Blog posted successfully!', response.success);
