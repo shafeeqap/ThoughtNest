@@ -14,7 +14,7 @@ const AdminDashboard = () => {
     const cards = dashboardCards(data);
 
 
-    console.log(data, 'Data...');
+    console.log(data, 'Card data...');
 
 
     return (

@@ -1,21 +1,19 @@
 'use client';
+
 import TiptapEditor from '@/Components/Tiptap/Editor';
 import { assets } from '@/data/assets';
 import { validateBlog } from '@/lib/validators/validateBlog';
 import { useAddBlogMutation } from '@/redux/features/blogApiSlice';
-import { blogService } from '@/services/blogService';
-import { categoryService } from '@/services/categoryService';
+import { useFetchCategoryQuery } from '@/redux/features/categoryApiSlice';
 import { sessionService } from '@/services/sessionService';
-import { CategoryType } from '@/types/category';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify';
 
 
 
 const Page = () => {
   const [image, setImage] = useState<File | null>(null);
-  const [categories, setCategories] = useState<CategoryType[]>([]);
   const [data, setData] = useState({
     title: '',
     description: '',
@@ -24,18 +22,13 @@ const Page = () => {
     authorImg: '/author_img.png'
   });
   const [authStatus, setAuthStatus] = useState({ userId: '' });
+
+  const { data: categories, isError, isLoading } = useFetchCategoryQuery();
   const [addBlog] = useAddBlogMutation();
 
-  useEffect(() => {
-    async function fetchCategories() {
-      const response = await categoryService.fetchCategory();
-      console.log(response, 'Res cat...');
-      setCategories(response)
-    }
-    fetchCategories();
-  }, []);
+  const allCategory = useMemo(() => categories?.category ?? [], [categories])
 
-  console.log(categories, 'Categories...');
+  console.log(allCategory, 'Categories...');
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -60,20 +53,20 @@ const Page = () => {
     const { name, value } = e.target;
     setData((prevData) => {
       const updateData = { ...prevData, [name]: value };
-      console.log(updateData, "Update Data");
+
       return updateData
     })
   }
 
-  console.log(image, 'Image...');
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const validationError = validateBlog(data.title, data.description, image);
+    const validationError = validateBlog(data.title, data.description, image, data.category);
     if (validationError) {
       if (validationError.title) toast.warning(validationError.title);
       if (validationError.description) toast.warning(validationError.description);
+      if (validationError.category) toast.warning(validationError.category);
       if (validationError.image) {
         validationError.image.forEach((msg) => toast.warning(msg))
       }
@@ -91,7 +84,7 @@ const Page = () => {
     }
 
     try {
-      const response = await addBlog({formData}).unwrap();
+      const response = await addBlog({ formData }).unwrap();
       if (response.success) {
         toast.success('Your blog is added')
         console.log('Blog posted successfully!', response.success);
@@ -110,8 +103,9 @@ const Page = () => {
       console.error('Failed to submit blog:', error);
       toast.error('Failed to submit blog:')
     }
-
   }
+
+  console.log(data, 'Blog Data...');
 
   return (
     <>
@@ -157,9 +151,10 @@ const Page = () => {
           onChange={onChangHandler}
           name="category"
           value={data.category}
-          className='w-40 mt-4 px-4 py-3 border text-gray-500'
+          className='mt-4 px-4 py-3 border text-gray-500'
         >
-          {categories.map((cat) => (
+          <option value="">-- Select Category --</option>
+          {allCategory.map((cat) => (
             <option
               key={cat._id}
               value={cat._id}>

@@ -3,13 +3,18 @@ import { blogSchema } from "@/lib/schema/zodSchema";
 export const validateBlog = (
   title: string,
   description: string,
-  image: File | null | string
+  image: File | null | string,
+  category: string
 ) => {
-  const result = blogSchema.safeParse({ title, description, image });
+  const result = blogSchema.safeParse({ title, description, image, category });
 
   if (!result.success) {
-    const errors: { title?: string; description?: string; image?: string[] } =
-      {};
+    const errors: {
+      title?: string;
+      description?: string;
+      image?: string[];
+      category?: string;
+    } = {};
 
     result.error.issues.forEach((issue) => {
       const field = issue.path[0];
@@ -22,6 +27,10 @@ export const validateBlog = (
 
       if (field === "description") {
         errors.description = issue.message;
+      }
+
+      if (field === "category") {
+        errors.category = issue.message;
       }
 
       if (field === "image" && !errors.image) {

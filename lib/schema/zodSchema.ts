@@ -65,4 +65,5 @@ export const blogSchema = z.object({
       },
       { message: "Only .jpg, .jpeg, .png, and .webp formats are supported" }
     ),
+  category: z.string().min(1, { message: "Category name is required." }),
 });

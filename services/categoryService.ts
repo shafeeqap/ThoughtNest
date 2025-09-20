@@ -16,10 +16,10 @@ export const categoryService = {
     });
     return response.data;
   },
-  fetchCategory: async ():Promise <CategoryType[]> => {
-    const response = await axiosInstance.get("/api/category");
-    return response.data.category;
-  },
+  // fetchCategory: async ():Promise <CategoryType[]> => {
+  //   const response = await axiosInstance.get("/api/category");
+  //   return response.data.category;
+  // },
   toggleCategoryStatus: async (id: string) => {
     const response = await axiosInstance.patch(`/api/category/${id}`);
     return response.data;
