@@ -7,8 +7,8 @@ import { truncateText } from '@/lib/utils/helpers/truncateText';
 import { ErrorType } from '@/types/error';
 import { toast } from 'react-toastify';
 import { validateCategory } from '@/lib/validators/validateCategory';
-import { categoryService } from '@/services/categoryService';
 import { EditCategoryModal } from '@/Components/Modal/ModalItem';
+import { useEditCategoryMutation } from '@/redux/features/categoryApiSlice';
 
 
 interface IProps extends CategoryType {
@@ -17,9 +17,8 @@ interface IProps extends CategoryType {
     handleDelete: (id: string) => Promise<void>;
     setCategoryName: Dispatch<SetStateAction<string>>;
     setDescription: Dispatch<SetStateAction<string>>;
-    setCategory: Dispatch<SetStateAction<CategoryType[]>>;
-    error: ErrorType;
     setError: (value: React.SetStateAction<ErrorType>) => void;
+    error: ErrorType;
 }
 
 const CategoryTableItem: React.FC<IProps> = ({
@@ -32,7 +31,6 @@ const CategoryTableItem: React.FC<IProps> = ({
     handleDelete,
     setCategoryName,
     setDescription,
-    setCategory,
     error,
     setError
 }) => {
@@ -42,6 +40,8 @@ const CategoryTableItem: React.FC<IProps> = ({
     const [editDescription, setEditDescription] = useState(description);
     const [actionType, setActionType] = useState<"action" | "delete" | null>(null);
     const truncatedText = truncateText(description);
+
+    const [editCategory] = useEditCategoryMutation();
 
     // ====================================================================================== //
     const Title = actionType === "action" ? status === 'active' ? "Block Category" : "Activate Category" : "Delete Category";
@@ -72,9 +72,7 @@ const CategoryTableItem: React.FC<IProps> = ({
                 return;
             }
 
-            const response = await categoryService.editCategory(id, categoryName, description);
-
-            setCategory(prev => prev.map(cat => cat._id === id ? response.updatedCategory : cat))
+            const response = await editCategory({id, categoryName, description}).unwrap();
 
             toast.success(response.msg);
             setCategoryName('');

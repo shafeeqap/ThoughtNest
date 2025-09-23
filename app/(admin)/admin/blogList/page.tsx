@@ -22,6 +22,7 @@ const Page = () => {
   const [deleteBlog] = useDeleteBlogMutation();
 
   const allBlogs = useMemo(() => data?.blogs ?? [], [data]);
+  console.log(allBlogs, 'Allblogs...');
 
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -72,10 +73,10 @@ const Page = () => {
   // =====================> Handle Blog Delete <===================== //
   const handleDelete = async (id: string) => {
     try {
-      const res = await deleteBlog(id).unwrap();
+      const res = await deleteBlog({ id }).unwrap();
       toast.success(res.msg);
 
-      const newTotalPages = Math.ceil(filteredBlogs.length - 1 / recordsPerPage)
+      const newTotalPages = Math.ceil((filteredBlogs.length - 1) / recordsPerPage)
 
       if (currentPage > newTotalPages) {
         setCurrentPage(prevPage => Math.max(1, prevPage - 1))

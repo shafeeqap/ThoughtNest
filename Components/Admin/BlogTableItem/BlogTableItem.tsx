@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { ConfirmModal, PreviewModal, UpdateStatusModal } from '@/Components/Modal';
 import { assets } from '@/data/assets'
 import { formatDate } from '@/lib/utils/helpers/formatDate';
@@ -11,12 +11,11 @@ import { IoCloseCircleOutline, IoTrashBinOutline, IoWarningOutline, IoEyeOutline
 import { CiEdit } from "react-icons/ci";
 import { blogStatusConfig } from '@/lib/config/ui/blogStatusConfig';
 import { blogActionConfig } from '@/lib/config/ui/blogActionConfig';
-import { CategoryType } from '@/types/category';
-import { categoryService } from '@/services/categoryService';
 import { validateBlog } from '@/lib/validators/validateBlog';
 import { toast } from 'react-toastify';
 import { EditBlogModal } from '@/Components/Modal/ModalItem';
 import { useEditBlogMutation } from '@/redux/features/blogApiSlice';
+import { useFetchCategoryQuery } from '@/redux/features/categoryApiSlice';
 
 
 interface IProps extends BlogItemType {
@@ -47,14 +46,15 @@ const BlogTableItem: React.FC<IProps> = ({
     const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
     const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false);
     const [actionType, setActionType] = useState<"action" | "delete" | null>(null);
-    const [categories, setCategories] = useState<CategoryType[]>([]);
-
     const [editTitle, setEditTitle] = useState(title);
     const [editCategoryName, setEditCategoryName] = useState(category._id);
     const [editDescription, setEditDescription] = useState(description);
     const [editImage, setEditImage] = useState<File | null | string>(image);
 
-    const [editBlog] = useEditBlogMutation()
+    const { data: categories, isError, isLoading } = useFetchCategoryQuery();
+    const [editBlog] = useEditBlogMutation();
+
+    const allCategory = useMemo(() => categories?.category ?? [], [categories])
 
     const formattedDate = formatDate(createdAt);
     const truncatedText = truncateText(title);
@@ -80,21 +80,14 @@ const BlogTableItem: React.FC<IProps> = ({
         setActionType(null);
     }
 
-    useEffect(() => {
-        async function fetchCategories() {
-            const response = await categoryService.fetchCategory();
-            setCategories(response)
-        }
-
-        fetchCategories();
-    }, []);
 
     const handleBlogEdit = async (id: string,) => {
-        const validationError = validateBlog(editTitle, editDescription, editImage);
+        const validationError = validateBlog(editTitle, editDescription, editImage, editCategoryName);
 
         if (validationError) {
             if (validationError.title) toast.warning(validationError.title);
             if (validationError.description) toast.warning(validationError.description);
+            if (validationError.category) toast.warning(validationError.category)
             if (validationError.image) {
                 validationError.image.forEach((msg) => toast.warning(msg))
             }
@@ -112,7 +105,6 @@ const BlogTableItem: React.FC<IProps> = ({
         }
         try {
             const res = await editBlog({ id, formData }).unwrap();
-            // setAllBlogs(prev => prev.map(blog => blog._id === id ? res.updatedBlog : blog));
             toast.success(res.msg);
 
             setShowEditModal(false);
@@ -263,7 +255,7 @@ const BlogTableItem: React.FC<IProps> = ({
                     editImage={editImage}
                     setEditCategoryName={setEditCategoryName}
                     setEditImage={setEditImage}
-                    categories={categories}
+                    categories={allCategory}
                     handleBlogEdit={handleBlogEdit}
                     isChanged={isChanged}
                 />

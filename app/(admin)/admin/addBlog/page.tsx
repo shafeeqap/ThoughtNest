@@ -7,13 +7,16 @@ import { useAddBlogMutation } from '@/redux/features/blogApiSlice';
 import { useFetchCategoryQuery } from '@/redux/features/categoryApiSlice';
 import { sessionService } from '@/services/sessionService';
 import Image from 'next/image';
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
-
-
+import Cropper, { ReactCropperElement } from "react-cropper";
+import "cropperjs/dist/cropper.css";
 
 const Page = () => {
-  const [image, setImage] = useState<File | null>(null);
+  const [image, setImage] = useState<string>("");
+  const [croppedImage, setCroppedImage] = useState<File | null>(null);
+  const cropperRef = useRef<ReactCropperElement>(null);
+
   const [data, setData] = useState({
     title: '',
     description: '',
@@ -23,12 +26,11 @@ const Page = () => {
   });
   const [authStatus, setAuthStatus] = useState({ userId: '' });
 
-  const { data: categories, isError, isLoading } = useFetchCategoryQuery();
+  const { data: categories, isError } = useFetchCategoryQuery();
   const [addBlog] = useAddBlogMutation();
 
   const allCategory = useMemo(() => categories?.category ?? [], [categories])
 
-  console.log(allCategory, 'Categories...');
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -58,11 +60,40 @@ const Page = () => {
     })
   }
 
+  // Handle file input
+  const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.result) {
+          setImage(reader.result.toString());
+        }
+      }
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Get cropped result
+  const handleCrop = () => {
+    const cropper = cropperRef.current?.cropper;
+    console.log("Cropper ref:", cropper);
+
+    if (cropper) {
+      cropper.getCroppedCanvas().toBlob((blob) => {
+        if (blob) {
+          const file = new File([blob], "cropped.jpg", { type: "image/jpg" });
+          setCroppedImage(file);
+        }
+      }, "image/jpeg");
+    }
+  }
+
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const validationError = validateBlog(data.title, data.description, image, data.category);
+    const validationError = validateBlog(data.title, data.description, croppedImage, data.category);
     if (validationError) {
       if (validationError.title) toast.warning(validationError.title);
       if (validationError.description) toast.warning(validationError.description);
@@ -79,8 +110,8 @@ const Page = () => {
       formData.append(key, value);
     })
 
-    if (image) {
-      formData.append('image', image);
+    if (croppedImage) {
+      formData.append('image', croppedImage);
     }
 
     try {
@@ -95,7 +126,8 @@ const Page = () => {
           author: 'Alex Bennett',
           authorImg: '/author_img.png',
         });
-        setImage(null)
+        setImage("");
+        setCroppedImage(null);
       } else {
         toast.error('Something went wrong!');
       }
@@ -105,32 +137,59 @@ const Page = () => {
     }
   }
 
-  console.log(data, 'Blog Data...');
+
+  if (isError) return <p>Error fetching category</p>;
 
   return (
     <>
       <form onSubmit={onSubmitHandler} className='ml-14 md:ml-10 py-10 pt-5 px-5 sm:pt-12 sm:pl-16 absolute w-[78%] md:w-2xl'>
         <p className='text-xl'>Upload thumbnail</p>
+
+        {/* Image upload */}
         <label htmlFor="image">
           <Image className='mt-4 cursor-pointer'
-            src={!image ? assets.upload_area : URL.createObjectURL(image)}
+            src={!image ? assets.upload_area : image}
             width={140}
             height={70}
             alt='upload_image'
           />
         </label>
-        <input onChange={(e) => {
-          if (e.target.files && e.target.files[0]) {
-            setImage(e.target.files[0])
-          }
-        }}
+        <input onChange={onSelectFile}
           type="file"
           id='image'
           hidden
         />
 
-        <p className='text-xl mt-4'>Blog Title</p>
+        {/* Cropper preview */}
+        {image && (
+          <div className='mt-5'>
+            <Cropper
+              ref={cropperRef}
+              src={image}
+              style={{ height: 400, width: "100%" }}
+              aspectRatio={16 / 9}
+              guides={true}
+              viewMode={1}
+            />
+            <button
+              type='button'
+              onClick={handleCrop}
+              className="mt-3 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
+            >
+              Crop Image
+            </button>
+          </div>
+        )}
 
+        {/* Show cropped preview */}
+        {croppedImage && (
+          <div className='mt-5'>
+            <p>Preview Cropped Image:</p>
+            <Image src={URL.createObjectURL(croppedImage)} alt='Cropped Preview' width={200} height={120} />
+          </div>
+        )}
+
+        <p className='text-xl mt-4'>Blog Title</p>
         <input
           onChange={onChangHandler}
           name='title'

@@ -48,3 +48,4 @@ Tools & Packages Used:
 8. jose :- Providing support for JSON Web Tokens (JWT).
 9. axios :- Handle HTTP request.
 10. recharts :- To help build charts in the admin dashboard.
+11. react-cropper: To use for image cropping (popular Cropper.js library)

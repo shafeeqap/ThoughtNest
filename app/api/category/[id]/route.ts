@@ -1,4 +1,5 @@
 import { connectDB } from "@/lib/config/db";
+import BlogModel from "@/lib/models/BlogModel";
 import categoryModel from "@/lib/models/CategoryModel";
 import { NextResponse } from "next/server";
 
@@ -49,10 +50,22 @@ export async function DELETE(
 
     const { id } = await context.params;
 
-    const category = await categoryModel.findById(id);
+    console.log(id, "Cat ID...");
 
+    const category = await categoryModel.findById(id);
     if (!category) {
       return NextResponse.json({ msg: "Category not found" }, { status: 404 });
+    }
+
+    const existsBlog = await BlogModel.findOne({ category: id });
+
+    if (existsBlog) {
+      return NextResponse.json(
+        {
+          msg: "This category is used in a blog; you can't delete it.",
+        },
+        { status: 409 }
+      );
     }
 
     await categoryModel.findByIdAndDelete(id);
@@ -79,12 +92,14 @@ export async function PUT(
 
     const { id } = await context.params;
     const { categoryName, description } = await req.json();
-    
-    const categoryExist = await categoryModel.findOne({categoryName})
-    
+
+    const categoryExist = await categoryModel.findOne({ categoryName });
 
     if (categoryExist) {
-      return NextResponse.json({ msg: "Category already exists" }, { status: 409 });
+      return NextResponse.json(
+        { msg: "Category already exists" },
+        { status: 409 }
+      );
     }
 
     const updatedCategory = await categoryModel.findByIdAndUpdate(
@@ -97,7 +112,6 @@ export async function PUT(
       { msg: "Category updated successfully", updatedCategory },
       { status: 200 }
     );
-
   } catch (error) {
     return NextResponse.json(
       { msg: "Error update category by ID", error },

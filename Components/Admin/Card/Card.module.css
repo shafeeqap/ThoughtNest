@@ -1,0 +1,114 @@
+.cardTitle {
+    font-size: 20px;
+    font-weight: 550;
+    text-transform: uppercase;
+}
+
+.mainCard {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: 1fr;
+    grid-template-areas: "card1 card1 card1"
+        "card2 card2 card2"
+        "card3 card3 card3"
+        "card4 card4 card4"
+        "card5 card5 card5";
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 8px 15px;
+    border-radius: 5px;
+    color: white;
+    min-height: 150px;
+}
+
+.cardItems {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.cardItems h1 {
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.card1 {
+    grid-area: card1;
+    background-color: #0088FE;
+}
+
+.card2 {
+    grid-area: card2;
+    background-color: #d8176e;
+}
+
+.card3 {
+    grid-area: card3;
+    background-color: #00C49F;
+}
+
+.card4 {
+    grid-area: card4;
+    background-color: #FF8042;
+}
+
+.card5 {
+    grid-area: card5;
+    background-color: #bf63a2;
+}
+
+.cardInner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cardStatus {
+    display: flex;
+    flex-direction: column;
+    width: 6rem;
+}
+
+.cardStatus .cardStatusItems {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+
+/* Tablet */
+@media (min-width: 577px) and (max-width: 768px) {
+    .mainCard {
+        grid-template-columns: 1fr;
+        grid-template-areas: "card1 card1 card1"
+            "card2 card2 card2"
+            "card3 card3 card3"
+            "card4 card4 card4"
+            "card5 card5 card5";
+    }
+
+    .charts {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        grid-template-areas: "chart1 chart1"
+            "chart2 chart2";
+    }
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+    .mainCard {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-template-areas: "card1 card2 card3 card4 card5";
+    }
+
+    .charts {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+        grid-template-areas: "chart1 chart2";
+    }
+}

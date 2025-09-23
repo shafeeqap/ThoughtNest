@@ -6,36 +6,31 @@ import Pagination from '@/Components/Pagination/Pagination';
 import Spinner from '@/Components/Spinner/Spinner';
 import Search from '@/Components/ui/search/Search';
 import { formatDate } from '@/lib/utils/helpers/formatDate';
-import { subscribeService } from '@/services/subscribeService';
-import { SubscriptionType } from '@/types/subscription';
 import { toast } from 'react-toastify';
+import {
+  useDeleteSubscribeMutation,
+  useFetchAllSubscribeQuery,
+  useToggleSubscribeStatusMutation
+} from '@/redux/features/subscribeApiSlice';
 
 const Page = () => {
-  const [subscribe, setSubscribe] = useState<SubscriptionType[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const recordsPerPage = 5;
   const pagesToShow = 5
 
-  useEffect(() => {
-    const getSubscribeData = async () => {
-      const subscribeData = await subscribeService.fetchAllSubscribe();
-      setSubscribe(subscribeData);
-      setIsLoading(false);
-    }
+  const { data, isError, isLoading } = useFetchAllSubscribeQuery();
+  const [deleteSubscribe] = useDeleteSubscribeMutation();
+  const [toggleSubscribeStatus] = useToggleSubscribeStatusMutation();
 
-    getSubscribeData();
-  }, []);
-
-console.log(subscribe);
+  const allSubscribe = useMemo(() => data?.subscription ?? [], [data]);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm])
 
   const filteredSubscription = useMemo(() => {
-    return subscribe.filter((item) => {
+    return allSubscribe.filter((item) => {
 
       const dateString = formatDate(item.date);
 
@@ -43,7 +38,7 @@ console.log(subscribe);
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
     })
-  }, [subscribe, searchTerm])
+  }, [allSubscribe, searchTerm])
 
   // Pagination logic
   const paginatedSubscription = useMemo(() => {
@@ -52,46 +47,39 @@ console.log(subscribe);
 
   const numberOfPages = Math.ceil(filteredSubscription.length / recordsPerPage);
 
+  if (isError) return <p>Error fetching subscription</p>;
+
   // =====================> Handle Subscription Delete <===================== //
   const handleDelete = async (id: string) => {
     try {
-      const res = await subscribeService.deleteSubscribe(id);
+      const res = await deleteSubscribe({ id }).unwrap();
       toast.success(res.msg);
-      setSubscribe(prev => {
-        const updatedData = prev.filter(subs => subs._id !== id)
-        const newTotalPages = Math.ceil(updatedData.length / recordsPerPage)
 
-        if (currentPage > newTotalPages) {
-          setCurrentPage(prevPage => Math.max(1, prevPage - 1))
-        }
-        return updatedData
-      })
+      const newTotalPages = Math.ceil((filteredSubscription.length - 1) / recordsPerPage)
 
-    } catch (error) {
-      toast.error("Failed to delete blog");
-      console.error(error);
+      if (currentPage > newTotalPages) {
+        setCurrentPage(prevPage => Math.max(1, prevPage - 1))
+      }
+
+    } catch (error: unknown) {
+      const err = error as { status?: number; data?: { msg?: string } }
+      const errorMsg = err?.data?.msg || "Failed to delete subscription"
+      toast.error(errorMsg);
+      console.error("Delete subscription error", error);
     }
   }
 
   // =====================> HandleSubscribe Action <===================== //
   const handleSubscribeAction = async (id: string) => {
     try {
-      const res = await subscribeService.toggleSubscribeStatus(id);
-      setSubscribe(prev => {
-        return prev.map(subscribe => {
-          if (subscribe._id === id) {
-            return {
-              ...subscribe,
-              status: res.updatedSubscribe.status
-            }
-          }
-          return subscribe
-        })
-      })
+      const res = await toggleSubscribeStatus({ id }).unwrap();
+
       toast.success(res.msg);
-    } catch (error) {
-      toast.error("Failed to update Subscription");
-      console.error(error);
+    } catch (error: unknown) {
+      const err = error as { status?: number; data?: { msg?: string } };
+      const errorMsg = err?.data?.msg || "Failed to update Subscription"
+      toast.error(errorMsg);
+      console.error("Error while update subscription", error);
     }
   }
 

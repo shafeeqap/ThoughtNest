@@ -6,74 +6,64 @@ import Spinner from '@/Components/Spinner/Spinner';
 import Search from '@/Components/ui/search/Search';
 import { toast } from 'react-toastify';
 import { FiPlus } from "react-icons/fi";
-import { categoryService } from '@/services/categoryService';
-import { CategoryType } from '@/types/category';
 import Pagination from '@/Components/Pagination/Pagination';
 import { validateCategory } from '@/lib/validators/validateCategory';
 import { ErrorType } from '@/types/error';
 import { AddCategoryModal } from '@/Components/Modal/ModalItem';
-
-
+import {
+    useAddCategoryMutation,
+    useDeleteCategoryMutation,
+    useFetchCategoryQuery,
+    useToggleCategoryStatusMutation
+} from '@/redux/features/categoryApiSlice';
 
 const Page = () => {
     const [showModal, setShowModal] = useState<boolean>(false);
-    const [category, setCategory] = useState<CategoryType[]>([]);
     const [categoryName, setCategoryName] = useState('');
     const [description, setDescription] = useState('');
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [error, setError] = useState<ErrorType>({});
-    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const recordsPerPage = 5;
     const pagesToShow = 5
 
+    const { data: categories, isError, isLoading } = useFetchCategoryQuery();
+    const [addCategory] = useAddCategoryMutation();
+    const [deleteCategory] = useDeleteCategoryMutation();
+    const [toggleCategoryStatus] = useToggleCategoryStatusMutation()
 
-    useEffect(() => {
-        const getCategoryData = async () => {
-            const response = await categoryService.fetchCategory();
-            setCategory(response);
-            setIsLoading(false);
-        }
+    const allCategory = useMemo(() => categories?.category ?? [], [categories]);
+    console.log(allCategory, 'All Category...');
 
-        getCategoryData();
-    }, []);
 
     useEffect(() => {
         setCurrentPage(1);
     }, [searchTerm])
 
     const filteredCategory = useMemo(() => {
-        return (category || []).filter((item) => {
+        return (allCategory || []).filter((item) => {
 
             return `${item.categoryName} ${item.description} ${item.status}`
                 .toLowerCase()
                 .includes(searchTerm.toLowerCase())
         })
-    }, [category, searchTerm])
+    }, [searchTerm, allCategory])
+
 
     // Pagination logic
     const paginatedCategory = useMemo(() => {
         return filteredCategory.slice((currentPage - 1) * recordsPerPage, currentPage * recordsPerPage)
     }, [filteredCategory, currentPage])
 
-
     const numberOfPages = Math.ceil(filteredCategory.length / recordsPerPage);
+
+    if (isError) return <p>Error fetching category</p>;
 
     // =====================> HandleCategory Action <===================== //
     const handleCategoryAction = async (id: string) => {
         try {
-            const res = await categoryService.toggleCategoryStatus(id);
-            setCategory(prev => {
-                return prev.map(category => {
-                    if (category._id === id) {
-                        return {
-                            ...category,
-                            status: res.updatedCategory.status
-                        }
-                    }
-                    return category
-                })
-            })
+            const res = await toggleCategoryStatus({ id }).unwrap();
+
             toast.success(res.msg);
         } catch (error) {
             toast.error("Failed to update category");
@@ -89,38 +79,38 @@ const Page = () => {
                 setError(validationError)
                 return;
             }
-            const response = await categoryService.addCategory(categoryName, description);
-            setCategory((prev) => [...prev, response.newCategory])
+            const response = await addCategory({ categoryName, description }).unwrap();
 
             toast.success(response.msg);
             setCategoryName('');
             setDescription('');
             setShowModal(false);
             setError({})
-        } catch (error) {
-            console.log(error);
-            toast.error("Failed to submit category");
+        } catch (error: unknown) {
+            const err = error as { status?: number; data?: { msg?: string } };
+            const errorMsg = err?.data?.msg || "Failed to submit category";
+            toast.error(errorMsg);
+            console.log("Submit new category error", error);
         }
     }
 
     // =====================> Handle Category Delete <===================== //
     const handleDelete = async (id: string) => {
         try {
-            const res = await categoryService.deleteCategory(id);
+            const res = await deleteCategory({ id }).unwrap();
             toast.success(res.msg);
-            setCategory(prev => {
-                const updatedData = prev.filter(cat => cat._id !== id)
-                const newTotalPages = Math.ceil(updatedData.length / recordsPerPage)
 
-                if (currentPage > newTotalPages) {
-                    setCurrentPage(prevPage => Math.max(1, prevPage - 1))
-                }
-                return updatedData
-            })
+            const newTotalPages = Math.ceil((filteredCategory.length - 1) / recordsPerPage)
 
-        } catch (error) {
-            toast.error("Failed to delete category");
-            console.error(error);
+            if (currentPage > newTotalPages) {
+                setCurrentPage(prevPage => Math.max(1, prevPage - 1))
+            }
+
+        } catch (error: unknown) {
+            const err = error as { status?: number; data?: { msg?: string } }
+            const errorMsg = err?.data?.msg || "Failed to delete category";
+            toast.error(errorMsg);
+            console.error("Delete category error:", error);
         }
     }
 
@@ -191,7 +181,6 @@ const Page = () => {
                                     handleDelete={handleDelete}
                                     setCategoryName={setCategoryName}
                                     setDescription={setDescription}
-                                    setCategory={setCategory}
                                     error={error}
                                     setError={setError}
                                 />
