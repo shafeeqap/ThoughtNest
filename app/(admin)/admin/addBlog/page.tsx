@@ -9,12 +9,15 @@ import { sessionService } from '@/services/sessionService';
 import Image from 'next/image';
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
-import Cropper, { ReactCropperElement } from "react-cropper";
+import { ReactCropperElement } from "react-cropper";
 import "cropperjs/dist/cropper.css";
+import { ImageCropModal } from '@/Components/Modal';
+
 
 const Page = () => {
   const [image, setImage] = useState<string>("");
   const [croppedImage, setCroppedImage] = useState<File | null>(null);
+  const [showCropModal, setShowCropModal] = useState(false);
   const cropperRef = useRef<ReactCropperElement>(null);
 
   const [data, setData] = useState({
@@ -50,7 +53,6 @@ const Page = () => {
 
   console.log(authStatus, 'Auth add blog...');
 
-
   const onChangHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setData((prevData) => {
@@ -68,6 +70,7 @@ const Page = () => {
       reader.onload = () => {
         if (reader.result) {
           setImage(reader.result.toString());
+          setShowCropModal(true);
         }
       }
       reader.readAsDataURL(file);
@@ -77,13 +80,16 @@ const Page = () => {
   // Get cropped result
   const handleCrop = () => {
     const cropper = cropperRef.current?.cropper;
-    console.log("Cropper ref:", cropper);
 
     if (cropper) {
       cropper.getCroppedCanvas().toBlob((blob) => {
         if (blob) {
           const file = new File([blob], "cropped.jpg", { type: "image/jpg" });
           setCroppedImage(file);
+
+          // update preview image
+          const previewUrl = URL.createObjectURL(file);
+          setImage(previewUrl)
         }
       }, "image/jpeg");
     }
@@ -160,35 +166,6 @@ const Page = () => {
           hidden
         />
 
-        {/* Cropper preview */}
-        {image && (
-          <div className='mt-5'>
-            <Cropper
-              ref={cropperRef}
-              src={image}
-              style={{ height: 400, width: "100%" }}
-              aspectRatio={16 / 9}
-              guides={true}
-              viewMode={1}
-            />
-            <button
-              type='button'
-              onClick={handleCrop}
-              className="mt-3 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
-            >
-              Crop Image
-            </button>
-          </div>
-        )}
-
-        {/* Show cropped preview */}
-        {croppedImage && (
-          <div className='mt-5'>
-            <p>Preview Cropped Image:</p>
-            <Image src={URL.createObjectURL(croppedImage)} alt='Cropped Preview' width={200} height={120} />
-          </div>
-        )}
-
         <p className='text-xl mt-4'>Blog Title</p>
         <input
           onChange={onChangHandler}
@@ -228,6 +205,19 @@ const Page = () => {
           Add
         </button>
       </form>
+
+      {showCropModal && (
+        <ImageCropModal
+          isOpen={showCropModal}
+          onClose={() => setShowCropModal(false)}
+          image={image}
+          buttonText='Save'
+          croppedImage={croppedImage}
+          handleCrop={handleCrop}
+          cropperRef={cropperRef}
+          title='Crope Image'
+        />
+      )}
     </>
   )
 }

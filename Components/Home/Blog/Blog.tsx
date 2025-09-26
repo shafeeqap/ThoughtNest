@@ -2,19 +2,19 @@
 
 import React from 'react'
 import { FaArrowRightLong } from 'react-icons/fa6'
-import { BlogItemType, Category } from '@/types/blog'
+import { BlogItemType } from '@/types/blog'
 import BlogItem from './BlogItem'
 import { useRouter } from 'next/navigation';
+import { CategoryType } from '@/types/category';
 
 interface PropType {
     filteredBlogs: BlogItemType[]
     isLoading: boolean;
-    categories: Category[]
+    categories: CategoryType[]
 }
 
 const Blog: React.FC<PropType> = ({ filteredBlogs, categories }) => {
     const router = useRouter();
-
 
     const handleViewAllBlogs = (category: string) => {
         router.push(`/blogs/view-all-blogs/${category}`)
@@ -24,17 +24,17 @@ const Blog: React.FC<PropType> = ({ filteredBlogs, categories }) => {
         <>
             <div className='flex justify-center items-center bg-gray-100'>
                 <div className='max-w-full px-5 md:max-w-[95%] py-5'>
-                    {categories.filter((category) => category !== 'All')
+                    {categories.filter((category) => category.categoryName !== 'All')
                         .map((category, index) => {
-                            const blogsForCategory = filteredBlogs.filter((blog) => blog.category === category)
+                            const blogsForCategory = filteredBlogs.filter((blog) => blog.category.categoryName === category.categoryName)
 
                             if (blogsForCategory.length === 0) return null;
 
                             return (
                                 <div key={index} className='border-t border-gray-400 mt-10'>
                                     <div className='flex justify-between py-16'>
-                                        <h1 className='text-lg sm:text-4xl font-bold tracking-widest uppercase'>{category}</h1>
-                                        <div onClick={() => handleViewAllBlogs(category)}
+                                        <h1 className='text-lg sm:text-4xl font-bold tracking-widest uppercase'>{category.categoryName}</h1>
+                                        <div onClick={() => handleViewAllBlogs(category.categoryName)}
                                             className='flex items-center gap-2 hover:text-blue-500 cursor-pointer mb-10'
                                         >
                                             <p className='border-b'>View All</p>

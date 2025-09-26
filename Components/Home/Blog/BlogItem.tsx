@@ -19,7 +19,7 @@ const BlogItem: React.FC<BlogItemType> = ({ title, description, category, image,
                 <Image src={image} alt={title} width={400} height={400} className='h-72 object-cover' />
             </Link>
 
-            <p className='ml-5 mt-5 px-3 py-1 inline-block bg-black text-white text-sm uppercase'>{category}</p>
+            <p className='ml-5 mt-5 px-3 py-1 inline-block bg-black text-white text-sm uppercase'>{category.categoryName}</p>
             <div className="p-5">
                 <h5 className='mb-2 text-lg font-medium tracking-tight text-gray-700'>{title}</h5>
                 <div className='mb-3 text-sm tracking-tight text-gray-500 line-clamp-3'

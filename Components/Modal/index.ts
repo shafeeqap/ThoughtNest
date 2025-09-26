@@ -4,3 +4,4 @@ export { default as AddModal } from "./AddModal";
 export { default as EditModal } from "./EditModal";
 export { default as UpdateStatusModal } from "./UpdateStatusModal";
 export { default as PreviewModal } from "./PreviewModal";
+export { default as ImageCropModal } from "./ImageCropModal";

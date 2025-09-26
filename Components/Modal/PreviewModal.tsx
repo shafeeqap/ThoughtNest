@@ -38,7 +38,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
 
     return (
         <BaseModal isOpen={isOpen} onClose={onClose} >
-            <div className='w-auto md:w-[550px] lg:w-auto max-w-[1200px] max-h-[580px] overflow-auto'>
+            <div className='w-auto md:w-[550px] lg:w-auto max-w-[1200px] max-h-[500px] overflow-auto'>
                 <div className='bg-gray-300 py-5 px-5 md:px-12 lg:px-28 '>
                     {/* Blog Heading */}
                     <div className='flex flex-col items-center my-16'>
