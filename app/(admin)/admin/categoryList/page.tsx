@@ -28,20 +28,19 @@ const Page = () => {
     const pagesToShow = 5
 
     const { data: categories, isError, isLoading } = useFetchCategoryQuery();
+    
     const [addCategory] = useAddCategoryMutation();
     const [deleteCategory] = useDeleteCategoryMutation();
     const [toggleCategoryStatus] = useToggleCategoryStatusMutation()
 
-    const allCategory = useMemo(() => categories?.category ?? [], [categories]);
-    console.log(allCategory, 'All Category...');
-
+    const allCategory = useMemo(() => categories?.categories ?? [], [categories]);
 
     useEffect(() => {
         setCurrentPage(1);
     }, [searchTerm])
 
     const filteredCategory = useMemo(() => {
-        return (allCategory || []).filter((item) => {
+        return allCategory.filter((item) => {
 
             return `${item.categoryName} ${item.description} ${item.status}`
                 .toLowerCase()
@@ -150,6 +149,9 @@ const Page = () => {
                             </th>
                             <th scope='col' className='px-6 py-3'>
                                 Update
+                            </th>
+                            <th scope='col' className='px-6 py-3'>
+                                No Blogs
                             </th>
                             <th scope='col' className='px-6 py-3'>
                                 Action

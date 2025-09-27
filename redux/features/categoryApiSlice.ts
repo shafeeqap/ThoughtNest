@@ -4,7 +4,7 @@ import { apiSlice } from "../apiSlice";
 export const categoryApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     fetchCategory: builder.query<
-      { msg: string; category: CategoryType[] },
+      { msg: string; categories: CategoryType[]; },
       void
     >({
       query: () => "/category",

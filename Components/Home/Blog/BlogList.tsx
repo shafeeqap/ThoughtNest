@@ -1,19 +1,24 @@
 'use client';
 
-import React, {  useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { BlogItemType } from '@/types/blog'
 import Blog from './Blog'
 import { CategoryType } from '@/types/category'
 import { useFetchCategoryQuery } from '@/redux/features/categoryApiSlice'
 import { useFetchAllBlogQuery } from '@/redux/features/blogApiSlice'
-import { usePathname } from 'next/navigation';
+
 
 const BlogList: React.FC = () => {
     const { data: categoryData, isError: catError } = useFetchCategoryQuery();
     const { data: blogsData, isError: blogError, isLoading } = useFetchAllBlogQuery();
-    const pathname = usePathname();
+
+    const activeCategories = categoryData?.categories.filter((cat) => cat.status === 'active');
+    console.log(activeCategories, 'Active Categories...');
 
     const blogs: BlogItemType[] = blogsData?.blogs ?? [];
+    console.log(blogs.filter((blog) => blog.status === 'approved'), 'Blogs...');
+
+
 
     const [categoryMenu, setCategoryMenu] = useState<string>("All");
 
@@ -25,14 +30,10 @@ const BlogList: React.FC = () => {
             status: "active",
             date: Date.now(),
         }
-        return [allCategory, ...(categoryData?.category ?? [])]
+        return [allCategory, ...(categoryData?.categories ?? [])]
     }, [categoryData]);
 
-
     const filteredBlogs = categoryMenu === "All" ? blogs : blogs.filter((item) => item.category.categoryName === categoryMenu);
-    
-    console.log(categoryMenu, 'Category Menu...');
-    
 
     return (
         <>

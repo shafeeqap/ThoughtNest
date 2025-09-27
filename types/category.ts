@@ -4,4 +4,5 @@ export interface CategoryType {
   description: string;
   status: string;
   date: number;
+  blogCount?: number;
 }

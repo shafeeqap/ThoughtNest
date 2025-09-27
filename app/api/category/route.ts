@@ -36,9 +36,43 @@ export async function POST(req: Request) {
 export async function GET() {
   try {
     await connectDB();
-    const category = await categoryModel.find();
+    const categories = await categoryModel.aggregate([
+      {
+        $lookup: {
+          from: "blogmodels",
+          localField: "_id",
+          foreignField: "category",
+          as: "blogs",
+        },
+      },
+      {
+        $addFields: {
+          blogCount: { $size: "$blogs" },
+        },
+      },
+      {
+        $project: { blogs: 0 },
+      },
+    ]);
 
-    return NextResponse.json({ category }, { status: 200 });
+
+    // const categoryData = await Promise.all(
+    //   categories.map(async (cat) => {
+    //     const countBlogs = await BlogModel.countDocuments({
+    //       category: cat._id,
+    //     });
+
+    //     return {
+    //       _id: cat._id,
+    //       categoryName: cat.categoryName,
+    //       description: cat.description,
+    //       status: cat.status,
+    //       blogCount: countBlogs,
+    //     };
+    //   })
+    // );
+
+    return NextResponse.json({ categories }, { status: 200 });
   } catch (error) {
     console.error("POST /api/category error:", error);
     return NextResponse.json(

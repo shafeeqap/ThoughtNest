@@ -10,7 +10,6 @@ import Image from 'next/image';
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
 import { ReactCropperElement } from "react-cropper";
-import "cropperjs/dist/cropper.css";
 import { ImageCropModal } from '@/Components/Modal';
 
 
@@ -32,7 +31,7 @@ const Page = () => {
   const { data: categories, isError } = useFetchCategoryQuery();
   const [addBlog] = useAddBlogMutation();
 
-  const allCategory = useMemo(() => categories?.category ?? [], [categories])
+  const allCategory = useMemo(() => categories?.categories ?? [], [categories])
 
 
   useEffect(() => {
@@ -62,6 +61,7 @@ const Page = () => {
     })
   }
 
+  
   // Handle file input
   const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {

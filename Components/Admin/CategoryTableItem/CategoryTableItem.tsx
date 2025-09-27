@@ -27,6 +27,7 @@ const CategoryTableItem: React.FC<IProps> = ({
     categoryName,
     description,
     status,
+    blogCount,
     handleCategoryAction,
     handleDelete,
     setCategoryName,
@@ -146,6 +147,8 @@ const CategoryTableItem: React.FC<IProps> = ({
                         />
                     </button>
                 </td>
+
+                <td className='px-6 py-4 text-[18px] bg-gray-200 text-center'>{blogCount}</td>
 
                 {/* Action category */}
                 <td className='px-6 py-4 sm:flex justify-around items-center'>

@@ -54,7 +54,7 @@ const BlogTableItem: React.FC<IProps> = ({
     const { data: categories, isError, isLoading } = useFetchCategoryQuery();
     const [editBlog] = useEditBlogMutation();
 
-    const allCategory = useMemo(() => categories?.category ?? [], [categories])
+    const allCategory = useMemo(() => categories?.categories ?? [], [categories])
 
     const formattedDate = formatDate(createdAt);
     const truncatedText = truncateText(title);
