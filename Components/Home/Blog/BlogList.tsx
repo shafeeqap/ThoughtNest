@@ -9,18 +9,16 @@ import { useFetchAllBlogQuery } from '@/redux/features/blogApiSlice'
 
 
 const BlogList: React.FC = () => {
-    const { data: categoryData, isError: catError } = useFetchCategoryQuery();
-    const { data: blogsData, isError: blogError, isLoading } = useFetchAllBlogQuery();
+    const [categoryMenu, setCategoryMenu] = useState<string>("All");
 
-    const activeCategories = categoryData?.categories.filter((cat) => cat.status === 'active');
-    console.log(activeCategories, 'Active Categories...');
+    const { data: categoryData } = useFetchCategoryQuery();
+    const { data: blogsData, isError, error, isLoading } = useFetchAllBlogQuery();
 
     const blogs: BlogItemType[] = blogsData?.blogs ?? [];
-    console.log(blogs.filter((blog) => blog.status === 'approved'), 'Blogs...');
+    const categories: CategoryType[] = categoryData?.categories ?? [];
 
-
-
-    const [categoryMenu, setCategoryMenu] = useState<string>("All");
+    const activeCategories = categories.filter((cat) => cat.status === 'active');
+    const approvedBlogs = blogs.filter((blog) => blog.status === 'approved');
 
     const allCategories = useMemo<CategoryType[]>(() => {
         const allCategory: CategoryType = {
@@ -30,10 +28,17 @@ const BlogList: React.FC = () => {
             status: "active",
             date: Date.now(),
         }
-        return [allCategory, ...(categoryData?.categories ?? [])]
-    }, [categoryData]);
+        return [allCategory, ...activeCategories]
+    }, [activeCategories]);
 
-    const filteredBlogs = categoryMenu === "All" ? blogs : blogs.filter((item) => item.category.categoryName === categoryMenu);
+    const filteredBlogs = categoryMenu === "All" ? approvedBlogs : approvedBlogs.filter((item) => item.category.categoryName === categoryMenu);
+
+    if (isError) {
+        const errMsg =
+            (error as { data?: { message?: string } })?.data?.message ||
+            (error as { status?: number })?.status?.toString();
+        return <p>Error fetching blogs: {errMsg}</p>;
+    }
 
     return (
         <>

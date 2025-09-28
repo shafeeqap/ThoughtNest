@@ -1,7 +1,8 @@
 'use client';
 
-import React, { Dispatch, FormEvent, ReactNode, SetStateAction, useState } from 'react'
+import React, { Dispatch, FormEvent, ReactNode, SetStateAction } from 'react'
 import BaseModal from './BaseModal'
+import { BlogStatus } from '@/types/blog';
 
 interface UpdateStatusModalProps {
     isOpen: boolean;
@@ -13,7 +14,9 @@ interface UpdateStatusModalProps {
     buttonText?: string;
     icon?: ReactNode;
     id: string;
-    updatedStatus: string;
+    updatedStatus: BlogStatus;
+    setUpdatedStatus: Dispatch<SetStateAction<BlogStatus>>
+    isChanged: boolean;
 }
 
 const UpdateStatusModal: React.FC<UpdateStatusModalProps> = ({
@@ -25,12 +28,14 @@ const UpdateStatusModal: React.FC<UpdateStatusModalProps> = ({
     buttonText = 'save changes',
     setShowUpdateModal,
     updatedStatus,
+    setUpdatedStatus,
+    isChanged,
 }) => {
-    const [status, setStatus] = useState(updatedStatus);
+    
 
     const onFormSubmit = (e: FormEvent) => {
         e.preventDefault();
-        handleUpdateStatus(id, "status", status)
+        handleUpdateStatus(id, "status", updatedStatus)
         setShowUpdateModal(false);
     }
 
@@ -45,10 +50,10 @@ const UpdateStatusModal: React.FC<UpdateStatusModalProps> = ({
                         <div className='flex flex-col py-10'>
                             <label htmlFor="status" className='relative -top-2'>Select status</label>
                             <select
-                                onChange={(e) => setStatus(e.target.value)}
+                                onChange={(e) => setUpdatedStatus(e.target.value as BlogStatus)}
                                 name="status"
                                 id='status'
-                                value={status}
+                                value={updatedStatus}
                                 className='w-40 mt-4 px-4 py-2 border text-gray-500 absolute'
                             >
                                 <option value="pending">Pending</option>
@@ -67,7 +72,10 @@ const UpdateStatusModal: React.FC<UpdateStatusModalProps> = ({
                             </button>
                             <button
                                 type='submit'
-                                className='bg-blue-500 text-white px-5 py-2  rounded cursor-pointer uppercase hover:bg-blue-600'
+                                disabled={!isChanged}
+                                className={`text-xs sm:text-base text-white px-7 py-2 rounded uppercase 
+                                ${isChanged ? "bg-red-500 hover:bg-red-600 cursor-pointer"
+                                        : "bg-gray-400 cursor-not-allowed"} `}
                             >
                                 {buttonText}
                             </button>

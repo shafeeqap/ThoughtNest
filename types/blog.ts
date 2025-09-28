@@ -7,6 +7,7 @@ interface Category {
   updatedAt?: string;
 }
 
+export type BlogStatus = "pending" | "approved" | "rejected";
 export interface BlogItemType {
   _id: string;
   userId: string;
@@ -16,7 +17,7 @@ export interface BlogItemType {
   description: string;
   author: string;
   authorImg: string;
-  status: "pending" | "approved" | "rejected";
+  status: BlogStatus;
   action: "active" | "blocked";
   createdAt: string;
   updatedAt?: string;

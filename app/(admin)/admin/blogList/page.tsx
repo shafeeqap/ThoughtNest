@@ -17,7 +17,7 @@ import {
 } from '@/redux/features/blogApiSlice';
 
 const Page = () => {
-  const { data, isError, isLoading } = useFetchAllBlogQuery();
+  const { data, isError, error, isLoading } = useFetchAllBlogQuery();
   const [updateBlog] = useUpdateBlogMutation();
   const [deleteBlog] = useDeleteBlogMutation();
 
@@ -55,8 +55,6 @@ const Page = () => {
   }, [filteredBlogs, currentPage])
 
   const numberOfPages = Math.ceil(filteredBlogs.length / recordsPerPage);
-
-  if (isError) return <p>Error fetching blogs</p>;
 
   // =====================> Handle Blog Action (active/blocked) <===================== //
   const handleBlogAction = async (id: string, type: "action", value: string) => {
@@ -101,6 +99,12 @@ const Page = () => {
 
   }
 
+  if (isError) {
+    const errMsg =
+      (error as { data?: { message?: string } })?.data?.message ||
+      (error as { status?: number })?.status?.toString();
+    return <p>Error fetching blogs: {errMsg}</p>;
+  }
 
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>

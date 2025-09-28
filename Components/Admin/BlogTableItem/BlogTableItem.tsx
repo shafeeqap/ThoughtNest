@@ -5,7 +5,7 @@ import { ConfirmModal, PreviewModal, UpdateStatusModal } from '@/Components/Moda
 import { assets } from '@/data/assets'
 import { formatDate } from '@/lib/utils/helpers/formatDate';
 import { truncateText } from '@/lib/utils/helpers/truncateText';
-import { BlogItemType } from '@/types/blog';
+import { BlogItemType, BlogStatus } from '@/types/blog';
 import Image from 'next/image'
 import { IoCloseCircleOutline, IoTrashBinOutline, IoWarningOutline, IoEyeOutline } from 'react-icons/io5';
 import { CiEdit } from "react-icons/ci";
@@ -50,8 +50,9 @@ const BlogTableItem: React.FC<IProps> = ({
     const [editCategoryName, setEditCategoryName] = useState(category._id);
     const [editDescription, setEditDescription] = useState(description);
     const [editImage, setEditImage] = useState<File | null | string>(image);
+    const [updatedStatus, setUpdatedStatus] = useState<BlogStatus>(status);
 
-    const { data: categories, isError, isLoading } = useFetchCategoryQuery();
+    const { data: categories } = useFetchCategoryQuery();
     const [editBlog] = useEditBlogMutation();
 
     const allCategory = useMemo(() => categories?.categories ?? [], [categories])
@@ -60,6 +61,7 @@ const BlogTableItem: React.FC<IProps> = ({
     const truncatedText = truncateText(title);
 
     const isChanged = editTitle !== title || editCategoryName !== category._id || editDescription !== description || editImage !== image;
+    const isStatusChanged = status !== updatedStatus;
 
 
     // ====================================================================================== //
@@ -236,7 +238,9 @@ const BlogTableItem: React.FC<IProps> = ({
                     onClose={() => setShowUpdateModal(false)}
                     handleUpdateStatus={handleUpdateStatus}
                     setShowUpdateModal={setShowUpdateModal}
-                    updatedStatus={status}
+                    setUpdatedStatus={setUpdatedStatus}
+                    updatedStatus={updatedStatus}
+                    isChanged={isStatusChanged}
                 />
             )}
 
