@@ -95,7 +95,7 @@ const BlogTableItem: React.FC<IProps> = ({
         try {
             const res = await bulkUpdateBlogStatus({ ids, status }).unwrap();
             toast.success(res.msg)
-            setSelectedIds([]); 
+            setSelectedIds([]);
         } catch (err) {
             console.error("Bulk update failed", err);
         }
@@ -180,7 +180,7 @@ const BlogTableItem: React.FC<IProps> = ({
                     {status && (
                         <button
                             onClick={() => setShowUpdateModal(true)}
-                            className={`px-1.5 py-1.5 cursor-pointer uppercase flex justify-around gap-0.5 min-w-[100px] ${blogStatusConfig[status].className}`}
+                            className={`px-1.5 py-1.5 uppercase flex justify-around gap-0.5 min-w-[100px] ${blogStatusConfig[status].className}`}
                         >
                             {blogStatusConfig[status].icon}
                             <p>{status}</p>

@@ -17,30 +17,32 @@ import {
 } from '@/redux/features/blogApiSlice';
 
 const Page = () => {
-  const { data, isError, error, isLoading } = useFetchAllBlogQuery();
-  const [updateBlog] = useUpdateBlogMutation();
-  const [deleteBlog] = useDeleteBlogMutation();
-
-  const allBlogs = useMemo(() => data?.blogs ?? [], [data]);
-
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  console.log(selectedIds, 'Selected...');
-
-
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const recordsPerPage = 5;
   const pagesToShow = 5;
 
-  const allChecked = allBlogs.length > 0 && selectedIds.length === allBlogs.length;
+  const { data, isError, error, isLoading } = useFetchAllBlogQuery();
+  const [updateBlog] = useUpdateBlogMutation();
+  const [deleteBlog] = useDeleteBlogMutation();
+  
+  const allBlogs = useMemo(() => data?.blogs ?? [], [data]);
+
+  const allChecked = allBlogs.length > 0 && selectedIds.length === allBlogs.filter(item => item.status.includes(searchTerm)).length;
   console.log(allChecked, 'All checked...');
+  console.log(selectedIds, 'Selected Ids...');
+  console.log(searchTerm, 'Search Term...');
+  
+  
+  
 
   // select all checkbox
   const handleSelectAll = () => {
     if (allChecked) {
       setSelectedIds([]);
     } else {
-      setSelectedIds(allBlogs.map(blog => blog._id));
+      setSelectedIds(allBlogs.filter(item => item.status.includes(searchTerm)).map(blog => blog._id));
     }
   };
 

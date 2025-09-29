@@ -8,9 +8,6 @@ export async function PATCH(req: Request) {
 
     const { ids, status } = await req.json();
 
-    console.log(ids, "IDs...");
-    console.log(status, "Status...");
-
     if (!ids || ids.length === 0) {
       return NextResponse.json(
         { msg: "No IDs provided" },
