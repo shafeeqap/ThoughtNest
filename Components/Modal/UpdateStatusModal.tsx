@@ -17,6 +17,8 @@ interface UpdateStatusModalProps {
     updatedStatus: BlogStatus;
     setUpdatedStatus: Dispatch<SetStateAction<BlogStatus>>
     isChanged: boolean;
+    handleBulkUpdate: (ids: string[], status: BlogStatus) => void;
+    selectedIds: string[];
 }
 
 const UpdateStatusModal: React.FC<UpdateStatusModalProps> = ({
@@ -30,12 +32,20 @@ const UpdateStatusModal: React.FC<UpdateStatusModalProps> = ({
     updatedStatus,
     setUpdatedStatus,
     isChanged,
+    handleBulkUpdate,
+    selectedIds,
 }) => {
-    
+
 
     const onFormSubmit = (e: FormEvent) => {
         e.preventDefault();
-        handleUpdateStatus(id, "status", updatedStatus)
+
+        if (selectedIds.length > 0) {
+            handleBulkUpdate(selectedIds, updatedStatus);
+        } else if (id) {
+            handleUpdateStatus(id, "status", updatedStatus)
+        }
+
         setShowUpdateModal(false);
     }
 

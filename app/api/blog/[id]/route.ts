@@ -66,6 +66,7 @@ export async function DELETE(
       { status: 200 }
     );
   } catch (error) {
+    console.error("DELETE /api/blog[id] error:", error);
     return NextResponse.json(
       { msg: "Error delete blog by ID", error },
       { status: 500 }
@@ -104,7 +105,7 @@ export async function PATCH(
       { status: 200 }
     );
   } catch (error) {
-    console.log(error);
+    console.error("PATCH /api/blog/[id] error:", error);
     return NextResponse.json(
       { msg: "Error blog updating by ID", error },
       { status: 500 }
@@ -192,7 +193,7 @@ export async function PUT(
       { status: 200 }
     );
   } catch (error) {
-    console.log(error);
+    console.error("PUT /api/blog/[id] error:", error);
     return NextResponse.json(
       { msg: "Error blog editing by ID", error },
       { status: 500 }

@@ -6,19 +6,23 @@ import Blog from './Blog'
 import { CategoryType } from '@/types/category'
 import { useFetchCategoryQuery } from '@/redux/features/categoryApiSlice'
 import { useFetchAllBlogQuery } from '@/redux/features/blogApiSlice'
+import Spinner from '@/Components/Spinner/Spinner';
 
 
 const BlogList: React.FC = () => {
     const [categoryMenu, setCategoryMenu] = useState<string>("All");
 
-    const { data: categoryData } = useFetchCategoryQuery();
+    const { data: categoryData, isLoading: catLoading } = useFetchCategoryQuery();
     const { data: blogsData, isError, error, isLoading } = useFetchAllBlogQuery();
 
     const blogs: BlogItemType[] = blogsData?.blogs ?? [];
     const categories: CategoryType[] = categoryData?.categories ?? [];
 
     const activeCategories = categories.filter((cat) => cat.status === 'active');
-    const approvedBlogs = blogs.filter((blog) => blog.status === 'approved');
+    const approvedBlogs = blogs.filter((blog) => {
+        const activeBlogs = blog.status === 'approved' && blog.action !== "blocked";
+        return activeBlogs;
+    });
 
     const allCategories = useMemo<CategoryType[]>(() => {
         const allCategory: CategoryType = {
@@ -44,15 +48,20 @@ const BlogList: React.FC = () => {
         <>
             {/* Category Button */}
             <div className='flex justify-center gap-2 sm:gap-6 my-10'>
-                {allCategories.map((category, index) => {
-                    return <button
-                        key={index}
-                        onClick={() => setCategoryMenu(category.categoryName)}
-                        className={`py-1 px-2 cursor-pointer border border-solid ${categoryMenu === category.categoryName ? "bg-black text-white border-black" : "border-transparent hover:border-gray-500"}`}
-                    >
-                        {category.categoryName}
-                    </button>
-                })}
+                {catLoading ? (
+                    <Spinner size='small' />
+                ) :
+
+                    allCategories.map((category, index) => {
+                        return <button
+                            key={index}
+                            onClick={() => setCategoryMenu(category.categoryName)}
+                            className={`py-1 px-2 cursor-pointer border border-solid ${categoryMenu === category.categoryName ? "bg-black text-white border-black" : "border-transparent hover:border-gray-500"}`}
+                        >
+                            {category.categoryName}
+                        </button>
+                    })
+                }
             </div>
 
             {/* Banner Section */}

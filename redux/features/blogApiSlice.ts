@@ -51,6 +51,18 @@ export const blogApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Blog"],
     }),
+
+    bulkUpdateBlog: builder.mutation<
+      { msg: string; updatedBlog: BlogItemType[] },
+      { ids: string[]; status: string }
+    >({
+      query: ({ ids, status }) => ({
+        url: `/blog/bulk-update`,
+        method: "PATCH",
+        body: { ids, status },
+      }),
+      invalidatesTags: ["Blog"],
+    }),
   }),
   overrideExisting: false,
 });
@@ -61,4 +73,5 @@ export const {
   useUpdateBlogMutation,
   useDeleteBlogMutation,
   useEditBlogMutation,
+  useBulkUpdateBlogMutation,
 } = blogApiSlice;

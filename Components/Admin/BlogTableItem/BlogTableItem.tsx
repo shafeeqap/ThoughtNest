@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react'
+import React, { Dispatch, SetStateAction, useMemo, useState } from 'react'
 import { ConfirmModal, PreviewModal, UpdateStatusModal } from '@/Components/Modal';
 import { assets } from '@/data/assets'
 import { formatDate } from '@/lib/utils/helpers/formatDate';
@@ -14,7 +14,7 @@ import { blogActionConfig } from '@/lib/config/ui/blogActionConfig';
 import { validateBlog } from '@/lib/validators/validateBlog';
 import { toast } from 'react-toastify';
 import { EditBlogModal } from '@/Components/Modal/ModalItem';
-import { useEditBlogMutation } from '@/redux/features/blogApiSlice';
+import { useBulkUpdateBlogMutation, useEditBlogMutation } from '@/redux/features/blogApiSlice';
 import { useFetchCategoryQuery } from '@/redux/features/categoryApiSlice';
 
 
@@ -23,6 +23,9 @@ interface IProps extends BlogItemType {
     handleUpdateStatus: (id: string, type: "status", value: string) => Promise<void>;
     handleDelete: (id: string) => Promise<void>;
     counter: number;
+    selectedIds: string[];
+    setSelectedIds: Dispatch<SetStateAction<string[]>>;
+    handleSelectOne: (id: string) => void;
 }
 
 const BlogTableItem: React.FC<IProps> = ({
@@ -40,6 +43,9 @@ const BlogTableItem: React.FC<IProps> = ({
     handleUpdateStatus,
     status,
     action,
+    selectedIds,
+    setSelectedIds,
+    handleSelectOne,
 }) => {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [shwoEditModal, setShowEditModal] = useState<boolean>(false);
@@ -52,8 +58,10 @@ const BlogTableItem: React.FC<IProps> = ({
     const [editImage, setEditImage] = useState<File | null | string>(image);
     const [updatedStatus, setUpdatedStatus] = useState<BlogStatus>(status);
 
+
     const { data: categories } = useFetchCategoryQuery();
     const [editBlog] = useEditBlogMutation();
+    const [bulkUpdateBlogStatus] = useBulkUpdateBlogMutation();
 
     const allCategory = useMemo(() => categories?.categories ?? [], [categories])
 
@@ -80,6 +88,17 @@ const BlogTableItem: React.FC<IProps> = ({
         }
         setShowModal(false);
         setActionType(null);
+    };
+
+    // handle bulk update
+    const handleBulkUpdate = async (ids: string[], status: BlogStatus) => {
+        try {
+            const res = await bulkUpdateBlogStatus({ ids, status }).unwrap();
+            toast.success(res.msg)
+            setSelectedIds([]); 
+        } catch (err) {
+            console.error("Bulk update failed", err);
+        }
     }
 
 
@@ -169,6 +188,17 @@ const BlogTableItem: React.FC<IProps> = ({
                     )}
                 </td>
 
+                <td className='px-3 py-4'>
+                    <input
+                        type="checkbox"
+                        name=""
+                        id=""
+                        checked={selectedIds.includes(_id)}
+                        onChange={() => handleSelectOne(_id)}
+                        className='w-4 h-4 cursor-pointer'
+                    />
+                </td>
+
                 {/* Edit Blog */}
                 <td className='px-3 py-4'>
                     <CiEdit
@@ -241,6 +271,8 @@ const BlogTableItem: React.FC<IProps> = ({
                     setUpdatedStatus={setUpdatedStatus}
                     updatedStatus={updatedStatus}
                     isChanged={isStatusChanged}
+                    handleBulkUpdate={handleBulkUpdate}
+                    selectedIds={selectedIds}
                 />
             )}
 
@@ -276,6 +308,8 @@ const BlogTableItem: React.FC<IProps> = ({
                     title={title}
                     description={description}
                     createdAt={createdAt}
+                    status={status}
+                    action={action}
                 />
             )}
         </>

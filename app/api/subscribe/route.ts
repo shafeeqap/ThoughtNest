@@ -38,7 +38,7 @@ export async function GET(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("GETT /api/subscribe error:", error);
+    console.error("GET /api/subscribe error:", error);
     return NextResponse.json(
       { msg: "Error fetching Subscription" },
       { status: 500 }

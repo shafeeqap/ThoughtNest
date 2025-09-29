@@ -32,7 +32,7 @@ export async function PATCH(
       { status: 200 }
     );
   } catch (error) {
-    console.log(error);
+    console.error("PATCH /api/category/[id] error:", error);
     return NextResponse.json(
       { msg: "Error category action by ID", error },
       { status: 500 }
@@ -75,6 +75,7 @@ export async function DELETE(
       { status: 200 }
     );
   } catch (error) {
+    console.error("DELETE /api/category/[id] error:", error);
     return NextResponse.json(
       { msg: "Error delete category by ID", error },
       { status: 500 }
@@ -113,6 +114,7 @@ export async function PUT(
       { status: 200 }
     );
   } catch (error) {
+    console.error("PUT /api/category/[id] error:", error);
     return NextResponse.json(
       { msg: "Error update category by ID", error },
       { status: 500 }

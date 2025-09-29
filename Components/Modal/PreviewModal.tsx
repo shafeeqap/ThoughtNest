@@ -5,21 +5,25 @@ import BaseModal from './BaseModal'
 import Image from 'next/image';
 import { sanitizeHtml } from '@/lib/utils/sanitize/sanitizeHtmlClient';
 import { formatDate } from '@/lib/utils/helpers/formatDate';
+import { blogStatusConfig } from '@/lib/config/ui/blogStatusConfig';
+import { blogActionConfig } from '@/lib/config/ui/blogActionConfig';
 
 interface Category {
     categoryName: string;
-  }
+}
 
 interface PreviewModalProps {
     isOpen: boolean;
     onClose: () => void;
-    title:string;
-    author:string;
-    authorImg:string;
+    title: string;
+    author: string;
+    authorImg: string;
     category: Category;
     createdAt: string;
-    description:string;
+    description: string;
     image: string | File | null;
+    action: string;
+    status: string
 }
 
 const PreviewModal: React.FC<PreviewModalProps> = ({
@@ -32,6 +36,8 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
     createdAt,
     description,
     image,
+    action,
+    status,
 }) => {
     const safeHtml = sanitizeHtml(description);
     const formattedDate = formatDate(createdAt);
@@ -43,7 +49,11 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
                     {/* Blog Heading */}
                     <div className='flex flex-col items-center my-16'>
                         <h1 className='text-2xl sm:text-3xl font-semibold max-w-[700px] mx-auto'>{title}</h1>
-                        <p className='bg-gray-400 text-white my-2 w-fit px-5 py-.5'>{category.categoryName}</p>
+                        <div className='flex flex-col sm:flex-row sm:items-center sm:gap-5 sm:justify-center uppercase'>
+                            <p className={`px-5 py-.5 text-white ${blogActionConfig[action].className}`}>{action}</p>
+                            <p className='bg-gray-400 text-white my-2 w-fit px-5 py-.5'>{category.categoryName}</p>
+                            <p className={`px-5 py-.5 ${blogStatusConfig[status].className}`}>{status}</p>
+                        </div>
                         <p>{formattedDate}</p>
                         <Image
                             src={authorImg}

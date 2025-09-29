@@ -22,12 +22,37 @@ const Page = () => {
   const [deleteBlog] = useDeleteBlogMutation();
 
   const allBlogs = useMemo(() => data?.blogs ?? [], [data]);
-  console.log(allBlogs, 'Allblogs...');
+
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  console.log(selectedIds, 'Selected...');
+
 
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const recordsPerPage = 5;
-  const pagesToShow = 5
+  const pagesToShow = 5;
+
+  const allChecked = allBlogs.length > 0 && selectedIds.length === allBlogs.length;
+  console.log(allChecked, 'All checked...');
+
+  // select all checkbox
+  const handleSelectAll = () => {
+    if (allChecked) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(allBlogs.map(blog => blog._id));
+    }
+  };
+
+  // single row checkbox
+  const handleSelectOne = (id: string) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter((s) => s !== id));
+    } else {
+      setSelectedIds([...selectedIds, id]);
+    }
+  }
+
 
   const handleSearch = useCallback(
     debounce((value: string) => {
@@ -134,6 +159,11 @@ const Page = () => {
               <th scope='col' className='px-3 py-3'>Category</th>
               <th scope='col' className='px-6 py-3'>Image</th>
               <th scope='col' className='px-3 py-3'>Status</th>
+              <th scope='col' className='px-3 py-3'>
+                <input type="checkbox" name="" id="" checked={allChecked} onChange={handleSelectAll}
+                  className='w-4 h-4 cursor-pointer'
+                />
+              </th>
               <th scope='col' className='px-3 py-3'>Edit</th>
               <th scope='col' className='px-3 py-3'>Action</th>
               <th scope='col' className='px-3 py-3'>Details</th>
@@ -164,6 +194,9 @@ const Page = () => {
                   counter={(currentPage - 1) * recordsPerPage + index + 1}
                   handleBlogAction={handleBlogAction}
                   handleUpdateStatus={handleUpdateStatus}
+                  selectedIds={selectedIds}
+                  handleSelectOne={handleSelectOne}
+                  setSelectedIds={setSelectedIds}
                 />
               ))
             )}
