@@ -26,35 +26,8 @@ const Page = () => {
   const { data, isError, error, isLoading } = useFetchAllBlogQuery();
   const [updateBlog] = useUpdateBlogMutation();
   const [deleteBlog] = useDeleteBlogMutation();
-  
+
   const allBlogs = useMemo(() => data?.blogs ?? [], [data]);
-
-  const allChecked = allBlogs.length > 0 && selectedIds.length === allBlogs.filter(item => item.status.includes(searchTerm)).length;
-  console.log(allChecked, 'All checked...');
-  console.log(selectedIds, 'Selected Ids...');
-  console.log(searchTerm, 'Search Term...');
-  
-  
-  
-
-  // select all checkbox
-  const handleSelectAll = () => {
-    if (allChecked) {
-      setSelectedIds([]);
-    } else {
-      setSelectedIds(allBlogs.filter(item => item.status.includes(searchTerm)).map(blog => blog._id));
-    }
-  };
-
-  // single row checkbox
-  const handleSelectOne = (id: string) => {
-    if (selectedIds.includes(id)) {
-      setSelectedIds(selectedIds.filter((s) => s !== id));
-    } else {
-      setSelectedIds([...selectedIds, id]);
-    }
-  }
-
 
   const handleSearch = useCallback(
     debounce((value: string) => {
@@ -75,6 +48,40 @@ const Page = () => {
     })
 
   }, [allBlogs, searchTerm])
+
+  const isStatusSearch = filteredBlogs.map((blog) => blog.status.includes(searchTerm.toLowerCase()));
+
+  const allChecked = isStatusSearch && filteredBlogs.length > 0 && selectedIds.length === filteredBlogs.length;
+  console.log(allChecked, 'All checked...');
+  console.log(selectedIds, 'Selected Ids...');
+  console.log(searchTerm, 'Search Term...');
+  console.log(isStatusSearch, 'is status search');
+
+
+  // select all checkbox
+  const handleSelectAll = () => {
+    if (!isStatusSearch) return;
+
+    if (allChecked) {
+      setSelectedIds([]);
+    } else {
+      if (isStatusSearch) {
+        setSelectedIds(filteredBlogs.map(blog => blog._id));
+      } else {
+        setSelectedIds([]);
+      }
+    }
+  };
+
+  // single row checkbox
+  const handleSelectOne = (id: string) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter((s) => s !== id));
+    } else {
+      setSelectedIds([...selectedIds, id]);
+    }
+  }
+
 
   // Pagination
   const paginatedBlogData = useMemo(() => {
@@ -162,9 +169,15 @@ const Page = () => {
               <th scope='col' className='px-6 py-3'>Image</th>
               <th scope='col' className='px-3 py-3'>Status</th>
               <th scope='col' className='px-3 py-3'>
-                <input type="checkbox" name="" id="" checked={allChecked} onChange={handleSelectAll}
-                  className='w-4 h-4 cursor-pointer'
-                />
+                {isStatusSearch && (
+                  <input
+                    type="checkbox"
+                    checked={allChecked}
+                    onChange={handleSelectAll}
+                    className='w-4 h-4 cursor-pointer'
+                    disabled={!isStatusSearch}
+                  />
+                )}
               </th>
               <th scope='col' className='px-3 py-3'>Edit</th>
               <th scope='col' className='px-3 py-3'>Action</th>

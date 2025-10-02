@@ -2,7 +2,7 @@ import AdminLogInForm from '@/Components/Admin/Form/LoginForm';
 import React from 'react'
 import { FaSwatchbook } from 'react-icons/fa';
 
-const AdminHomepage = () => {
+const AdminLoginpage = () => {
 
   return (
     <div className="flex gap-2 h-screen">
@@ -35,4 +35,4 @@ const AdminHomepage = () => {
   )
 }
 
-export default AdminHomepage;
+export default AdminLoginpage;

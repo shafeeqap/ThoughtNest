@@ -30,8 +30,8 @@ export default function RootLayout({
       >
         <ToastContainer theme="dark" position="top-right" autoClose={3000} />
         <SessionProvider>
-          <GlobalLoader />
           <StoreProvider>
+            <GlobalLoader />
             {children}
           </StoreProvider>
         </SessionProvider>

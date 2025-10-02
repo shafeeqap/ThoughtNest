@@ -10,9 +10,6 @@ const Card: React.FC= () => {
     const { data, isLoading } = useGetDashboardDataQuery();
     const cards = dashboardCards(data);
 
-    console.log(data, 'Card data...');
-
-
     return (
         <div className={styles.mainCard}>
         {!isLoading && cards.map((card) => {

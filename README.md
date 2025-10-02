@@ -46,6 +46,6 @@ Tools & Packages Used:
 6. bcrypt :- For password-hashing.
 7. auth.js :- For helping simplify authentication and authorization with using socieal media account.
 8. jose :- Providing support for JSON Web Tokens (JWT).
-9. axios :- Handle HTTP request.
+9. RTK Query :- Handle HTTP request. simplifies API data retrieval and caching.
 10. recharts :- To help build charts in the admin dashboard.
 11. react-cropper: To use for image cropping (popular Cropper.js library)

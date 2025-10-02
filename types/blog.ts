@@ -7,7 +7,7 @@ interface Category {
   updatedAt?: string;
 }
 
-export type BlogStatus = "approved" | "rejected";
+export type BlogStatus = "pending" | "approved" | "rejected";
 export interface BlogItemType {
   _id: string;
   userId: string;
