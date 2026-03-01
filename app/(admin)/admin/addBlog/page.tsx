@@ -5,9 +5,8 @@ import { assets } from '@/data/assets';
 import { validateBlog } from '@/lib/validators/validateBlog';
 import { useAddBlogMutation } from '@/redux/features/blogApiSlice';
 import { useFetchCategoryQuery } from '@/redux/features/categoryApiSlice';
-import { sessionService } from '@/services/sessionService';
 import Image from 'next/image';
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
 import { ReactCropperElement } from "react-cropper";
 import { ImageCropModal } from '@/Components/Modal';
