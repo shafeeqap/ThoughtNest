@@ -11,6 +11,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
 import { ReactCropperElement } from "react-cropper";
 import { ImageCropModal } from '@/Components/Modal';
+import { useSession } from 'next-auth/react';
 
 
 const Page = () => {
@@ -18,39 +19,25 @@ const Page = () => {
   const [croppedImage, setCroppedImage] = useState<File | null>(null);
   const [showCropModal, setShowCropModal] = useState(false);
   const cropperRef = useRef<ReactCropperElement>(null);
+  const { data: session, status } = useSession();
 
   const [data, setData] = useState({
     title: '',
     description: '',
     category: '',
-    author: 'Alex Bennett',
+    author: session?.user.name || '',
     authorImg: '/author_img.png'
   });
-  const [authStatus, setAuthStatus] = useState({ userId: '' });
 
   const { data: categories, isError } = useFetchCategoryQuery();
   const [addBlog] = useAddBlogMutation();
 
+  console.log(session, 'Session in add blog...');
+  console.log(status, 'Session status in add blog...');
+  console.log(session?.user.name, 'Session user name in add blog...');
+
   const allCategory = useMemo(() => categories?.categories ?? [], [categories])
 
-
-  useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        const data = await sessionService.session();
-        setAuthStatus(data);
-      } catch (error) {
-        console.error('Failed to fetch session status:', error);
-      }
-    }
-
-    checkAuthStatus();
-    const interval = setInterval(checkAuthStatus, 5 * 60 * 1000);
-
-    return () => clearInterval(interval);
-  }, [])
-
-  console.log(authStatus, 'Auth add blog...');
 
   const onChangHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -129,7 +116,7 @@ const Page = () => {
           title: '',
           description: '',
           category: '',
-          author: 'Alex Bennett',
+          author: '',
           authorImg: '/author_img.png',
         });
         setImage("");
@@ -148,7 +135,7 @@ const Page = () => {
 
   return (
     <>
-      <form onSubmit={onSubmitHandler} className='ml-14 md:ml-10 py-10 pt-5 px-5 sm:pt-12 sm:pl-16 absolute w-[78%] md:w-2xl'>
+      <form onSubmit={onSubmitHandler} className='ml-10 py-10 pt-5 px-15 sm:pt-12 sm:pl-16 absolute w-full'>
         <p className='text-xl'>Upload thumbnail</p>
 
         {/* Image upload */}

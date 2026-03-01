@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import SubsTableItem from '@/Components/Admin/SubsTableItem/SubsTableItem';
-import Pagination from '@/Components/Pagination/Pagination';
+import Pagination from '@/Components/ui/Pagination/Pagination';
 import Spinner from '@/Components/Spinner/Spinner';
 import Search from '@/Components/ui/search/Search';
 import { formatDate } from '@/lib/utils/helpers/formatDate';
@@ -86,7 +86,7 @@ const Page = () => {
 
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
-      <div className='max-w-[700px] flex gap-1'>
+      <div className='flex gap-1'>
         <h1 className='hidden sm:block text-sm sm:text-2xl font-semibold w-full'>Manage Subscription</h1>
         <div className='w-full ml-1 flex justify-center items-center'>
           <Search
@@ -95,7 +95,7 @@ const Page = () => {
           />
         </div>
       </div>
-      <div className='relative max-w-[700px] overflow-x-auto mt-4 scrollbar-hide'>
+      <div className='relative  overflow-x-auto mt-4 scrollbar-hide'>
         <table className='w-full text-sm text-gray-500'>
           <thead className='text-xs text-left text-white uppercase bg-[#626a7a]'>
             <tr>
@@ -147,7 +147,7 @@ const Page = () => {
       </div>
 
       {/* Pagination */}
-      <div className='max-w-[700px]'>
+      <div className=''>
         {!isLoading && numberOfPages > 1 && (
           <Pagination
             currentPage={currentPage}

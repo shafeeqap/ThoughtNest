@@ -2,7 +2,7 @@
 
 import React, { useCallback, useMemo, useState } from 'react'
 import BlogTableItem from '@/Components/Admin/BlogTableItem/BlogTableItem';
-import Pagination from '@/Components/Pagination/Pagination';
+import Pagination from '@/Components/ui/Pagination/Pagination';
 import Spinner from '@/Components/Spinner/Spinner';
 import { toast } from 'react-toastify';
 import { debounce } from 'lodash';

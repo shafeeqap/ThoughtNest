@@ -7,9 +7,11 @@ import bcrypt from "bcrypt";
 interface UserInput {
   email: string;
   username?: string;
-  provider: string;
-  providerId: string;
+  provider: string | undefined;
+  providerId: string | undefined;
   image: string | null;
+  readonly role?: string;
+  status?: string;
 }
 
 // ===> Helper function to find/create users when the user log in with OAuth <=== //
@@ -19,8 +21,10 @@ export async function findOrCreateUser({
   provider,
   providerId,
   image,
+  role = "user",
+  status = "active",
 }: UserInput) {
-  await connectDB();
+  // await connectDB();
 
   let user = await UserModal.findOne({
     $or: [{ email }, { "providers.id": providerId }],
@@ -33,6 +37,8 @@ export async function findOrCreateUser({
       username,
       providers: [{ name: provider, id: providerId }],
       image,
+      role,
+      status,
     });
     await user.save();
   } else {

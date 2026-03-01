@@ -13,6 +13,7 @@ import { CgProfile } from "react-icons/cg";
 import { SiMicrodotblog } from "react-icons/si";
 import { BsPeopleFill } from "react-icons/bs";
 import { dashboardCardType, DashboardResponse } from "@/types/dashboard";
+import { FooterLinkType } from "@/types/footer";
 
 export const adminNavLinks: NavLinksType[] = [
   {
@@ -148,3 +149,38 @@ export function dashboardCards(
     },
   ];
 }
+
+export const footerItems: FooterLinkType[] = [
+  {
+    id: 1,
+    title: "Quick Links",
+    items: [
+      { id: 1, url: "#", label: "Home" },
+      { id: 2, url: "#", label: "Blogs" },
+      { id: 3, url: "#", label: "Privacy Policy" },
+      { id: 4, url: "#", label: "Terms of Services" },
+    ],
+  },
+  {
+    id: 2,
+    title: "Category",
+    items: [],
+  },
+  {
+    id: 3,
+    title: "Company",
+    items: [
+      { id: 1, url: "#", label: "Get in touch" },
+      { id: 1, url: "#", label: "About us" },
+    ],
+  },
+  {
+    id: 4,
+    title: "Contact Us",
+    items: [
+      { id: 1, url: "#", label: "+91 9988 123 123" },
+      { id: 1, url: "#", label: "info@thoughtnest.com" },
+      { id: 1, url: "#", label: "Kerala, India" },
+    ],
+  },
+];

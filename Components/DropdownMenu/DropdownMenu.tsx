@@ -15,12 +15,17 @@ type DropdownMenuProps = {
     email: string;
     authMethod: string;
     provider: string;
+    headerBgColor?: boolean;
 };
 
-const DropdownMenu = ({ handleLogout, image, name, email, provider }: DropdownMenuProps) => {
+const DropdownMenu = ({ handleLogout, image, name, email, provider, headerBgColor }: DropdownMenuProps) => {
+    console.log(headerBgColor, 'Header bg color in DropdownMenu...');
+    
     const [toggleMenu, setToggleMenu] = useState(false);
     const imgRef = useRef<HTMLImageElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
+
+    // console.log(provider, 'Provider in DropdownMenu...');
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -28,6 +33,7 @@ const DropdownMenu = ({ handleLogout, image, name, email, provider }: DropdownMe
                 setToggleMenu(false);
             }
         }
+
         window.addEventListener('click', handleClickOutside);
         return () => window.removeEventListener('click', handleClickOutside);
     }, [])
@@ -43,7 +49,7 @@ const DropdownMenu = ({ handleLogout, image, name, email, provider }: DropdownMe
                     width={150}
                     height={150}
                     alt='profil-img'
-                    className='rounded-full h-10 w-10 object-cover cursor-pointer'
+                    className={`${headerBgColor ? 'bg-white' : ''} rounded-full h-10 w-10 object-cover cursor-pointer`}
                 />
 
                 {toggleMenu && (
@@ -65,9 +71,9 @@ const DropdownMenu = ({ handleLogout, image, name, email, provider }: DropdownMe
                                 <div>
                                     {provider === 'google' ? (
                                         <FcGoogle size={22} />
-                                    ) : (
+                                    ) : provider === 'facebook' ? (
                                         <FaFacebookF size={22} className='text-blue-800' />
-                                    )}
+                                    ) : ""}
                                 </div>
                             )}
                         </div>
@@ -77,7 +83,7 @@ const DropdownMenu = ({ handleLogout, image, name, email, provider }: DropdownMe
                                 return (
                                     <li
                                         key={link.id}
-                                        className='p-2 cursor-pointer hover:bg-blue-100 transition-transform ease-in-out transform hover:translate-x-1'
+                                        className='w-full p-2 min-w-36 cursor-pointer hover:bg-blue-100 transition-transform ease-in-out transform hover:translate-x-1'
                                     >
                                         {link.label === 'Logout' ? (
                                             <div

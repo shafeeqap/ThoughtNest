@@ -69,8 +69,8 @@ const BlogList: React.FC = () => {
 
             {/* Blog Section */}
             <Blog
-                filteredBlogs={filteredBlogs}
                 isLoading={isLoading}
+                filteredBlogs={filteredBlogs}
                 categories={allCategories}
             />
         </>

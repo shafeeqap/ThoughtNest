@@ -13,7 +13,7 @@ const BlogItem: React.FC<BlogItemType> = ({ title, description, category, image,
 
     
     return (
-        <div className='max-w-full md:max-w-[330px] lg:max-w-[350px] bg-white border border-gray-300 transform-gpu will-change-transform hover:scale-105 duration-500'>
+        <div className='max-w-full md:max-w-82.5 lg:max-w-87.5 bg-white border border-gray-300 transform-gpu will-change-transform hover:scale-105 duration-500'>
             {/* Blog Image */}
             <Link href={`/blogs/${_id}`}>
                 <Image src={image} alt={title} width={400} height={400} className='h-72 object-cover' />

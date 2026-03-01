@@ -6,7 +6,7 @@ import Spinner from '@/Components/Spinner/Spinner';
 import Search from '@/Components/ui/search/Search';
 import { toast } from 'react-toastify';
 import { FiPlus } from "react-icons/fi";
-import Pagination from '@/Components/Pagination/Pagination';
+import Pagination from '@/Components/ui/Pagination/Pagination';
 import { validateCategory } from '@/lib/validators/validateCategory';
 import { ErrorType } from '@/types/error';
 import { AddCategoryModal } from '@/Components/Modal/ModalItem';
@@ -116,9 +116,9 @@ const Page = () => {
 
     return (
         <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
-            <div className='max-w-[850px] flex flex-col md:flex-row justify-between items-center gap-5'>
+            <div className='flex flex-col md:flex-row justify-between items-center gap-5'>
                 <h1 className='hidden sm:block text-sm sm:text-2xl font-semibold w-[30%]'>Manage Category</h1>
-                <div className='flex-1 justify-around items-center w-full'>
+                <div className='flex-1 w-full'>
                     <Search
                         handleSearch={setSearchTerm}
                         searchTerm={searchTerm}
@@ -131,7 +131,7 @@ const Page = () => {
                     <FiPlus size={22} />Add category
                 </div>
             </div>
-            <div className='relative max-w-[850px] overflow-x-auto mt-4 scrollbar-hide'>
+            <div className='relative overflow-x-auto mt-4 scrollbar-hide'>
                 <table className='w-full text-sm text-gray-500'>
                     <thead className='text-xs text-left text-white uppercase bg-[#626a7a]'>
                         <tr>
@@ -207,7 +207,7 @@ const Page = () => {
             )}
 
             {/* Pagination */}
-            <div className='max-w-[850px]'>
+            <div className=''>
                 {!isLoading && numberOfPages > 1 && (
                     <Pagination
                         currentPage={currentPage}

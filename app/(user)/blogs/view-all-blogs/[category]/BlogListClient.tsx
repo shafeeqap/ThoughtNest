@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import BlogItem from '@/Components/Home/Blog/BlogItem';
 import { BlogItemType } from '@/types/blog';
-import Pagination from '@/Components/Pagination/Pagination';
+import Pagination from '@/Components/ui/Pagination/Pagination';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 interface BlogListClientProps {

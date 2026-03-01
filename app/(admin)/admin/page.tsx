@@ -1,4 +1,4 @@
-import AdminLogInForm from '@/Components/Admin/Form/LoginForm';
+import AdminLogInForm from '@/Components/Admin/Login/AdminLogin';
 import React from 'react'
 import { FaSwatchbook } from 'react-icons/fa';
 

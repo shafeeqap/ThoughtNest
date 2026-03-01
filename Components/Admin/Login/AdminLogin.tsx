@@ -4,22 +4,29 @@ import React, { useState } from 'react';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import { ErrorType } from '@/types/error';
 import { validateLoginForm } from '@/lib/validators/validateLoginForm';
-import { authService } from '@/services/authService';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import TextInput from '@/Components/ui/Inputs/TextInput';
 import PasswordInput from '@/Components/ui/Inputs/PasswordInput';
 import Button from '@/Components/ui/Button/Button';
+import { getSession, signIn, useSession } from 'next-auth/react';
+import { handleAuthError } from '@/lib/utils/errorHandler/handleAuthError';
+import Spinner from '@/Components/Spinner/Spinner';
 
 
-const AdminLogInForm: React.FC = () => {
+const AdminLogIn: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('');
     const [error, setError] = useState<ErrorType>({});
-    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
+    const { status } = useSession();
+    const loading = status === 'loading';
+
+    if (loading) {
+        return <div><Spinner /></div>;
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -30,32 +37,34 @@ const AdminLogInForm: React.FC = () => {
             return
         }
 
-        setLoading(true);
+        const res = await signIn('credentials', {
+            email,
+            password,
+            redirect: false,
+            callbackUrl: '/admin/dashboard'
+        });
 
-        try {
-            const response = await authService.login(email, password);
-            console.log(response.user, "Admin log...");
-            if (response.user.role === 'admin') {
-                router.replace('/admin/dashboard')
-                toast.success(response.msg)
-            } else {
-                // router.replace('/login')
-                toast.warning('No admin role')
-            }
+        console.log(res, 'signIn in Admin Login...');
 
-            setEmail('');
-            setPassword('')
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                toast.warning(error.message)
-                console.log(error.message, 'Error...');
-            } else {
-                toast.warning('An unexpected error occurred.');
-                console.log(error, 'Unknown error...');
-            }
-        } finally {
-            setLoading(false)
+        if (!res || res.error) {
+            handleAuthError(res?.code);
+            return;
         }
+
+        if (res?.ok) {
+            const session = await getSession();
+            console.log(session, 'Session in Admin Login...');
+
+            if (session?.user?.role !== 'admin') {
+                toast.error('No admin role');
+                return
+            }
+            toast.success('Login successful!')
+            router.replace(res.url ?? '/admin/dashboard');
+        }
+
+        setEmail('');
+        setPassword('')
     }
 
     return (
@@ -101,4 +110,4 @@ const AdminLogInForm: React.FC = () => {
     )
 }
 
-export default AdminLogInForm
+export default AdminLogIn

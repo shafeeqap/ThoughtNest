@@ -1,12 +1,12 @@
 'use client';
 
 import React, { Dispatch, SetStateAction, useMemo, useState } from 'react'
+import Image from 'next/image'
 import { ConfirmModal, PreviewModal, UpdateStatusModal } from '@/Components/Modal';
 import { assets } from '@/data/assets'
 import { formatDate } from '@/lib/utils/helpers/formatDate';
 import { truncateText } from '@/lib/utils/helpers/truncateText';
 import { BlogItemType, BlogStatus } from '@/types/blog';
-import Image from 'next/image'
 import { IoCloseCircleOutline, IoTrashBinOutline, IoWarningOutline, IoEyeOutline } from 'react-icons/io5';
 import { CiEdit } from "react-icons/ci";
 import { blogStatusConfig } from '@/lib/config/ui/blogStatusConfig';
@@ -180,7 +180,7 @@ const BlogTableItem: React.FC<IProps> = ({
                     {status && (
                         <button
                             onClick={() => setShowUpdateModal(true)}
-                            className={`px-1.5 py-1.5 uppercase flex justify-around gap-0.5 min-w-[100px] ${blogStatusConfig[status].className}`}
+                            className={`px-1.5 py-1.5 uppercase flex justify-around gap-0.5 min-w-25 ${blogStatusConfig[status].className}`}
                         >
                             {blogStatusConfig[status].icon}
                             <p>{status}</p>
@@ -217,7 +217,7 @@ const BlogTableItem: React.FC<IProps> = ({
                                 setActionType('action')
                                 setShowModal(true)
                             }}
-                            className={`px-1.5 py-1.5 min-w-[95px] cursor-pointer flex justify-around items-center uppercase ${blogActionConfig[action].className}`}
+                            className={`px-1.5 py-1.5 min-w-23.75 cursor-pointer flex justify-around items-center uppercase ${blogActionConfig[action].className}`}
                         >
                             {blogActionConfig[action].icon}
                             {blogActionConfig[action].btnName}

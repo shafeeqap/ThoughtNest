@@ -18,7 +18,7 @@ type MobileNavbarProps = {
 const MobileNavbar: React.FC<MobileNavbarProps> = ({ showNav, toggleOpenNav }) => {
   const [authStatus, setAuthStatus] = useState<{ isAuthenticated: string, role: string }>({ isAuthenticated: '', role: '' })
   const router = useRouter();
-  const pathname = usePathname();
+  // const pathname = usePathname();
 
 
   useEffect(() => {
@@ -32,10 +32,10 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({ showNav, toggleOpenNav }) =
     }
     checkAuthStatus();
 
-    const interval = setInterval(checkAuthStatus, 5 * 60 * 1000);
+    // const interval = setInterval(checkAuthStatus, 5 * 60 * 1000);
 
-    return () => clearInterval(interval);
-  }, [pathname])
+    // return () => clearInterval(interval);
+  }, [])
 
 
 
@@ -63,7 +63,7 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({ showNav, toggleOpenNav }) =
       {showNav && (
         <div
           onClick={toggleOpenNav}
-          className={`fixed inset-0 bg-black opacity-80 z-[999] transform transition-all duration-500`} />
+          className={`fixed inset-0 bg-black opacity-80 z-999 transform transition-all duration-500`} />
       )}
 
       {/* Side Nav */}

@@ -1,11 +1,9 @@
 'use client';
 
 import DropdownMenu from '@/Components/DropdownMenu/DropdownMenu';
-import { authService } from '@/services/authService';
-import { sessionService } from '@/services/sessionService';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation';
+import React from 'react'
 import { FaArrowRight } from 'react-icons/fa'
 import { HiBars3BottomRight } from 'react-icons/hi2'
 import { toast } from 'react-toastify';
@@ -13,79 +11,27 @@ import { useSession, signOut } from 'next-auth/react';
 import Spinner from '@/Components/Spinner/Spinner';
 
 
-
 type NavbarProps = {
     headerBgColor?: boolean;
     toggleOpenNav: () => void;
 }
 
-interface AuthStatus {
-    isAuthenticated: boolean;
-    userId: string;
-    name: string;
-    email: string;
-    image: string;
-    authMethod: string;
-    provider: string;
-    role: string;
-}
 
-const initialState: AuthStatus = {
-    isAuthenticated: false,
-    userId: "",
-    name: "",
-    email: "",
-    image: "",
-    authMethod: "",
-    provider: "",
-    role: "",
-}
 const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
-    const [authStatus, setAuthStatus] = useState(initialState);
-    const [loading, setLoading] = useState(true);
+    const { data: session, status } = useSession();
     const router = useRouter();
-    const pathname = usePathname();
-    const { data: session } = useSession();
+    const isAuthenticated = !!session;
+    const role = session?.user?.role;
 
-
-
-    useEffect(() => {
-        const checkAuthStatus = async () => {
-            try {
-                const data = await sessionService.session();
-
-                setAuthStatus(data);
-            } catch (error) {
-                console.error('Failed to fetch session status:', error);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        checkAuthStatus();
-        const interval = setInterval(checkAuthStatus, 5 * 60 * 1000);
-
-        return () => clearInterval(interval);
-    }, [pathname])
-
+    console.log(session, 'Session in Navbar...');
 
     const handleLogout = async () => {
         try {
-            setAuthStatus(initialState);
-
             if (session) {
                 await signOut({ redirect: false });
                 toast.success('Logged out successfully');
                 router.push('/');
-            } else {
-                const response = await authService.logout()
-                if (response) {
-                    toast.success(response.msg);
-                    setAuthStatus(initialState);
-                    router.push('/');
-                }
             }
-
         } catch (error: unknown) {
             if (error instanceof Error) {
                 toast.error(error.message);
@@ -95,22 +41,23 @@ const Navbar: React.FC<NavbarProps> = ({ headerBgColor, toggleOpenNav }) => {
         }
     }
 
-    if (loading) {
+    if (status === 'loading') {
         return <div><Spinner size='small' /></div>;
     }
 
     return (
-        <div className={`flex ${authStatus.isAuthenticated && authStatus.role !== 'admin' ? 'flex-row-reverse' : 'flex-row'} items-center gap-5`}>
-            {authStatus.isAuthenticated && authStatus.role !== 'admin' ? (
+        <div className={`flex ${isAuthenticated && role !== 'admin' ? 'flex-row-reverse' : 'flex-row'} items-center gap-5`}>
+            {isAuthenticated && role !== 'admin' ? (
                 <div className='hidden lg:block'>
                     {/* Dropdown Menu */}
                     <DropdownMenu
                         handleLogout={handleLogout}
-                        image={authStatus.image}
-                        name={authStatus.name}
-                        email={authStatus.email}
-                        authMethod={authStatus.authMethod}
-                        provider={authStatus.provider}
+                        image={session?.user.image || ''}
+                        name={session?.user.name || ''}
+                        email={session?.user.email || ''}
+                        authMethod={session?.user.provider || ''}
+                        provider={session?.user.provider || ''}
+                        headerBgColor={headerBgColor}
                     />
                 </div>
             ) : (

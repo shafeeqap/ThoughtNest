@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 // import { getToken } from "next-auth/jwt";
 import UserModal from "@/lib/models/UserModel";
 import { auth } from "@/auth";
+// import { auth } from "@/auth";
 
 export async function GET(req: NextRequest) {
   try {
@@ -14,7 +15,7 @@ export async function GET(req: NextRequest) {
     
     const session = await auth();
 
-    console.log(session, 'Session...');
+    // console.log(session, 'Session...');
     // console.log(nextAuthToken, 'Next Auth...');
     
     

@@ -28,7 +28,7 @@ const Header: React.FC = () => {
                     onClick={() => route.push('/')}
                     className='flex items-center space-x-2 cursor-pointer'
                 >
-                    <FaSwatchbook className={`${headerBgColor ? 'text-white' : 'text-black'} w-5 h-5 md:w-8 md:h-8`} />
+                    {/* <FaSwatchbook className={`${headerBgColor ? 'text-white' : 'text-black'} w-5 h-5 md:w-8 md:h-8`} /> */}
                     <h1 className={`${headerBgColor ? 'text-white' : 'text-black'} text-xl md:text-3xl font-bold`}>
                         Thought
                         <span className='font-light'>Nest</span>

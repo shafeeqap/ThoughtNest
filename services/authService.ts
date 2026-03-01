@@ -30,38 +30,38 @@ export const authService = {
       throw new Error("Signup failed");
     }
   },
-  login: async (email: string, password: string): Promise<LoginResponse> => {
-    try {
-      const response = await axiosInstance.post(`/api/login`, {
-        email,
-        password,
-      });
+  // login: async (email: string, password: string): Promise<LoginResponse> => {
+  //   try {
+  //     const response = await axiosInstance.post(`/api/login`, {
+  //       email,
+  //       password,
+  //     });
 
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 401) {
-          throw new Error(error.response.data?.msg || "Authentication failed");
-        }
+  //     return response.data;
+  //   } catch (error) {
+  //     if (axios.isAxiosError(error)) {
+  //       if (error.response?.status === 401) {
+  //         throw new Error(error.response.data?.msg || "Authentication failed");
+  //       }
 
-        throw new Error(error.response?.data?.msg || "Login failed");
-      }
-      throw new Error("Login failed");
-    }
-  },
-  logout: async () => {
-    try {
-      const response = await axiosInstance.post("/api/logout");
-      return response.data;
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        const message = error.response?.data?.message || "Logout failed";
-        throw new Error(message);
-      } else if (error instanceof Error) {
-        throw error;
-      } else {
-        throw new Error("An unexpected error occurred during logout.");
-      }
-    }
-  },
+  //       throw new Error(error.response?.data?.msg || "Login failed");
+  //     }
+  //     throw new Error("Login failed");
+  //   }
+  // },
+  // logout: async () => {
+  //   try {
+  //     const response = await axiosInstance.post("/api/logout");
+  //     return response.data;
+  //   } catch (error: unknown) {
+  //     if (axios.isAxiosError(error)) {
+  //       const message = error.response?.data?.message || "Logout failed";
+  //       throw new Error(message);
+  //     } else if (error instanceof Error) {
+  //       throw error;
+  //     } else {
+  //       throw new Error("An unexpected error occurred during logout.");
+  //     }
+  //   }
+  // },
 };

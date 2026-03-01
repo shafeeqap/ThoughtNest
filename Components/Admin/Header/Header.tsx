@@ -1,64 +1,48 @@
 'use client';
 import { authService } from '@/services/authService';
 import { sessionService } from '@/services/sessionService';
+import { signOut, useSession } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { FaBell, FaUserCircle } from 'react-icons/fa'
 import { MdLogout } from 'react-icons/md'
 import { toast } from 'react-toastify';
 
-interface AuthStatus {
-    isAuthenticated: boolean;
-    userId: string;
-    name: string;
-    email: string;
-    image: string;
-}
+// interface AuthStatus {
+//     isAuthenticated: boolean;
+//     userId: string;
+//     name: string;
+//     email: string;
+//     image: string;
+// }
 
-const initialState: AuthStatus = {
-    isAuthenticated: false,
-    userId: "",
-    name: "",
-    email: "",
-    image: "",
-}
+// const initialState: AuthStatus = {
+//     isAuthenticated: false,
+//     userId: "",
+//     name: "",
+//     email: "",
+//     image: "",
+// }
 
 const Header: React.FC = () => {
-    const [authStatus, setAuthStatus] = useState(initialState);
+    // const [authStatus, setAuthStatus] = useState(initialState);
     const router = useRouter();
-    const pathname = usePathname();
+    // const pathname = usePathname();
+    const { data: session, status } = useSession();
+    const isAuthenticated = !!session;
+    const role = session?.user?.role;
 
-    useEffect(() => {
-        const checkAuthStatus = async () => {
-            try {
-                const data = await sessionService.session();
-
-                setAuthStatus(data);
-            } catch (error) {
-                console.error('Failed to fetch session status:', error);
-            } finally {
-                // setLoading(false);
-            }
-        }
-
-        checkAuthStatus();
-        const interval = setInterval(checkAuthStatus, 5 * 60 * 1000);
-
-        return () => clearInterval(interval);
-    }, [pathname])
+    console.log(session, 'Session in Admin Header...');
+    console.log(status, 'Status in Admin Header...');
 
 
 
     const handleLogout = async () => {
         try {
-            setAuthStatus(initialState);
 
-            const response = await authService.logout();
-            console.log(response, 'Admin logout...');
-
-            if (response) {
-                toast.success(response.msg);
-                setAuthStatus(initialState);
+            if (session) {
+                await signOut({ redirect: false });
+                toast.success('Logged out successfully');
                 router.push('/admin');
             }
 
@@ -71,7 +55,6 @@ const Header: React.FC = () => {
         }
     }
 
-    console.log(authStatus, 'Admin status...');
 
     return (
         <>
@@ -83,7 +66,7 @@ const Header: React.FC = () => {
                 <div className='flex justify-between py-2 gap-2'>
                     <FaUserCircle title='Profile' className='w-6 h-6 cursor-pointer hover:text-gray-300' />
                     <FaBell title='Notification' className='w-6 h-6 cursor-pointer hover:text-gray-300' />
-                    {authStatus && (
+                    {isAuthenticated && (
                         <button
                             onClick={handleLogout}
                         >

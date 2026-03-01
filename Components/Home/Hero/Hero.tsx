@@ -7,8 +7,8 @@ import { useFetchAllBlogQuery } from '@/redux/features/blogApiSlice';
 import { sessionService } from '@/services/sessionService';
 import { subscribeService } from '@/services/subscribeService';
 import { isAxiosError } from 'axios';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image'
-import { usePathname } from 'next/navigation';
 import React, { useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify';
 
@@ -17,8 +17,13 @@ const Hero: React.FC = () => {
     const [email, setEmail] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
     const [authStatus, setAuthStatus] = useState();
-    const pathname = usePathname();
+    // const pathname = usePathname();
 
+    const { data: session, status } = useSession();
+    console.log(session, 'Session in Hero...');
+    console.log(status, 'Session status in Hero...');
+    
+    
     const { data, isLoading } = useFetchAllBlogQuery();
 
     const blogsData = useMemo(() => data?.blogs ?? [], [data]);
@@ -37,10 +42,10 @@ const Hero: React.FC = () => {
         }
 
         checkAuthStatus();
-        const interval = setInterval(checkAuthStatus, 5 * 60 * 1000);
+        // const interval = setInterval(checkAuthStatus, 5 * 60 * 1000);
 
-        return () => clearInterval(interval);
-    }, [pathname])
+        // return () => clearInterval(interval);
+    }, [])
 
     console.log(authStatus, 'Auth...');
 
@@ -99,7 +104,7 @@ const Hero: React.FC = () => {
                         <div className='grid grid-col-1 md:grid-cols-2 lg:grid-cols-2 gap-4  sm:py-10 py-5'>
                             {/* Text Content */}
                             {latestBlogs.map((blog) => {
-                                
+
                                 const formatedDate = formatDate(blog.createdAt);
 
                                 return (

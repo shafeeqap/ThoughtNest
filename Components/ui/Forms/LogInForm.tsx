@@ -7,9 +7,11 @@ import Button from '../Button/Button';
 import PasswordInput from '../Inputs/PasswordInput';
 import { ErrorType } from '@/types/error';
 import { validateLoginForm } from '@/lib/validators/validateLoginForm';
-import { authService } from '@/services/authService';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import { useSession, signIn } from 'next-auth/react';
+import Spinner from '@/Components/Spinner/Spinner';
+import { handleAuthError } from '@/lib/utils/errorHandler/handleAuthError';
 
 
 const LogInForm: React.FC = () => {
@@ -17,11 +19,20 @@ const LogInForm: React.FC = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('');
     const [error, setError] = useState<ErrorType>({});
-    const [loading, setLoading] = useState(false);
+
     const router = useRouter();
+
+    const { status } = useSession();
+    const loading = status === 'loading';
+
+    if (loading) {
+        return <div><Spinner /></div>;
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        console.log('Form submitted with:', { email, password });
 
         const validationError = validateLoginForm(email, password)
 
@@ -30,29 +41,25 @@ const LogInForm: React.FC = () => {
             return
         }
 
-        setLoading(true);
+        const res = await signIn('credentials', {
+            email,
+            password,
+            redirect: false, // Prevent automatic redirection
+        });
 
-        try {
-            const response = await authService.login(email, password);
+        console.log(res, 'Response from signIn...');
 
-            toast.success(response.msg)
-            router.replace('/')
-
-            setEmail('');
-            setPassword('')
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                toast.warning(error.message)
-                console.log(error.message, 'Error...');
-            } else {
-                toast.warning('An unexpected error occurred.');
-                console.log(error, 'Unknown error...');
-            }
-        } finally {
-            setLoading(false)
+        if (!res || res.error) {
+            handleAuthError(res?.code);
+            return;
         }
+
+        toast.success('Login successful!');
+        router.replace('/')
+        setEmail('');
+        setPassword('')
     }
-    
+
     return (
         <>
             <form onSubmit={handleSubmit} >
