@@ -32,8 +32,8 @@ const Header: React.FC = () => {
     const isAuthenticated = !!session;
     const role = session?.user?.role;
 
-    console.log(session, 'Session in Admin Header...');
-    console.log(status, 'Status in Admin Header...');
+    // console.log(session, 'Session in Admin Header...');
+    // console.log(status, 'Status in Admin Header...');
 
 
 

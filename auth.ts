@@ -123,8 +123,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
     async jwt(params) {
-      const { token, user, account } = params;
-      // console.log("JWT callback triggered with token:", token);
+      const { user, account } = params;
       // console.log("JWT callback triggered with user:", user);
       // console.log("JWT callback triggered with account:", account);
 

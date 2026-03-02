@@ -9,6 +9,10 @@ export default auth((req) => {
   const session = req.auth;
   const user = req.auth?.user;
 
+  // console.log("Middleware pathname:", pathname);
+  // console.log("Middleware session:", session);
+  // console.log("Middleware user:", user);
+
   // Protect admin routes
   if (pathname.startsWith("/admin/dashboard")) {
     if (!user || user.role !== "admin") {

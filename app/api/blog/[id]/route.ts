@@ -5,8 +5,8 @@ import fs, { writeFile } from "fs/promises";
 import mongoose from "mongoose";
 import { decodeEntities } from "@/lib/utils/helpers/decodeEntities";
 import { sanitizeHtml } from "@/lib/utils/sanitize/sanitizeHtmlServer";
-import { verifyAccessToken } from "@/lib/jwt/jwt";
 import UserModal from "@/lib/models/UserModel";
+import { auth } from "@/auth";
 
 // =====> API Endpoint to get blogs by id <=====
 export async function GET(
@@ -118,10 +118,6 @@ export async function PUT(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  const accessToken = req.cookies.get("accessToken")?.value;
-  if (!accessToken) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
 
   try {
     await connectDB();
@@ -129,12 +125,14 @@ export async function PUT(
     const formData = await req.formData();
     const { id } = await context.params;
 
-    const decoded = await verifyAccessToken(accessToken);
-    if (!decoded) {
+    const session = await auth();
+    // console.log(session, 'Session...');
+
+    if (!session?.user.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await UserModal.findById(decoded.userId);
+    const user = await UserModal.findById(session.user.id);
     if (!user)
       return NextResponse.json({ error: "User not found" }, { status: 404 });
 

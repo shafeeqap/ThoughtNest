@@ -41,20 +41,20 @@ const ImageCropModal: React.FC<ImageCropModalProps> = ({
                 <p className='text-center'>{message}</p>
             </div>
 
-            <div className='w-3/4 px-5 lg:w-[1100px] max-h-[500px] lg:h-auto overflow-y-auto flex flex-col md:flex-row items-center justify-between gap-5 overflow-x-hidden'>
+            <div className='w-3/4 px-5 lg:w-150 max-h-125 lg:h-auto overflow-y-auto flex flex-col justify-center lg:flex-row gap-5 overflow-x-hidden'>
 
                 {/* Cropper preview */}
                 {image && (
-                    <div className='w-fit mt-5 flex flex-col items-center'>
+                    <div className='w-full mt-5 flex flex-col justify-center'>
                         <Cropper
                             src={image}
                             style={{ height: 300, width: "100%" }}
-                            aspectRatio={16 / 9}
+                            // aspectRatio={16 / 9}
                             guides={true}
                             viewMode={1}
                             ref={cropperRef}
                         />
-                        <div className='mt-3 flex flex-col sm:flex-row gap-5'>
+                        <div className='mt-3 flex flex-col justify-center sm:flex-row gap-5'>
                             <button
                                 type='button'
                                 onClick={handleCrop}
@@ -75,12 +75,12 @@ const ImageCropModal: React.FC<ImageCropModalProps> = ({
                 )}
 
                 {/* Show cropped preview */}
-                {croppedImage && (
-                    <div className='w-full mt-5 mb-5 flex flex-col items-center gap-3'>
+                {/* {croppedImage && (
+                    <div className='mt-5 mb-5 flex flex-col items-center gap-3 bg-red-400'>
                         <p>Preview Cropped Image:</p>
-                        <Image src={URL.createObjectURL(croppedImage)} alt='Cropped Preview' width={200} height={120} />
+                        <Image src={URL.createObjectURL(croppedImage)} alt='Cropped Preview' width={200} height={400} />
                     </div>
-                )}
+                )} */}
             </div>
         </BaseModal>
     )

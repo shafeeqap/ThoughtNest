@@ -31,9 +31,9 @@ const Page = () => {
   const { data: categories, isError } = useFetchCategoryQuery();
   const [addBlog] = useAddBlogMutation();
 
-  console.log(session, 'Session in add blog...');
-  console.log(status, 'Session status in add blog...');
-  console.log(session?.user.name, 'Session user name in add blog...');
+  // console.log(session, 'Session in add blog...');
+  // console.log(status, 'Session status in add blog...');
+  // console.log(session?.user.name, 'Session user name in add blog...');
 
   const allCategory = useMemo(() => categories?.categories ?? [], [categories])
 
@@ -47,7 +47,7 @@ const Page = () => {
     })
   }
 
-  
+
   // Handle file input
   const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -82,10 +82,12 @@ const Page = () => {
   }
 
 
-  const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmitHandler = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const validationError = validateBlog(data.title, data.description, croppedImage, data.category);
+    console.log(validationError, 'Validation error object...');
+    
     if (validationError) {
       if (validationError.title) toast.warning(validationError.title);
       if (validationError.description) toast.warning(validationError.description);
@@ -96,18 +98,32 @@ const Page = () => {
 
       return;
     }
+    console.log(data, 'Blog data before appending image...');
 
     const formData = new FormData();
+    // console.log(formData, 'Empty form data object...');
+    
     Object.entries(data).forEach(([key, value]) => {
       formData.append(key, value);
+
+      for (const pair of formData.entries()) {
+        console.log(pair[0], pair[1], 'Form data entry...'); // Log each key-value pair in FormData
+      }
+      
     })
+
+    console.log(croppedImage, 'Cropped image file...');
+    
 
     if (croppedImage) {
       formData.append('image', croppedImage);
     }
 
+
+    console.log(formData, 'Form data before submission...');
+    
     try {
-      const response = await addBlog({ formData }).unwrap();
+      const response = await addBlog( {formData} ).unwrap();
       if (response.success) {
         toast.success('Your blog is added')
         console.log('Blog posted successfully!', response.success);
@@ -129,6 +145,14 @@ const Page = () => {
     }
   }
 
+  const onCloseCropModal = () => {
+    setShowCropModal(false);
+    setImage("");
+    setCroppedImage(null);
+  }
+
+  // console.log(data, 'Blog data state...');
+  
 
   if (isError) return <p>Error fetching category</p>;
 
@@ -195,7 +219,7 @@ const Page = () => {
       {showCropModal && (
         <ImageCropModal
           isOpen={showCropModal}
-          onClose={() => setShowCropModal(false)}
+          onClose={onCloseCropModal}
           image={image}
           buttonText='Save'
           croppedImage={croppedImage}

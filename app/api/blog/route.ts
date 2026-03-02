@@ -1,5 +1,5 @@
+import { auth } from "@/auth";
 import { connectDB } from "@/lib/config/db";
-import { verifyAccessToken } from "@/lib/jwt/jwt";
 import BlogModel from "@/lib/models/BlogModel";
 import "@/lib/models/CategoryModel";
 import { decodeEntities } from "@/lib/utils/helpers/decodeEntities";
@@ -32,18 +32,14 @@ export async function GET(req: Request) {
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
+    const session = await auth();
+    console.log(session, 'Session...');
 
-    const accessToken = req.cookies.get("accessToken")?.value;
-    if (!accessToken) {
+    if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const decoded = await verifyAccessToken(accessToken);
-
-    if (!decoded?.userId) {
-      return NextResponse.json({ error: "Invalid token" }, { status: 403 });
-    }
-
+  
     const formData = await req.formData();
     console.log(formData, "Form Data...");
 
@@ -75,7 +71,7 @@ export async function POST(req: NextRequest) {
     }
 
     const blogData = {
-      userId: decoded.userId,
+      userId: session.user.id,
       title: formData.get("title") as string,
       description: safeDescription,
       category: new mongoose.Types.ObjectId(formData.get("category") as string),

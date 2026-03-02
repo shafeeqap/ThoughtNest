@@ -20,8 +20,11 @@ const Footer = () => {
         <div className='flex flex-col md:flex-row justify-between items-center w-full h-full'>
           <div className='flex flex-col w-full md:w-[30%]'>
             <div className='flex gap-2 items-center'>
-            <FaSwatchbook className='w-5 h-5 text-white ' />
-            <h1 className='text-2xl font-medium text-white'>ThoughtNest</h1>
+              <FaSwatchbook className='w-5 h-5 text-white ' />
+              <div className='flex items-center text-2xl'>
+                <h1 className='font-bold text-white'>Thought</h1>
+                <span className='font-light'>Nest</span>
+              </div>
             </div>
             <p className='text-sm max-w-56'>ThoughtNest is a blogging platform where users can freely share and explore ideas, stories, and personal thoughts without limitation</p>
           </div>
