@@ -32,7 +32,7 @@ const Page = () => {
   const [addBlog] = useAddBlogMutation();
 
   // console.log(session, 'Session in add blog...');
-  // console.log(status, 'Session status in add blog...');
+  console.log(status, 'Session status in add blog...');
   // console.log(session?.user.name, 'Session user name in add blog...');
 
   const allCategory = useMemo(() => categories?.categories ?? [], [categories])
@@ -86,8 +86,8 @@ const Page = () => {
     e.preventDefault();
 
     const validationError = validateBlog(data.title, data.description, croppedImage, data.category);
-    console.log(validationError, 'Validation error object...');
-    
+
+
     if (validationError) {
       if (validationError.title) toast.warning(validationError.title);
       if (validationError.description) toast.warning(validationError.description);
@@ -98,32 +98,21 @@ const Page = () => {
 
       return;
     }
-    console.log(data, 'Blog data before appending image...');
+
 
     const formData = new FormData();
-    // console.log(formData, 'Empty form data object...');
-    
+
+
     Object.entries(data).forEach(([key, value]) => {
       formData.append(key, value);
-
-      for (const pair of formData.entries()) {
-        console.log(pair[0], pair[1], 'Form data entry...'); // Log each key-value pair in FormData
-      }
-      
     })
-
-    console.log(croppedImage, 'Cropped image file...');
-    
 
     if (croppedImage) {
       formData.append('image', croppedImage);
     }
 
-
-    console.log(formData, 'Form data before submission...');
-    
     try {
-      const response = await addBlog( {formData} ).unwrap();
+      const response = await addBlog({ formData }).unwrap();
       if (response.success) {
         toast.success('Your blog is added')
         console.log('Blog posted successfully!', response.success);
@@ -152,7 +141,7 @@ const Page = () => {
   }
 
   // console.log(data, 'Blog data state...');
-  
+
 
   if (isError) return <p>Error fetching category</p>;
 

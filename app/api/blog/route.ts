@@ -53,8 +53,10 @@ export async function POST(req: NextRequest) {
 
     const safeName = image.name.replace(/[^a-z0-9.]/gi, "_").toLowerCase();
     fileName = `${timestamp}_${safeName}`;
+    
     const imageByteData = await image.arrayBuffer();
     const buffer = Buffer.from(imageByteData);
+
     const filePath = `./public/${fileName}`;
     await writeFile(filePath, buffer);
 

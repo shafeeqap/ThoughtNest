@@ -19,10 +19,13 @@ import {
     MdFormatListNumbered
 } from 'react-icons/md';
 import { BsTextParagraph } from 'react-icons/bs';
+import { LuImagePlus } from "react-icons/lu";
+import { Image } from '@tiptap/extension-image'
+
 
 interface Props {
     content: string;
-    onChange: (value: string) => void
+    onChange: (value: string) => void;
 }
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
@@ -49,10 +52,23 @@ const CustomHeading = Heading.extend({
             },
         }
     },
+});
+
+const CustomImage = Image.extend({
+    addAttributes() {
+        return {
+            ...this.parent?.(),
+            class: {
+                default: 'my-4 rounded-lg',
+            },
+            width: {
+                default: '100%',
+            }
+        }
+    }
 })
 
 const TiptapEditor = ({ content, onChange }: Props) => {
-
     const editor = useEditor({
         extensions: [
             StarterKit.configure({
@@ -72,6 +88,7 @@ const TiptapEditor = ({ content, onChange }: Props) => {
                     }
                 },
             }),
+            CustomImage,
             CustomHeading,
             Paragraph,
             TextAlign.configure({
@@ -97,6 +114,33 @@ const TiptapEditor = ({ content, onChange }: Props) => {
             console.log(editor.getJSON())
         }
     }, [content, editor])
+
+    const handleImageUpload = async (file: File) => {
+        try {
+            const formData = new FormData()
+            formData.append('file', file);
+
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            })
+            console.log(res, 'res...');
+
+            const data = await res.json()
+            if (!data.url) {
+                throw new Error("Upload failed")
+            }
+
+            editor?.chain().focus().setImage({
+                src: data.url,
+                width: "50%",
+                class: "max-auto rounded-xl"
+            }).run()
+
+        } catch (error) {
+            console.error("Image upload failed:", error);
+        }
+    }
 
     return (
         <>
@@ -222,12 +266,29 @@ const TiptapEditor = ({ content, onChange }: Props) => {
                                 className={`${editor.isActive({ textAlign: 'justify' }) ? 'text-blue-600' : ''} cursor-pointer`}
                             />
                         </button>
+                        <input
+                            type='file'
+                            accept='image/*'
+                            hidden id='imageUpload'
+                            onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                    handleImageUpload(file);
+                                }
+                            }} />
+                        <button type='button'
+                            onClick={() => document.getElementById('imageUpload')?.click()}
+                            className='border p-1 rounded'>
+                            <LuImagePlus size={22}
+                                className={`${editor.isActive({ textAlign: 'justify' }) ? 'text-blue-600' : ''} cursor-pointer`}
+                            />
+                        </button>
                     </div>
                 </div>
             )}
-            <div className='border p-4 my-5 max-h-[400px] overflow-y-auto'>
+            <div className='border p-4 my-5 max-h-100 overflow-y-auto'>
                 {/* Toolbar */}
-                <div className="prose max-h-[200px] max-w-none prose-h2:text-blue-600 prose-h3:text-green-600 prose-p:text-base">
+                <div className="prose max-h-50 max-w-none prose-h2:text-blue-600 prose-h3:text-green-600 prose-p:text-base">
                     <EditorContent editor={editor} />
                 </div>
             </div>
