@@ -278,7 +278,7 @@ const TiptapEditor = ({ content, onChange }: Props) => {
                             }} />
                         <button type='button'
                             onClick={() => document.getElementById('imageUpload')?.click()}
-                            className='border p-1 rounded'>
+                            className='border p-1 rounded flex justify-center w-10 sm:w-fit hover:bg-slate-200'>
                             <LuImagePlus size={22}
                                 className={`${editor.isActive({ textAlign: 'justify' }) ? 'text-blue-600' : ''} cursor-pointer`}
                             />

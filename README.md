@@ -1,4 +1,4 @@
-# Next.js Blog Platform
+## Next.js Blog Platform
 A fast, SEO-friendly blog platform built with Next.js, focused on performance,
 clean architecture, and scalability.
 
@@ -14,22 +14,22 @@ third-party CMS tools.
 - Optimized images and fast load times
 
 ## Tech Stack:
-----------------------
+
 1. Next.js (App Router)
 2. TypeScript
 3. Tailwind CSS
 4. MongoDB
-5. zod :- Form data validation.
-6. Tiptap :- Rich text editor.
-7. dompurify :- To prevent XSS (Cross-Site Scripting) attacks.
-8. jsdom :- For DOM support during server-side rendering (Next.js SSR).
-9. lodash :- For helping filter logic to prevent immediate triggers. When the user  types in the search input.
-10. bcrypt :- For password-hashing.
-11. auth.js :- For helping simplify authentication and authorization with using socieal media account.
-12. jose :- Providing support for JSON Web Tokens (JWT).
-13. RTK Query :- Handle HTTP request. simplifies API data retrieval and caching.
-14. recharts :- To help build charts in the admin dashboard.
-15. react-cropper: To use for image cropping (popular Cropper.js library)
+5. zod: Form data validation
+6. Tiptap: Rich text editor
+7. dompurify: To prevent XSS (Cross-Site Scripting) attacks
+8. jsdom: For DOM support during server-side rendering (Next.js SSR)
+9. lodash: For helping filter logic to prevent immediate triggers. When the user  types in the search input
+10. bcrypt: For password-hashing
+11. auth.js: For helping simplify authentication and authorization with using socieal media account
+12. jose: Providing support for JSON Web Tokens (JWT)
+13. RTK Query: Handle HTTP request. simplifies API data retrieval and caching
+14. recharts: To help build charts in the admin dashboard
+15. react-cropper: To use for image cropping popular Cropper.js library
 
 
 ## Getting Started
