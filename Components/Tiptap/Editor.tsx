@@ -8,7 +8,7 @@ import Heading from '@tiptap/extension-heading'
 import { useEffect } from 'react';
 import Image from '@tiptap/extension-image'
 import TiptapButton from './TiptapButton';
-
+import ImageResize from "tiptap-extension-resize-image"
 
 interface Props {
     content: string;
@@ -46,9 +46,13 @@ const CustomImage = Image.extend({
     group: 'block',
     draggable: true,
 
+
     addAttributes() {
         return {
             ...this.parent?.(),
+            caption: {
+                default: "",
+            },
             class: {
                 default: 'my-4 rounded-lg max-w-full h-auto',
             },
@@ -59,7 +63,7 @@ const CustomImage = Image.extend({
                         return {}
                     }
                     return {
-                        width: attributes.width
+                        style: `width: ${attributes.width}`
                     }
                 }
             },
@@ -88,6 +92,9 @@ const TiptapEditor = ({ content, onChange }: Props) => {
                 },
             }),
             CustomImage,
+            ImageResize.configure({
+                inline: false,
+            }),
             CustomHeading,
             Paragraph,
             TextAlign.configure({
@@ -104,6 +111,21 @@ const TiptapEditor = ({ content, onChange }: Props) => {
         onUpdate: ({ editor }) => {
             onChange?.(editor.getHTML())
         },
+        editorProps: {
+            handleDrop(view, event, slice, moved) {
+                const files = event.dataTransfer?.files
+
+                if (!files || files.length === 0) return false
+
+                const file = files[0]
+
+                if (!file.type.startsWith("image/")) return false
+
+                handleImageUpload(file)
+
+                return true
+            }
+        }
     });
 
 
@@ -133,7 +155,7 @@ const TiptapEditor = ({ content, onChange }: Props) => {
             editor?.chain().focus().setImage({
                 src: data.url,
                 width: "50%",
-                class: "mx-auto rounded-xl"
+                class: "mx-auto rounded-lg",
             }).run()
 
         } catch (error) {
@@ -151,8 +173,25 @@ const TiptapEditor = ({ content, onChange }: Props) => {
             )}
             <div className='border p-4 my-5 max-h-100 overflow-y-auto'>
                 {/* Toolbar */}
-                <div className="prose max-h-50 max-w-none prose-h2:text-blue-600 prose-h3:text-green-600 prose-p:text-base">
-                    <EditorContent editor={editor} />
+                <div className="prose max-w-none prose-h2:text-blue-600 prose-h3:text-green-600 prose-p:text-base">
+                    {/* Editor content */}
+                    <EditorContent editor={editor}>
+                        {editor?.isActive("image") && (
+                            <div className="mt-2">
+                                <input
+                                    type="text"
+                                    placeholder="Add caption..."
+                                    value={editor.getAttributes("image").caption || ""}
+                                    onChange={(e) => {
+                                        editor.chain().focus().updateAttributes("image", {
+                                            caption: e.target.value,
+                                        }).run()
+                                    }}
+                                    className="w-full border rounded px-2 py-1 text-sm"
+                                />
+                            </div>
+                        )}
+                    </EditorContent>
                 </div>
             </div>
         </>
