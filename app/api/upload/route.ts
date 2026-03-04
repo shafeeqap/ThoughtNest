@@ -6,7 +6,6 @@ export async function POST(req: NextRequest) {
   const data = await req.formData();
   const file = data.get("file") as File | null;
   console.log("Received file:", file);
-  
 
   if (!file) {
     return NextResponse.json({ msg: "No file uploaded" }, { status: 400 });
@@ -18,9 +17,8 @@ export async function POST(req: NextRequest) {
   const fileName = `${Date.now()}-${file.name}`;
   const filePath = path.join(process.cwd(), "public/uploads", fileName);
   console.log("Saving file to:", filePath);
-  
 
   await fs.writeFile(filePath, buffer);
 
-  return NextResponse.json({ url: `/upload/${fileName}` }, { status: 200 });
+  return NextResponse.json({ url: `/uploads/${fileName}` }, { status: 200 });
 }
