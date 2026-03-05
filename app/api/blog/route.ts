@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import uploadToCloudinary from "@/lib/cloudinary/uploadToCloudinary";
 import { connectDB } from "@/lib/config/db";
 import BlogModel from "@/lib/models/BlogModel";
 import "@/lib/models/CategoryModel";
@@ -32,36 +33,65 @@ export async function GET(req: Request) {
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
+
     const session = await auth();
-    console.log(session, 'Session...');
 
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-  
     const formData = await req.formData();
-    console.log(formData, "Form Data...");
+    console.log("Received form data:", formData);
 
     const image = formData.get("image") as File | null;
-    if (!image) {
-      return NextResponse.json({ error: "Image is required" }, { status: 400 });
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    const category = formData.get("category") as string;
+    const author = formData.get("author") as string;
+    const authorImg = formData.get("authorImg") as string;
+
+    // ---------- Validate required fields ----------
+    if (!title || !description || !category || !author || !image) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
-    let fileName = "";
-    const timestamp = Date.now();
+    // ---------- Validate image ----------
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
-    const safeName = image.name.replace(/[^a-z0-9.]/gi, "_").toLowerCase();
-    fileName = `${timestamp}_${safeName}`;
-    
-    const imageByteData = await image.arrayBuffer();
-    const buffer = Buffer.from(imageByteData);
+    if (!allowedTypes.includes(image.type)) {
+      return NextResponse.json(
+        { error: `Unsupported image type: ${image.type}` },
+        { status: 400 }
+      );
+    }
 
-    const filePath = `./public/${fileName}`;
-    await writeFile(filePath, buffer);
+    const maxSize = 5 * 1024 * 1024; // 5MB
 
-    const description = formData.get("description") as string;
+    // if (image.size > maxSize) {
+    //   return NextResponse.json(
+    //     { error: "Image too large (max 5MB)" },
+    //     { status: 400 }
+    //   );
+    // }
 
+    // ---------- Validate category id ----------
+    if (!mongoose.Types.ObjectId.isValid(category)) {
+      return NextResponse.json(
+        { error: "Invalid category id" },
+        { status: 400 }
+      );
+    }
+
+    // ---------- Upload image to Cloudinary ----------
+    const imageBuffer = Buffer.from(await image.arrayBuffer());
+
+    const uploadResult = await uploadToCloudinary(imageBuffer, "blog/cover");
+    console.log("Cloudinary cover image upload result:", uploadResult);
+
+    // ---------- Sanitize description ----------
     const decodedDescription = decodeEntities(description);
     const safeDescription = sanitizeHtml(decodedDescription);
 
@@ -72,14 +102,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (!mongoose.Types.ObjectId.isValid(category)) {
+      return NextResponse.json({ error: "Invalid category" }, { status: 400 });
+    }
+
     const blogData = {
       userId: session.user.id,
-      title: formData.get("title") as string,
-      description: safeDescription,
-      category: new mongoose.Types.ObjectId(formData.get("category") as string),
-      author: formData.get("author") as string,
-      image: `/${fileName}`,
-      authorImg: formData.get("authorImg") as string,
+      title,
+      description,
+      category: new mongoose.Types.ObjectId(category),
+      author,
+      authorImg,
+      image: uploadResult.secure_url,
     };
 
     await BlogModel.create(blogData);

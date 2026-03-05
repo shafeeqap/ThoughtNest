@@ -30,6 +30,7 @@ third-party CMS tools.
 13. RTK Query: Handle HTTP request. simplifies API data retrieval and caching
 14. recharts: To help build charts in the admin dashboard
 15. react-cropper: To use for image cropping popular Cropper.js library
+16. cloudinary
 
 
 ## Getting Started

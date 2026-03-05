@@ -111,6 +111,7 @@ const TiptapEditor = ({ content, onChange }: Props) => {
         onUpdate: ({ editor }) => {
             onChange?.(editor.getHTML())
         },
+        // Handle image drag & drop
         editorProps: {
             handleDrop(view, event, slice, moved) {
                 const files = event.dataTransfer?.files
@@ -125,7 +126,7 @@ const TiptapEditor = ({ content, onChange }: Props) => {
 
                 return true
             }
-        }
+        },
     });
 
 

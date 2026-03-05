@@ -52,10 +52,10 @@ const Page = () => {
   const isStatusSearch = filteredBlogs.map((blog) => blog.status.includes(searchTerm.toLowerCase()));
 
   const allChecked = isStatusSearch && filteredBlogs.length > 0 && selectedIds.length === filteredBlogs.length;
-  console.log(allChecked, 'All checked...');
-  console.log(selectedIds, 'Selected Ids...');
-  console.log(searchTerm, 'Search Term...');
-  console.log(isStatusSearch, 'is status search');
+  // console.log(allChecked, 'All checked...');
+  // console.log(selectedIds, 'Selected Ids...');
+  // console.log(searchTerm, 'Search Term...');
+  // console.log(isStatusSearch, 'is status search');
 
 
   // select all checkbox
@@ -140,6 +140,8 @@ const Page = () => {
     return <p>Error fetching blogs: {errMsg}</p>;
   }
 
+  console.log(paginatedBlogData, 'Paginated blog data...');
+  
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 ml-14 md:ml-10'>
       <div className='flex max-w-full flex-col md:flex-row justify-between items-center gap-5'>

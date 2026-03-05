@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Dispatch, SetStateAction, useMemo, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { ConfirmModal, PreviewModal, UpdateStatusModal } from '@/Components/Modal';
 import { assets } from '@/data/assets'
@@ -57,7 +57,22 @@ const BlogTableItem: React.FC<IProps> = ({
     const [editDescription, setEditDescription] = useState(description);
     const [editImage, setEditImage] = useState<File | null | string>(image);
     const [updatedStatus, setUpdatedStatus] = useState<BlogStatus>(status);
+    const [previewImage, setPreviewImage] = useState<string>("");
 
+    useEffect(() => {
+        if (!image) return;
+
+        if (typeof image === "string") {
+            setPreviewImage(image);
+        } else {
+            const url = URL.createObjectURL(image)
+            setPreviewImage(url);
+
+            return () => URL.revokeObjectURL(url);
+        }
+    }, [image])
+
+    console.log(previewImage, 'preview image...');
 
     const { data: categories } = useFetchCategoryQuery();
     const [editBlog] = useEditBlogMutation();
@@ -167,7 +182,7 @@ const BlogTableItem: React.FC<IProps> = ({
                 </td>
                 <td className='px-6 py-4'>
                     <Image
-                        src={image ? typeof image === 'string' ? image : URL.createObjectURL(image) : "/placeholder.png"}
+                        src={previewImage || "/placeholder.png"}
                         width={180}
                         height={180}
                         alt='blogImg'
