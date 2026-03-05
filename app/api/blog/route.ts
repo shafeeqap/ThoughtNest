@@ -5,7 +5,6 @@ import BlogModel from "@/lib/models/BlogModel";
 import "@/lib/models/CategoryModel";
 import { decodeEntities } from "@/lib/utils/helpers/decodeEntities";
 import { sanitizeHtml } from "@/lib/utils/sanitize/sanitizeHtmlServer";
-import { writeFile } from "fs/promises";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -68,7 +67,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    // const maxSize = 5 * 1024 * 1024; // 5MB
 
     // if (image.size > maxSize) {
     //   return NextResponse.json(

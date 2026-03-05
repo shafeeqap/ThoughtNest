@@ -113,16 +113,24 @@ const TiptapEditor = ({ content, onChange }: Props) => {
         },
         // Handle image drag & drop
         editorProps: {
-            handleDrop(view, event, slice, moved) {
+            handleDrop(view, event) {
                 const files = event.dataTransfer?.files
-
                 if (!files || files.length === 0) return false
 
-                const file = files[0]
+                const imageFile = Array.from(files).filter((file) => file.type.startsWith("image/"));
 
-                if (!file.type.startsWith("image/")) return false
+                if (imageFile.length === 0) return false
 
-                handleImageUpload(file)
+                event.preventDefault();
+
+                const coordinates = view.posAtCoords({
+                    left: event.clientX,
+                    top: event.clientY,
+                });
+
+                imageFile.forEach((file) => {
+                    handleImageUpload(file, coordinates?.pos)
+                })
 
                 return true
             }
@@ -137,7 +145,7 @@ const TiptapEditor = ({ content, onChange }: Props) => {
         }
     }, [content, editor])
 
-    const handleImageUpload = async (file: File) => {
+    const handleImageUpload = async (file: File, position?: number) => {
         try {
             const formData = new FormData()
             formData.append('file', file);
@@ -153,11 +161,21 @@ const TiptapEditor = ({ content, onChange }: Props) => {
                 throw new Error("Upload failed")
             }
 
-            editor?.chain().focus().setImage({
-                src: data.url,
-                width: "50%",
-                class: "mx-auto rounded-lg",
-            }).run()
+            editor
+                ?.chain()
+                .focus()
+                .insertContentAt(position ?? editor.state.selection.anchor,
+                    {
+                        type: "image",
+                        attrs: { src: data.url, caption: ""},
+                    },
+                )
+                // .setImage({
+                //     src: data.url,
+                //     width: "50%",
+                //     class: "mx-auto rounded-lg",
+                // })
+                .run()
 
         } catch (error) {
             console.error("Image upload failed:", error);

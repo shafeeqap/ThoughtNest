@@ -4,7 +4,7 @@ import uploadToCloudinary from "@/lib/cloudinary/uploadToCloudinary";
 export async function POST(req: NextRequest) {
   const data = await req.formData();
   const file = data.get("file") as File | null;
-  console.log("Received file:", file);
+  // console.log("Received file:", file);
 
   if (!file) {
     return NextResponse.json({ msg: "No file uploaded" }, { status: 400 });
@@ -17,8 +17,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  if (file.size > 5 * 1024 * 1024) {
-    // 5MB limit
+  if (file.size > 5 * 1024 * 1024) { // 5MB limit
     return NextResponse.json(
       { msg: "File size exceeds 5MB limit" },
       { status: 400 }

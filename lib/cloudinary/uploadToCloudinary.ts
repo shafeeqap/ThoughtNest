@@ -16,10 +16,7 @@ const uploadToCloudinary = (
         }
       }
     );
-    // console.log("Uploading to Cloudinary...", buffer);
-    // console.log("Stream created, writing buffer...", stream);
     
-
     stream.end(buffer);
   });
 };
