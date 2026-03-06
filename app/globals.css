@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-body{
+body {
     max-width: 100vw;
     overflow-x: hidden;
 }
@@ -9,7 +9,8 @@ body{
 .content p {
     margin-bottom: 1rem;
 }
-.content br + br {
+
+.content br+br {
     display: block;
     content: '';
     margin-top: 1rem;
@@ -18,7 +19,7 @@ body{
 .content {
     white-space: pre-line;
 }
-  
+
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
@@ -42,14 +43,26 @@ body{
     height: auto;
     display: block;
     margin: 16px auto;
-  }
+}
 
-  .ProseMirror figure {
-    text-align: center;
-  }
-  
-  .ProseMirror figcaption {
+.ProseMirror figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ProseMirror figcaption {
     font-size: 14px;
     color: #6b7280;
     margin-top: 4px;
-  }
+}
+
+.ProseMirror .resize-handle {
+    width: 10px;
+    height: 10px;
+    background: #2563eb;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    cursor: se-resize;
+}

@@ -14,12 +14,12 @@ import {
 import { BsTextParagraph } from 'react-icons/bs';
 import { LuImagePlus } from "react-icons/lu";
 
-type TiptapButtonProps = {
+type EditorToolbarProps = {
     editor: any;
     handleImageUpload: (file: File) => void;
 }
 
-const TiptapButton = ({ editor, handleImageUpload }: TiptapButtonProps) => {
+const EditorToolbar = ({ editor, handleImageUpload }: EditorToolbarProps) => {
     return (
         <div className='mt-5'>
             <div className='grid grid-cols-4 sm:flex gap-2 justify-center px-5 py-2 border border-gray-300 bg-slate-100 shadow'>
@@ -164,4 +164,4 @@ const TiptapButton = ({ editor, handleImageUpload }: TiptapButtonProps) => {
     )
 }
 
-export default TiptapButton
+export default EditorToolbar
