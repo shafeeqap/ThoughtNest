@@ -6,12 +6,14 @@ import StarterKit from '@tiptap/starter-kit'
 import Paragraph from '@tiptap/extension-paragraph';
 import Heading from '@tiptap/extension-heading'
 import { useEffect } from 'react';
-// import Image from '@tiptap/extension-image'
+import Image from '@tiptap/extension-image'
 import TiptapButton from './components/EditorToolbar';
-// import ImageResize from "tiptap-extension-resize-image"
+import ImageResize from "tiptap-extension-resize-image"
 import Placeholder from "@tiptap/extension-placeholder"
 import { ResizableImage } from "tiptap-extension-resizable-image"
 import SlashCommand from './extensions/SlashCommand';
+import { CustomStarterKit } from './extensions/CustomeStarterKit';
+import { CustomImage } from './extensions/CustomImage';
 
 
 
@@ -79,44 +81,29 @@ const CustomHeading = Heading.extend({
 // })
 
 
-
-
 const TiptapEditor = ({ content, onChange }: Props) => {
     const editor = useEditor({
         extensions: [
-            StarterKit.configure({
-                paragraph: {
-                    HTMLAttributes: {
-                        class: 'text-base',
-                    },
-                },
-                bulletList: {
-                    HTMLAttributes: {
-                        class: "list-disc ml-3"
-                    }
-                },
-                orderedList: {
-                    HTMLAttributes: {
-                        class: "list-decimal ml-3"
-                    }
-                },
-            }),
+            CustomStarterKit,
             CustomHeading,
-            // CustomImage.configure({
-            //     inline: false,
-            // }),
             Paragraph,
             Placeholder.configure({
                 placeholder: "Start writing your blog...",
             }),
+            // ResizableImage.configure({
+            //     inline: false,
+            //     allowBase64: true,
+            // }),
+            // Image.configure({
+            //     inline: false,
+            //     allowBase64: true,
+            // }),
             TextAlign.configure({
-                types: ['heading', 'paragraph', 'image'],
-                alignments: ['left', 'center', 'right', 'justify'],
+                types: ["heading", "paragraph"],
+                // alignments: ["left", "center", "right"],
             }),
-            // Image,
-            ResizableImage.configure({
-                inline: false,
-            }),
+            // CustomImage,
+            CustomImage,
             SlashCommand,
         ],
         content: content || '<p>Start writing your blog...</p>',
@@ -126,21 +113,21 @@ const TiptapEditor = ({ content, onChange }: Props) => {
             },
             // Handle image drag & drop
             handleDrop(view, event) {
-                // const files = event.dataTransfer?.files
-                // if (!files || files.length === 0) return false
+                const files = event.dataTransfer?.files
+                if (!files || files.length === 0) return false
 
-                // const imageFile = Array.from(files).filter((file) => file.type.startsWith("image/"));
-                const files = Array.from(event.dataTransfer?.files || [])
+                const imageFile = Array.from(files).filter((file) => file.type.startsWith("image/"));
 
-                const images = files.filter(file =>
-                    file.type.startsWith("image/")
-                )
-
-                if (images.length === 0) return false
+                if (imageFile.length === 0) return false
 
                 event.preventDefault();
 
-                images.forEach((file) => handleImageUpload(file))
+                const coordinates = view.posAtCoords({
+                    left: event.clientX,
+                    top: event.clientY,
+                })
+                const pos = coordinates?.pos || view.state.selection.from
+                imageFile.forEach((file, index) => handleImageUpload(file, pos + index))
 
                 return true
             },
@@ -173,7 +160,7 @@ const TiptapEditor = ({ content, onChange }: Props) => {
         }
     }, [content, editor])
 
-    const handleImageUpload = async (file: File) => {
+    const handleImageUpload = async (file: File, pos?: number) => {
         try {
             const formData = new FormData()
             formData.append('file', file);
@@ -189,11 +176,18 @@ const TiptapEditor = ({ content, onChange }: Props) => {
             editor
                 ?.chain()
                 .focus()
-                .insertContent({
+                // .setImage({
+                //     src: data.url,
+                //     width: "400px",
+                //     align: "center"
+                // })
+                .insertContentAt(pos ?? editor.state.selection.from, {
                     type: "image",
                     attrs: {
                         src: data.url,
-                    }
+                        width: "400px",
+                        align: "center",
+                    },
                 })
                 .run()
 
@@ -215,7 +209,8 @@ const TiptapEditor = ({ content, onChange }: Props) => {
                 <div className="prose max-w-none prose-h2:text-blue-600 prose-h3:text-green-600 prose-p:text-base">
                     {/* Editor content */}
                     <EditorContent editor={editor} />
-                    {editor?.isActive("image") && (
+
+                    {/* {editor?.isActive("image") && (
                         <div className="mt-2">
                             <input
                                 type="text"
@@ -229,7 +224,7 @@ const TiptapEditor = ({ content, onChange }: Props) => {
                                 className="w-full border rounded px-2 py-1 text-sm"
                             />
                         </div>
-                    )}
+                    )} */}
                 </div>
             </div>
         </>
