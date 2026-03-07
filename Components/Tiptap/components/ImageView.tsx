@@ -1,7 +1,8 @@
 import { NodeViewWrapper, NodeViewProps } from "@tiptap/react"
 // import Image from "next/image"
 import { useState } from "react"
-
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { CiAlignLeft, CiAlignCenterH, CiAlignRight } from "react-icons/ci";
 
 export default function ImageView({ node, updateAttributes, getPos, editor }: NodeViewProps) {
   const { src, width, align, caption } = node.attrs
@@ -51,10 +52,10 @@ export default function ImageView({ node, updateAttributes, getPos, editor }: No
     >
       {/* toolbar */}
       <div className="flex gap-2 mb-1 text-xs">
-        <button type="button" onClick={() => setAlign("left")} className="px-2 border">L</button>
-        <button type="button" onClick={() => setAlign("center")} className="px-2 border">C</button>
-        <button type="button" onClick={() => setAlign("right")} className="px-2 border">R</button>
-        <button type="button" onClick={deleteImage} className="px-2 border text-red-500">Delete</button>
+        <button type="button" onClick={() => setAlign("left")} className="px-2 border text-blue-600 hover:bg-gray-100"><CiAlignLeft size={32} title="Left" /></button>
+        <button type="button" onClick={() => setAlign("center")} className="px-2 border text-blue-600 hover:bg-gray-100"><CiAlignCenterH size={32} title="Center" /></button>
+        <button type="button" onClick={() => setAlign("right")} className="px-2 border text-blue-600 hover:bg-gray-100"><CiAlignRight size={32} title="Right" /></button>
+        <button type="button" onClick={deleteImage} className="px-2 border text-red-500 hover:bg-gray-100"><RiDeleteBin6Line size={32} title="Delete" /></button>
       </div>
 
       {/* alignment wrapper */}
@@ -64,7 +65,7 @@ export default function ImageView({ node, updateAttributes, getPos, editor }: No
           : align === "right"
             ? "ml-auto"
             : "mr-auto"
-          }`}
+          } `}
         style={{ width }}
       >
         <img
