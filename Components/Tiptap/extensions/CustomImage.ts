@@ -60,6 +60,12 @@ export const CustomImage = Node.create({
             },
           });
         },
+
+      setImageAlign:
+        (align) =>
+        ({ commands }) => {
+          return commands.updateAttributes(this.name, { align });
+        },
     };
   },
 

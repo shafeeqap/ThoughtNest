@@ -71,12 +71,11 @@ const TiptapEditor = ({ content, onChange }: Props) => {
             //     inline: false,
             //     allowBase64: true,
             // }),
+            CustomImage,
             TextAlign.configure({
-                types: ["heading", "paragraph", "image"],
+                types: ["heading", "paragraph"],
                 alignments: ["left", "center", "right"],
             }),
-            // CustomImage,
-            CustomImage,
             SlashCommand,
         ],
         content: content || '<p>Start writing your blog...</p>',
@@ -90,6 +89,7 @@ const TiptapEditor = ({ content, onChange }: Props) => {
                 if (!files || files.length === 0) return false
 
                 const imageFile = Array.from(files).filter((file) => file.type.startsWith("image/"));
+                console.log(imageFile, 'dropped files...');      
 
                 if (imageFile.length === 0) return false
 
@@ -137,6 +137,8 @@ const TiptapEditor = ({ content, onChange }: Props) => {
         try {
             const formData = new FormData()
             formData.append('file', file);
+            console.log(file, 'uploading file...');
+            
 
             const res = await fetch('/api/upload', {
                 method: 'POST',
