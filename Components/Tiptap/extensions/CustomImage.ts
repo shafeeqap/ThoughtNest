@@ -27,19 +27,19 @@ export const CustomImage = Node.create({
   renderHTML({ HTMLAttributes }) {
     const { align, width, caption, ...attrs } = HTMLAttributes;
 
-    return [
+    const figure = [
       "figure",
       {
         style: `text-align:${align}`,
       },
-      [
-        "img",
-        mergeAttributes(attrs, {
-          style: `width:${width}`,
-        }),
-      ],
-      caption ? ["figcaption", caption] : null,
+      ["img", mergeAttributes(attrs, { style: `width:${width}` })],
     ];
+
+    if (caption) {
+      figure.push(["figcaption", caption]);
+    }
+
+    return figure;
   },
 
   addNodeView() {
