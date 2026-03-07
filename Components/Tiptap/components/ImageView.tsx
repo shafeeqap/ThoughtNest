@@ -6,8 +6,8 @@ export default function ImageView({ node, updateAttributes }) {
   const { src, width, align, caption } = node.attrs
   const [dragging, setDragging] = useState(false)
 
-  console.log("Rendering ImageView with src:",dragging);
-  
+  console.log("Rendering ImageView with src:", src);
+
 
   const startResize = (e) => {
     e.preventDefault()
@@ -15,9 +15,10 @@ export default function ImageView({ node, updateAttributes }) {
 
     const startX = e.clientX
     const startWidth = parseInt(width)
+    // const startWidth = e.target.closest("img").offsetWidth
 
     const onMove = (e) => {
-      const newWidth = startWidth + (e.clientX - startX)
+      const newWidth = Math.max(100, startWidth + (e.clientX - startX))
       updateAttributes({ width: `${newWidth}px` })
     }
 
@@ -34,19 +35,18 @@ export default function ImageView({ node, updateAttributes }) {
   return (
     <NodeViewWrapper
       style={{ textAlign: align }}
-      className="my-4 relative"
+      className="my-4 inline-block relative"
     >
       <img
         src={src}
         style={{ width }}
-        className={`mx-auto ${dragging ? "cursor-se-resize" : ""}`}
+        className={`${align === "center"
+            ? "mx-auto"
+            : align === "right"
+              ? "ml-auto"
+              : "mr-auto"
+          } ${dragging ? "cursor-se-resize" : ""}`}
         alt="Image"
-      />
-
-      {/* resize handle */}
-      <div
-        onMouseDown={startResize}
-        className="absolute bottom-0 right-0 w-3 h-3 bg-blue-500 cursor-se-resize"
       />
 
       {/* caption */}
@@ -56,8 +56,14 @@ export default function ImageView({ node, updateAttributes }) {
         onChange={(e) =>
           updateAttributes({ caption: e.target.value })
         }
-        className="text-center text-sm text-gray-500 w-full mt-2 outline-none"
+        className="text-center text-sm text-gray-500 w-full mt-2 border"
       />
+      {/* resize handle */}
+      <div
+        onMouseDown={startResize}
+        className="absolute bottom-0 right-0 w-3 h-3 bg-blue-500 cursor-se-resize"
+      />
+
     </NodeViewWrapper>
   )
 }

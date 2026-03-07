@@ -14,6 +14,7 @@ import { ResizableImage } from "tiptap-extension-resizable-image"
 import SlashCommand from './extensions/SlashCommand';
 import { CustomStarterKit } from './extensions/CustomeStarterKit';
 import { CustomImage } from './extensions/CustomImage';
+import CustomHeading from './extensions/CustomHeading';
 
 
 
@@ -22,34 +23,6 @@ interface Props {
     content: string;
     onChange: (value: string) => void;
 }
-
-type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
-
-const levelClasses: Record<HeadingLevel, string> = {
-    1: 'text-4xl font-bold',
-    2: 'text-3xl font-semibold',
-    3: 'text-2xl font-semibold',
-    4: 'text-xl font-medium',
-    5: 'text-lg font-medium',
-    6: 'text-base font-medium',
-}
-
-const CustomHeading = Heading.extend({
-    addAttributes() {
-        return {
-            ...this.parent?.(),
-
-            level: {
-                default: 1,
-                renderHTML: ({ level }: { level: HeadingLevel }) => {
-                    return {
-                        class: levelClasses[level] || 'text-base',
-                    }
-                },
-            },
-        }
-    },
-});
 
 // const CustomImage = ImageResize.extend({
 //     inline: false,
@@ -99,8 +72,8 @@ const TiptapEditor = ({ content, onChange }: Props) => {
             //     allowBase64: true,
             // }),
             TextAlign.configure({
-                types: ["heading", "paragraph"],
-                // alignments: ["left", "center", "right"],
+                types: ["heading", "paragraph", "image"],
+                alignments: ["left", "center", "right"],
             }),
             // CustomImage,
             CustomImage,
