@@ -3,14 +3,14 @@ import { NodeViewWrapper, NodeViewProps } from "@tiptap/react"
 import { useState } from "react"
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiAlignLeft, CiAlignCenterH, CiAlignRight } from "react-icons/ci";
+import ImageToolbar from "./ImageToolbar";
+
 
 export default function ImageView({ node, updateAttributes, getPos, editor }: NodeViewProps) {
   const { src, width, align, caption } = node.attrs
   const [dragging, setDragging] = useState(false)
 
-  // console.log("Rendering ImageView with src:", src);
-
-  const startResize = (e: React.MouseEvent<HTMLDivElement>) => {
+  const startResize = (e: React.MouseEvent, direction: string) => {
     e.preventDefault()
     setDragging(true)
 
@@ -18,9 +18,13 @@ export default function ImageView({ node, updateAttributes, getPos, editor }: No
     const startWidth = parseFloat(width)
 
     const onMove = (e: MouseEvent) => {
-      console.log("Resizing image, clientX:", e.clientX, "startX:", startX, "startWidth:", startWidth);
+      let diff = e.clientX - startX
 
-      const newWidth = Math.max(100, startWidth + (e.clientX - startX))
+      if (direction.includes("left")) {
+        diff = -diff
+      }
+
+      const newWidth = Math.max(120, startWidth + diff)
       updateAttributes({ width: `${newWidth}px` })
     }
 
@@ -35,7 +39,7 @@ export default function ImageView({ node, updateAttributes, getPos, editor }: No
   }
 
   const setAlign = (value: "left" | "center" | "right") => {
-    console.log("Setting align to:", value);
+    // console.log("Setting align to:", value);
 
     updateAttributes({ align: value })
   }
@@ -46,21 +50,20 @@ export default function ImageView({ node, updateAttributes, getPos, editor }: No
   }
 
   return (
-    <NodeViewWrapper
-      // style={{ textAlign: align }}
-      className="my-4 block relative"
-    >
+    <NodeViewWrapper className="my-4 block relative">
       {/* toolbar */}
-      <div className="flex gap-2 mb-1 text-xs">
-        <button type="button" onClick={() => setAlign("left")} className="px-2 border text-blue-600 hover:bg-gray-100"><CiAlignLeft size={32} title="Left" /></button>
-        <button type="button" onClick={() => setAlign("center")} className="px-2 border text-blue-600 hover:bg-gray-100"><CiAlignCenterH size={32} title="Center" /></button>
-        <button type="button" onClick={() => setAlign("right")} className="px-2 border text-blue-600 hover:bg-gray-100"><CiAlignRight size={32} title="Right" /></button>
-        <button type="button" onClick={deleteImage} className="px-2 border text-red-500 hover:bg-gray-100"><RiDeleteBin6Line size={32} title="Delete" /></button>
-      </div>
+      {/* <div className="flex gap-2 mb-1 text-xs">
+        <button type="button" onClick={() => setAlign("left")} className={`px-2 border hover:bg-slate-200 ${align === "left" ? "bg-gray-100 text-blue-600" : ""}`}><CiAlignLeft size={22} title="Align left" /></button>
+        <button type="button" onClick={() => setAlign("center")} className={`px-2 border hover:bg-slate-200 ${align === "center" ? "bg-gray-100 text-blue-600" : ""}`}><CiAlignCenterH size={22} title="Align center" /></button>
+        <button type="button" onClick={() => setAlign("right")} className={`px-2 border hover:bg-slate-200 ${align === "right" ? "bg-gray-100 text-blue-600" : ""}`}><CiAlignRight size={22} title="Align right" /></button>
+        <button type="button" onClick={deleteImage} className="px-2 border text-red-500 hover:bg-gray-100"><RiDeleteBin6Line size={22} title="Delete image" /></button>
+      <ImageToolbar editor={editor} />
+      </div> */}
 
-      {/* alignment wrapper */}
+
+      {/* image container */}
       <div
-        className={`relative ${align === "center"
+        className={`relative group ${align === "center"
           ? "mx-auto"
           : align === "right"
             ? "ml-auto"
@@ -70,26 +73,41 @@ export default function ImageView({ node, updateAttributes, getPos, editor }: No
       >
         <img
           src={src}
-          style={{ width }}
-          className={`${align === "center"
-            ? "mx-auto"
-            : align === "right"
-              ? "ml-auto"
-              : "mr-auto"
-            } ${dragging ? "cursor-se-resize" : ""}`}
+          className="block w-full select-none"
+          draggable={false}
           alt="Image"
         />
 
         {/* resize handle */}
         <div
-          onMouseDown={(e) => {
-            e.stopPropagation()
-            startResize(e)
-          }}
-          className="absolute bottom-0 right-0 w-3 h-3 bg-blue-500 cursor-se-resize"
+          onMouseDown={(e) => startResize(e, "top-left")}
+          className="absolute w-3 h-3 bg-blue-500 top-0 left-0 cursor-nwse-resize"
+        />
+        <div
+          onMouseDown={(e) => startResize(e, "top-right")}
+          className="absolute w-3 h-3 bg-blue-500 top-0 right-0 cursor-nesw-resize"
+        />
+        <div
+          onMouseDown={(e) => startResize(e, "bottom-left")}
+          className="absolute w-3 h-3 bg-blue-500 bottom-0 left-0 cursor-nesw-resize"
         />
 
-        {/* caption */}
+        <div
+          onMouseDown={(e) => startResize(e, "bottom-right")}
+          className="absolute w-3 h-3 bg-blue-500 bottom-0 right-0 cursor-nwse-resize"
+        />
+      </div>
+
+      {/* caption */}
+      <div
+        className={`relative ${align === "center"
+          ? "mx-auto"
+          : align === "right"
+            ? "ml-auto"
+            : "mr-auto"
+          } `}
+        style={{ width }}
+      >
         <input
           value={caption}
           placeholder="Add caption..."

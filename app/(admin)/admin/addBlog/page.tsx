@@ -172,7 +172,7 @@ const Page = () => {
           value={data.title}
           type="text"
           placeholder='Enter blog title'
-          className='w-full  mt-4 px-4 py-2 border'
+          className='w-full mt-4 px-4 py-2 border border-gray-300'
         />
 
         <p className='text-xl mt-4'>Blog Description</p>
@@ -201,7 +201,7 @@ const Page = () => {
         <button
           type='submit'
           className='mt-8 w-40 h-12 bg-[#263043] text-white cursor-pointer hover:bg-[#37455f]'>
-          Add
+          Add Blog
         </button>
       </form>
 

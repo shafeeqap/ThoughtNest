@@ -7,7 +7,7 @@ import Paragraph from '@tiptap/extension-paragraph';
 import Heading from '@tiptap/extension-heading'
 import { useEffect } from 'react';
 import Image from '@tiptap/extension-image'
-import TiptapButton from './components/EditorToolbar';
+import EditorToolbar from './components/EditorToolbar';
 import ImageResize from "tiptap-extension-resize-image"
 import Placeholder from "@tiptap/extension-placeholder"
 import { ResizableImage } from "tiptap-extension-resizable-image"
@@ -15,6 +15,7 @@ import SlashCommand from './extensions/SlashCommand';
 import { CustomStarterKit } from './extensions/CustomeStarterKit';
 import { CustomImage } from './extensions/CustomImage';
 import CustomHeading from './extensions/CustomHeading';
+import ImageToolbar from './components/ImageToolbar';
 
 
 
@@ -89,7 +90,7 @@ const TiptapEditor = ({ content, onChange }: Props) => {
                 if (!files || files.length === 0) return false
 
                 const imageFile = Array.from(files).filter((file) => file.type.startsWith("image/"));
-                console.log(imageFile, 'dropped files...');      
+                console.log(imageFile, 'dropped files...');
 
                 if (imageFile.length === 0) return false
 
@@ -138,7 +139,7 @@ const TiptapEditor = ({ content, onChange }: Props) => {
             const formData = new FormData()
             formData.append('file', file);
             console.log(file, 'uploading file...');
-            
+
 
             const res = await fetch('/api/upload', {
                 method: 'POST',
@@ -174,32 +175,20 @@ const TiptapEditor = ({ content, onChange }: Props) => {
     return (
         <>
             {editor && (
-                <TiptapButton
+                <EditorToolbar
                     editor={editor}
                     handleImageUpload={handleImageUpload}
                 />
             )}
-            <div className='border p-4 my-5 max-h-100 overflow-y-auto'>
+            {/* {editor &&
+                <ImageToolbar editor={editor} />
+            } */}
+
+            <div className='border border-gray-300 p-4 my-5 max-h-100 overflow-y-auto'>
                 {/* Toolbar */}
                 <div className="prose max-w-none prose-h2:text-blue-600 prose-h3:text-green-600 prose-p:text-base">
                     {/* Editor content */}
                     <EditorContent editor={editor} />
-
-                    {/* {editor?.isActive("image") && (
-                        <div className="mt-2">
-                            <input
-                                type="text"
-                                placeholder="Add caption..."
-                                value={editor.getAttributes("image").caption || ""}
-                                onChange={(e) => {
-                                    editor.chain().focus().updateAttributes("image", {
-                                        caption: e.target.value,
-                                    }).run()
-                                }}
-                                className="w-full border rounded px-2 py-1 text-sm"
-                            />
-                        </div>
-                    )} */}
                 </div>
             </div>
         </>
