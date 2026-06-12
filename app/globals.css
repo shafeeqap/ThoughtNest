@@ -83,3 +83,9 @@ body {
 .ProseMirror [data-text-align="left"] {
     text-align: left;
 }
+
+.drag-handle {
+    position: absolute;
+    left: -24px;
+    cursor: grab;
+  }

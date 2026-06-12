@@ -7,15 +7,15 @@ import Paragraph from '@tiptap/extension-paragraph';
 import Heading from '@tiptap/extension-heading'
 import { useEffect } from 'react';
 import Image from '@tiptap/extension-image'
-import EditorToolbar from './components/EditorToolbar';
+import EditorToolbar from './EditorToolbar';
 import ImageResize from "tiptap-extension-resize-image"
 import Placeholder from "@tiptap/extension-placeholder"
 import { ResizableImage } from "tiptap-extension-resizable-image"
-import SlashCommand from './extensions/SlashCommand';
-import { CustomStarterKit } from './extensions/CustomeStarterKit';
-import { CustomImage } from './extensions/CustomImage';
-import CustomHeading from './extensions/CustomHeading';
-import ImageToolbar from './components/ImageToolbar';
+import SlashCommand from '../extensions/SlashCommand';
+import { CustomStarterKit } from '../extensions/CustomeStarterKit';
+import { CustomImage } from '../extensions/CustomImage';
+import CustomHeading from '../extensions/CustomHeading';
+import ImageToolbar from './ImageToolbar';
 
 
 
@@ -79,7 +79,7 @@ const TiptapEditor = ({ content, onChange }: Props) => {
             }),
             SlashCommand,
         ],
-        content: content || '<p>Start writing your blog...</p>',
+        // content: content || '<p>Start writing your blog...</p>',
         editorProps: {
             attributes: {
                 class: 'prose max-w-none focus:outline-none min-h-[300px]',

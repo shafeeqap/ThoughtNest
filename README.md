@@ -2,6 +2,9 @@
 A fast, SEO-friendly blog platform built with Next.js, focused on performance,
 clean architecture, and scalability.
 
+    ⚠️ This project is currently in progress and actively being improved.
+
+
 ## Why this project?
 This project was built to practice real-world product thinking, not just UI.
 It focuses on SEO, performance, and content management without relying on

@@ -1,6 +1,6 @@
 'use client';
 
-import TiptapEditor from '@/Components/Tiptap/Editor';
+import TiptapEditor from '@/Components/Tiptap/components/Editor';
 import { assets } from '@/data/assets';
 import { validateBlog } from '@/lib/validators/validateBlog';
 import { useAddBlogMutation } from '@/redux/features/blogApiSlice';
