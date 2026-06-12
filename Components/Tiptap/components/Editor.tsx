@@ -1,0 +1,198 @@
+'use client';
+
+import { useEditor, EditorContent } from '@tiptap/react'
+import TextAlign from '@tiptap/extension-text-align';
+import StarterKit from '@tiptap/starter-kit'
+import Paragraph from '@tiptap/extension-paragraph';
+import Heading from '@tiptap/extension-heading'
+import { useEffect } from 'react';
+import Image from '@tiptap/extension-image'
+import EditorToolbar from './EditorToolbar';
+import ImageResize from "tiptap-extension-resize-image"
+import Placeholder from "@tiptap/extension-placeholder"
+import { ResizableImage } from "tiptap-extension-resizable-image"
+import SlashCommand from '../extensions/SlashCommand';
+import { CustomStarterKit } from '../extensions/CustomeStarterKit';
+import { CustomImage } from '../extensions/CustomImage';
+import CustomHeading from '../extensions/CustomHeading';
+import ImageToolbar from './ImageToolbar';
+
+
+
+
+interface Props {
+    content: string;
+    onChange: (value: string) => void;
+}
+
+// const CustomImage = ImageResize.extend({
+//     inline: false,
+//     group: 'block',
+//     draggable: true,
+
+//     addAttributes() {
+//         return {
+//             ...this.parent?.(),
+//             caption: {
+//                 default: "",
+//             },
+//             // class: {
+//             //     default: 'my-4 rounded-lg max-w-full h-auto',
+//             // },
+//             width: {
+//                 default: null,
+//                 renderHTML: attributes => {
+//                     if (!attributes.width) {
+//                         return {}
+//                     }
+//                     return {
+//                         style: `width: ${attributes.width}`
+//                     }
+//                 }
+//             },
+//         }
+//     }
+// })
+
+
+const TiptapEditor = ({ content, onChange }: Props) => {
+    const editor = useEditor({
+        extensions: [
+            CustomStarterKit,
+            CustomHeading,
+            Paragraph,
+            Placeholder.configure({
+                placeholder: "Start writing your blog...",
+            }),
+            // ResizableImage.configure({
+            //     inline: false,
+            //     allowBase64: true,
+            // }),
+            // Image.configure({
+            //     inline: false,
+            //     allowBase64: true,
+            // }),
+            CustomImage,
+            TextAlign.configure({
+                types: ["heading", "paragraph"],
+                alignments: ["left", "center", "right"],
+            }),
+            SlashCommand,
+        ],
+        // content: content || '<p>Start writing your blog...</p>',
+        editorProps: {
+            attributes: {
+                class: 'prose max-w-none focus:outline-none min-h-[300px]',
+            },
+            // Handle image drag & drop
+            handleDrop(view, event) {
+                const files = event.dataTransfer?.files
+                if (!files || files.length === 0) return false
+
+                const imageFile = Array.from(files).filter((file) => file.type.startsWith("image/"));
+                console.log(imageFile, 'dropped files...');
+
+                if (imageFile.length === 0) return false
+
+                event.preventDefault();
+
+                const coordinates = view.posAtCoords({
+                    left: event.clientX,
+                    top: event.clientY,
+                })
+                const pos = coordinates?.pos || view.state.selection.from
+                imageFile.forEach((file, index) => handleImageUpload(file, pos + index))
+
+                return true
+            },
+
+            handlePaste(view, event) {
+                const items = event.clipboardData?.items;
+                if (!items) return false;
+
+                for (const item of items) {
+                    if (item.type.startsWith("image/")) {
+                        const file = item.getAsFile();
+                        if (file) handleImageUpload(file);
+                    }
+                }
+
+                return false;
+            }
+        },
+        immediatelyRender: false,
+        onUpdate: ({ editor }) => {
+            onChange?.(editor.getHTML())
+        },
+    });
+
+
+    useEffect(() => {
+        if (editor && content !== editor.getHTML()) {
+            editor.commands.setContent(content)
+            console.log(editor.getJSON())
+        }
+    }, [content, editor])
+
+    const handleImageUpload = async (file: File, pos?: number) => {
+        try {
+            const formData = new FormData()
+            formData.append('file', file);
+            console.log(file, 'uploading file...');
+
+
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            })
+            console.log(res, 'res...');
+
+            const data = await res.json()
+
+            editor
+                ?.chain()
+                .focus()
+                // .setImage({
+                //     src: data.url,
+                //     width: "400px",
+                //     align: "center"
+                // })
+                .insertContentAt(pos ?? editor.state.selection.from, {
+                    type: "image",
+                    attrs: {
+                        src: data.url,
+                        width: "400px",
+                        align: "center",
+                    },
+                })
+                .run()
+
+        } catch (error) {
+            console.error("Image upload failed:", error);
+        }
+    }
+
+    return (
+        <>
+            {editor && (
+                <EditorToolbar
+                    editor={editor}
+                    handleImageUpload={handleImageUpload}
+                />
+            )}
+            {/* {editor &&
+                <ImageToolbar editor={editor} />
+            } */}
+
+            <div className='border border-gray-300 p-4 my-5 max-h-100 overflow-y-auto'>
+                {/* Toolbar */}
+                <div className="prose max-w-none prose-h2:text-blue-600 prose-h3:text-green-600 prose-p:text-base">
+                    {/* Editor content */}
+                    <EditorContent editor={editor} />
+                </div>
+            </div>
+        </>
+    )
+}
+
+export default TiptapEditor

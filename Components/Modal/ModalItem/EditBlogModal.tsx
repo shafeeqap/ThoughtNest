@@ -3,7 +3,7 @@ import EditModal from '../EditModal'
 import Image from 'next/image';
 import { CategoryType } from '@/types/category';
 import { IoCloudUploadSharp } from "react-icons/io5";
-import TiptapEditor from '@/Components/Tiptap/Editor';
+import TiptapEditor from '@/Components/Tiptap/components/Editor';
 
 
 interface EditBlogModalProps {
